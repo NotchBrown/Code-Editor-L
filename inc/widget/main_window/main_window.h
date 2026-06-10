@@ -69,6 +69,7 @@ private slots:
     void onSettingsEditor();
     void onSettingsIPC();
     void onSettingsToolbar();
+    void onSettingsHotkey();
     
     // Window menu
     void onWindowCloseTab();

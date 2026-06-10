@@ -16,26 +16,24 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QTabWidget" name="tabWidget">
-      <property name="tabsClosable">
-       <bool>true</bool>
-      </property>
-      <property name="movable">
-       <bool>true</bool>
-      </property>
-      <property name="documentMode">
-       <bool>true</bool>
-      </property>
-      <widget class="QWidget" name="tab">
-       <attribute name="title">
-        <string>untitled</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="tabLayout">
-        <item>
-         <widget class="QWidget" name="editorPlaceholder" native="true"/>
-        </item>
-       </layout>
-      </widget>
+     <widget class="QWidget" name="editorContainer" native="true">
+      <layout class="QVBoxLayout" name="editorContainerLayout">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QWidget" name="editorPlaceholder" native="true"/>
+       </item>
+      </layout>
      </widget>
     </item>
    </layout>
@@ -46,19 +44,41 @@
      <x>0</x>
      <y>0</y>
      <width>1024</width>
-     <height>21</height>
+     <height>23</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuStart">
+    <property name="title">
+     <string>Start</string>
+    </property>
+    <addaction name="actionStartNewInstance"/>
+    <addaction name="separator"/>
+    <addaction name="separator"/>
+    <addaction name="actionStartExit"/>
+   </widget>
    <widget class="QMenu" name="menuFile">
     <property name="title">
      <string>File</string>
     </property>
+    <widget class="QMenu" name="menuFileRecent">
+     <property name="title">
+      <string>Recent</string>
+     </property>
+    </widget>
+    <widget class="QMenu" name="menuFileType">
+     <property name="title">
+      <string>Type</string>
+     </property>
+    </widget>
     <addaction name="actionFileNew"/>
     <addaction name="actionFileOpen"/>
+    <addaction name="menuFileRecent"/>
+    <addaction name="separator"/>
     <addaction name="actionFileSave"/>
     <addaction name="actionFileSaveAs"/>
     <addaction name="separator"/>
-    <addaction name="actionFileExit"/>
+    <addaction name="menuFileType"/>
+    <addaction name="actionFileProperties"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
@@ -70,37 +90,77 @@
     <addaction name="actionEditCut"/>
     <addaction name="actionEditCopy"/>
     <addaction name="actionEditPaste"/>
+    <addaction name="actionEditDelete"/>
+    <addaction name="separator"/>
+    <addaction name="actionEditGoLine"/>
+    <addaction name="actionEditComment"/>
+    <addaction name="actionEditUncomment"/>
+    <addaction name="actionEditCommentSegment"/>
+    <addaction name="actionEditUncommentSegment"/>
     <addaction name="separator"/>
     <addaction name="actionEditFind"/>
     <addaction name="actionEditReplace"/>
    </widget>
-   <widget class="QMenu" name="menuView">
+   <widget class="QMenu" name="menuMark">
     <property name="title">
-     <string>View</string>
+     <string>Mark</string>
     </property>
-    <addaction name="actionViewZoomIn"/>
-    <addaction name="actionViewZoomOut"/>
-    <addaction name="actionViewResetZoom"/>
+    <addaction name="actionMarkGoError"/>
+    <addaction name="actionMarkDeleteError"/>
+    <addaction name="actionMarkCleanError"/>
     <addaction name="separator"/>
-    <addaction name="actionViewLineNumbers"/>
-    <addaction name="actionViewFolding"/>
+    <addaction name="actionMarkGoBookmark"/>
+    <addaction name="actionMarkCreateBookmark"/>
+    <addaction name="actionMarkManageBookmark"/>
+    <addaction name="separator"/>
+    <addaction name="actionMarkCreateBreak"/>
+    <addaction name="actionMarkRemoveBreak"/>
    </widget>
-   <widget class="QMenu" name="menuTools">
+   <widget class="QMenu" name="menuSettings">
     <property name="title">
-     <string>Tools</string>
+     <string>Settings</string>
     </property>
-    <addaction name="actionToolsPreferences"/>
+    <addaction name="actionSettingsGeneral"/>
+    <addaction name="actionSettingsEditor"/>
+    <addaction name="actionSettingsIPC"/>
+    <addaction name="actionSettingsToolbar"/>
+    <addaction name="actionSettingsHotkey"/>
+   </widget>
+   <widget class="QMenu" name="menuWindow">
+    <property name="title">
+     <string>Window</string>
+    </property>
+    <widget class="QMenu" name="menuWindowTabs">
+     <property name="title">
+      <string>Open Tabs</string>
+     </property>
+    </widget>
+    <addaction name="actionWindowCloseTab"/>
+    <addaction name="actionWindowCloseAllSaved"/>
+    <addaction name="actionWindowCloseAll"/>
+    <addaction name="actionWindowCloseOther"/>
+    <addaction name="separator"/>
+    <addaction name="menuWindowTabs"/>
+    <addaction name="separator"/>
+    <addaction name="actionWindowNavigator"/>
+    <addaction name="actionWindowSegment"/>
+    <addaction name="actionWindowErrorsWarnings"/>
+    <addaction name="actionWindowIPCMessage"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
      <string>Help</string>
     </property>
     <addaction name="actionHelpAbout"/>
+    <addaction name="separator"/>
+    <addaction name="actionHelpHelp"/>
    </widget>
+   <addaction name="menuStart"/>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
-   <addaction name="menuView"/>
-   <addaction name="menuTools"/>
+   <addaction name="menuMark"/>
+   <addaction name="menuSettings"/>
+   <addaction name="menuWindow"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
@@ -122,151 +182,233 @@
    <addaction name="actionEditPaste"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionStartNewInstance">
+   <property name="text">
+    <string>Code Editor</string>
+   </property>
+  </action>
+  <action name="actionStartExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+  </action>
   <action name="actionFileNew">
    <property name="text">
     <string>New</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+N</string>
    </property>
   </action>
   <action name="actionFileOpen">
    <property name="text">
     <string>Open...</string>
    </property>
-   <property name="shortcut">
-    <string>Ctrl+O</string>
-   </property>
   </action>
   <action name="actionFileSave">
    <property name="text">
     <string>Save</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+S</string>
    </property>
   </action>
   <action name="actionFileSaveAs">
    <property name="text">
     <string>Save As...</string>
    </property>
-   <property name="shortcut">
-    <string>Ctrl+Shift+S</string>
-   </property>
   </action>
-  <action name="actionFileExit">
+  <action name="actionFileProperties">
    <property name="text">
-    <string>Exit</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+Q</string>
+    <string>Properties...</string>
    </property>
   </action>
   <action name="actionEditUndo">
    <property name="text">
     <string>Undo</string>
    </property>
-   <property name="shortcut">
-    <string>Ctrl+Z</string>
-   </property>
   </action>
   <action name="actionEditRedo">
    <property name="text">
     <string>Redo</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+Y</string>
    </property>
   </action>
   <action name="actionEditCut">
    <property name="text">
     <string>Cut</string>
    </property>
-   <property name="shortcut">
-    <string>Ctrl+X</string>
-   </property>
   </action>
   <action name="actionEditCopy">
    <property name="text">
     <string>Copy</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+C</string>
    </property>
   </action>
   <action name="actionEditPaste">
    <property name="text">
     <string>Paste</string>
    </property>
-   <property name="shortcut">
-    <string>Ctrl+V</string>
+  </action>
+  <action name="actionEditDelete">
+   <property name="text">
+    <string>Delete</string>
+   </property>
+  </action>
+  <action name="actionEditGoLine">
+   <property name="text">
+    <string>Go Line...</string>
+   </property>
+  </action>
+  <action name="actionEditComment">
+   <property name="text">
+    <string>Comment</string>
+   </property>
+  </action>
+  <action name="actionEditUncomment">
+   <property name="text">
+    <string>Uncomment</string>
+   </property>
+  </action>
+  <action name="actionEditCommentSegment">
+   <property name="text">
+    <string>Comment Segment</string>
+   </property>
+  </action>
+  <action name="actionEditUncommentSegment">
+   <property name="text">
+    <string>Uncomment Segment</string>
    </property>
   </action>
   <action name="actionEditFind">
    <property name="text">
     <string>Find...</string>
    </property>
-   <property name="shortcut">
-    <string>Ctrl+F</string>
-   </property>
   </action>
   <action name="actionEditReplace">
    <property name="text">
     <string>Replace...</string>
    </property>
-   <property name="shortcut">
-    <string>Ctrl+H</string>
+  </action>
+  <action name="actionMarkGoError">
+   <property name="text">
+    <string>Go Error...</string>
    </property>
   </action>
-  <action name="actionViewZoomIn">
+  <action name="actionMarkDeleteError">
    <property name="text">
-    <string>Zoom In</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl++</string>
+    <string>Delete Error</string>
    </property>
   </action>
-  <action name="actionViewZoomOut">
+  <action name="actionMarkCleanError">
    <property name="text">
-    <string>Zoom Out</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+-</string>
+    <string>Clean Error</string>
    </property>
   </action>
-  <action name="actionViewResetZoom">
+  <action name="actionMarkGoBookmark">
    <property name="text">
-    <string>Reset Zoom</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+0</string>
+    <string>Go BookMark</string>
    </property>
   </action>
-  <action name="actionViewLineNumbers">
+  <action name="actionMarkCreateBookmark">
    <property name="text">
-    <string>Line Numbers</string>
+    <string>Create BookMark</string>
    </property>
+  </action>
+  <action name="actionMarkManageBookmark">
+   <property name="text">
+    <string>Manage Bookmark...</string>
+   </property>
+  </action>
+  <action name="actionMarkCreateBreak">
+   <property name="text">
+    <string>Create Break</string>
+   </property>
+  </action>
+  <action name="actionMarkRemoveBreak">
+   <property name="text">
+    <string>Remove Break</string>
+   </property>
+  </action>
+  <action name="actionSettingsGeneral">
+   <property name="text">
+    <string>General...</string>
+   </property>
+  </action>
+  <action name="actionSettingsEditor">
+   <property name="text">
+    <string>Editor...</string>
+   </property>
+  </action>
+  <action name="actionSettingsIPC">
+   <property name="text">
+    <string>IPC...</string>
+   </property>
+  </action>
+  <action name="actionSettingsToolbar">
+   <property name="text">
+    <string>Toolbar...</string>
+   </property>
+  </action>
+  <action name="actionSettingsHotkey">
+   <property name="text">
+    <string>Hotkey...</string>
+   </property>
+  </action>
+  <action name="actionWindowCloseTab">
+   <property name="text">
+    <string>Close Tab</string>
+   </property>
+  </action>
+  <action name="actionWindowCloseAllSaved">
+   <property name="text">
+    <string>Close All Saved</string>
+   </property>
+  </action>
+  <action name="actionWindowCloseAll">
+   <property name="text">
+    <string>Close All</string>
+   </property>
+  </action>
+  <action name="actionWindowCloseOther">
+   <property name="text">
+    <string>Close The Other</string>
+   </property>
+  </action>
+  <action name="actionWindowNavigator">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="checked">
-    <bool>true</bool>
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Navigator</string>
    </property>
   </action>
-  <action name="actionViewFolding">
-   <property name="text">
-    <string>Code Folding</string>
-   </property>
+  <action name="actionWindowSegment">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="checked">
-    <bool>true</bool>
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Segment</string>
    </property>
   </action>
-  <action name="actionToolsPreferences">
+  <action name="actionWindowErrorsWarnings">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
    <property name="text">
-    <string>Preferences...</string>
+    <string>Errors And Warnings</string>
+   </property>
+  </action>
+  <action name="actionWindowIPCMessage">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>IPC Message</string>
    </property>
   </action>
   <action name="actionHelpAbout">
@@ -274,25 +416,13 @@
     <string>About</string>
    </property>
   </action>
+  <action name="actionHelpHelp">
+   <property name="text">
+    <string>Help</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
- <connections>
-  <connection>
-   <sender>tabWidget</sender>
-   <signal>tabCloseRequested(int)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>onTabCloseRequested(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>200</x>
-     <y>20</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>200</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

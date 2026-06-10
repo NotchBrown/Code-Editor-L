@@ -61,6 +61,7 @@ SOURCES += \
     src/function/settings/on_settings_editor.cpp \
     src/function/settings/on_settings_ipc.cpp \
     src/function/settings/on_settings_toolbar.cpp \
+    src/function/settings/on_settings_hotkey.cpp \
     src/function/window/on_window_close_tab.cpp \
     src/function/window/on_window_close_all_saved.cpp \
     src/function/window/on_window_close_all.cpp \

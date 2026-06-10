@@ -177,6 +177,8 @@ void MainWindow::setupConnections()
         connect(ui->actionSettingsIPC, &QAction::triggered, this, &MainWindow::onSettingsIPC);
     if (ui->actionSettingsToolbar)
         connect(ui->actionSettingsToolbar, &QAction::triggered, this, &MainWindow::onSettingsToolbar);
+    if (ui->actionSettingsHotkey)
+        connect(ui->actionSettingsHotkey, &QAction::triggered, this, &MainWindow::onSettingsHotkey);
     
     // Window menu
     if (ui->actionWindowCloseTab)
@@ -188,7 +190,15 @@ void MainWindow::setupConnections()
     if (ui->actionWindowCloseOther)
         connect(ui->actionWindowCloseOther, &QAction::triggered, this, &MainWindow::onWindowCloseOther);
     
-    // Dock widgets - not used in initial setup
+    // Dock widgets
+    if (ui->actionWindowNavigator)
+        connect(ui->actionWindowNavigator, &QAction::triggered, this, &MainWindow::onWindowNavigator);
+    if (ui->actionWindowSegment)
+        connect(ui->actionWindowSegment, &QAction::triggered, this, &MainWindow::onWindowSegment);
+    if (ui->actionWindowErrorsWarnings)
+        connect(ui->actionWindowErrorsWarnings, &QAction::triggered, this, &MainWindow::onWindowErrorsWarnings);
+    if (ui->actionWindowIPCMessage)
+        connect(ui->actionWindowIPCMessage, &QAction::triggered, this, &MainWindow::onWindowIPCMessage);
     
     // Help menu
     if (ui->actionHelpAbout)
