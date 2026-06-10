@@ -1,10 +1,9 @@
 #ifndef CODE_EDITOR_H
 #define CODE_EDITOR_H
 
+#include "main.h"
 #include <Qsci/qsciscintilla.h>
 #include <Qsci/qscilexer.h>
-#include <QMap>
-#include <QString>
 
 class CodeEditor : public QsciScintilla
 {
@@ -16,12 +15,11 @@ public:
 
     void setFilePath(const QString &path);
     QString filePath() const;
+    
+    bool loadFile(const QString &filePath);
+    bool saveFile(const QString &filePath = QString());
 
-    void setLexerByExtension(const QString &extension);
     void setLexerByName(const QString &name);
-
-    void setUndoDepth(int depth);
-    int undoDepth() const;
 
     QString selectedText() const;
     void insertText(const QString &text);
@@ -32,6 +30,18 @@ public:
     
     int currentLine() const;
     int currentColumn() const;
+    
+    void toggleBookmark(int line);
+    void clearAllBookmarks();
+    void toggleBreakpoint(int line);
+    void clearBreakpoint(int line);
+    void clearAllBreakpoints();
+    
+    void commentLine();
+    void uncommentLine();
+    void commentBlock();
+    void uncommentBlock();
+    void deleteChar();
 
 signals:
     void filePathChanged(const QString &path);
@@ -44,16 +54,12 @@ private slots:
 
 private:
     void setupEditor();
-    void setupLexer();
-    void setupMargins();
-    void setupFolding();
-    void setupAutoCompletion();
-    void setupKeyBindings();
-    void setupExtensionMap();
+    void setupConnections();
+    void updateLexerFromFile();
 
     QString m_filePath;
+    QsciLexer *m_lexer;
     QMap<QString, QString> m_extensionToLexer;
-    QsciLexer *m_currentLexer;
 };
 
 #endif // CODE_EDITOR_H

@@ -140,6 +140,47 @@ if (Test-Path $WindeployqtPath) {
         Write-Host "  windeployqt succeeded" -ForegroundColor Green
     } else {
         Write-Host "  Note: windeployqt exited with code $LASTEXITCODE" -ForegroundColor Cyan
+        Write-Host "  Manually copying dependencies..." -ForegroundColor Cyan
+    }
+    
+    # Copy QtCore DLL
+    $QtCoreDllPath = "$QtBinPath\Qt5Core.dll"
+    $QtCoreTargetPath = "$OutputDir\Qt5Core.dll"
+    if (Test-Path $QtCoreDllPath) {
+        Copy-Item -Path $QtCoreDllPath -Destination $QtCoreTargetPath -Force
+        Write-Host "  Copied Qt5Core.dll" -ForegroundColor Green
+    }
+    
+    # Copy QtGui DLL
+    $QtGuiDllPath = "$QtBinPath\Qt5Gui.dll"
+    $QtGuiTargetPath = "$OutputDir\Qt5Gui.dll"
+    if (Test-Path $QtGuiDllPath) {
+        Copy-Item -Path $QtGuiDllPath -Destination $QtGuiTargetPath -Force
+        Write-Host "  Copied Qt5Gui.dll" -ForegroundColor Green
+    }
+    
+    # Copy QtWidgets DLL
+    $QtWidgetsDllPath = "$QtBinPath\Qt5Widgets.dll"
+    $QtWidgetsTargetPath = "$OutputDir\Qt5Widgets.dll"
+    if (Test-Path $QtWidgetsDllPath) {
+        Copy-Item -Path $QtWidgetsDllPath -Destination $QtWidgetsTargetPath -Force
+        Write-Host "  Copied Qt5Widgets.dll" -ForegroundColor Green
+    }
+    
+    # Copy QtPrintSupport DLL
+    $QtPrintSupportDllPath = "$QtBinPath\Qt5PrintSupport.dll"
+    $QtPrintSupportTargetPath = "$OutputDir\Qt5PrintSupport.dll"
+    if (Test-Path $QtPrintSupportDllPath) {
+        Copy-Item -Path $QtPrintSupportDllPath -Destination $QtPrintSupportTargetPath -Force
+        Write-Host "  Copied Qt5PrintSupport.dll" -ForegroundColor Green
+    }
+    
+    # Copy QtNetwork DLL
+    $QtNetworkDllPath = "$QtBinPath\Qt5Network.dll"
+    $QtNetworkTargetPath = "$OutputDir\Qt5Network.dll"
+    if (Test-Path $QtNetworkDllPath) {
+        Copy-Item -Path $QtNetworkDllPath -Destination $QtNetworkTargetPath -Force
+        Write-Host "  Copied Qt5Network.dll" -ForegroundColor Green
     }
     
     # Copy QScintilla DLL (windeployqt cannot detect third-party libraries)
@@ -153,15 +194,27 @@ if (Test-Path $WindeployqtPath) {
         Write-Host "  Warning: QScintilla DLL not found at $QScintillaDllPath" -ForegroundColor Yellow
     }
     
-    # Copy QtNetwork DLL (sometimes windeployqt misses it)
-    $QtNetworkDllPath = "$QtBinPath\Qt5Network.dll"
-    $QtNetworkTargetPath = "$OutputDir\Qt5Network.dll"
+    # Copy platform plugins (CRITICAL - windeployqt often misses this)
+    $PlatformsSourcePath = "$QtDir\plugins\platforms"
+    $PlatformsTargetPath = "$OutputDir\platforms"
     
-    if (Test-Path $QtNetworkDllPath) {
-        Copy-Item -Path $QtNetworkDllPath -Destination $QtNetworkTargetPath -Force
-        Write-Host "  Copied Qt5Network.dll" -ForegroundColor Green
+    if (Test-Path $PlatformsSourcePath) {
+        New-Item -ItemType Directory -Path $PlatformsTargetPath -Force | Out-Null
+        Copy-Item -Path "$PlatformsSourcePath\qwindows.dll" -Destination $PlatformsTargetPath -Force
+        Write-Host "  Copied platforms\qwindows.dll" -ForegroundColor Green
     } else {
-        Write-Host "  Warning: Qt5Network.dll not found at $QtNetworkDllPath" -ForegroundColor Yellow
+        Write-Host "  Warning: Platform plugins not found at $PlatformsSourcePath" -ForegroundColor Yellow
+    }
+    
+    # Copy MinGW runtime DLLs
+    $MinGWDlls = @("libgcc_s_seh-1.dll", "libstdc++-6.dll", "libwinpthread-1.dll")
+    foreach ($dll in $MinGWDlls) {
+        $SourcePath = "$MinGWPath\$dll"
+        $TargetPath = "$OutputDir\$dll"
+        if (Test-Path $SourcePath) {
+            Copy-Item -Path $SourcePath -Destination $TargetPath -Force
+            Write-Host "  Copied $dll" -ForegroundColor Green
+        }
     }
 } else {
     Write-Host "  Error: windeployqt not found at $WindeployqtPath" -ForegroundColor Red

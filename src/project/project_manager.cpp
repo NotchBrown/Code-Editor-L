@@ -1,7 +1,5 @@
+#include "main.h"
 #include "project/project_manager.h"
-#include <QFile>
-#include <QTextStream>
-#include <QFileInfo>
 #include <QDebug>
 
 ProjectManager::ProjectManager(QObject *parent)

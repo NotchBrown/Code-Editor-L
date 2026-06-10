@@ -1,8 +1,8 @@
+#include "main.h"
 #include "ipc/ipc_server.h"
 #include <QJsonDocument>
 #include <QJsonParseError>
 #include <QDebug>
-#include <QApplication>
 
 IpcServer::IpcServer(QObject *parent)
     : QObject(parent),
