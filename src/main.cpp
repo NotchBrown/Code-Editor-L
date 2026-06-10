@@ -1,6 +1,7 @@
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QDebug>
+#include <QStyleFactory>
 #include "widget/main_window/main_window.h"
 
 int main(int argc, char *argv[])
@@ -9,6 +10,9 @@ int main(int argc, char *argv[])
     app.setApplicationName("CodeEditorLite");
     app.setApplicationVersion("1.0.0");
     app.setOrganizationName("CodeEditorLite");
+    
+    // Set Fusion style
+    app.setStyle(QStyleFactory::create("Fusion"));
 
     QCommandLineParser parser;
     parser.setApplicationDescription("A lightweight code editor with IPC support");
