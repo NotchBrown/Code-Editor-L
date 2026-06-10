@@ -1,0 +1,46 @@
+# Build directories
+dist/
+build/
+*.Debug/
+*.Release/
+
+# Qt generated files
+*.qm
+*.o
+*.obj
+moc_*.cpp
+moc_*.h
+qrc_*.cpp
+ui_*.h
+*.stash
+
+# Visual Studio / IDE
+.vs/
+*.user
+*.suo
+*.sln
+*.vcxproj*
+
+# Compiled executables
+*.exe
+*.dll
+*.lib
+*.a
+*.so
+*.dylib
+
+# Temporary files
+*.log
+*.tmp
+*.temp
+*~
+
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# QScintilla build artifacts
+lib/QScintilla/src/build/
+lib/QScintilla/src/*.o
+lib/QScintilla/src/Makefile*
