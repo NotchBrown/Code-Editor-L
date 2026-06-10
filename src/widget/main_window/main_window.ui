@@ -15,9 +15,27 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="spacing">
+     <number>2</number>
+    </property>
+    <property name="leftMargin">
+     <number>2</number>
+    </property>
+    <property name="topMargin">
+     <number>2</number>
+    </property>
+    <property name="rightMargin">
+     <number>2</number>
+    </property>
+    <property name="bottomMargin">
+     <number>2</number>
+    </property>
     <item>
      <widget class="QWidget" name="editorContainer" native="true">
       <layout class="QVBoxLayout" name="editorContainerLayout">
+       <property name="spacing">
+        <number>2</number>
+       </property>
        <property name="leftMargin">
         <number>0</number>
        </property>
@@ -51,6 +69,9 @@
     <property name="title">
      <string>Start</string>
     </property>
+    <property name="tearOffEnabled">
+     <bool>true</bool>
+    </property>
     <addaction name="actionStartNewInstance"/>
     <addaction name="separator"/>
     <addaction name="separator"/>
@@ -59,6 +80,9 @@
    <widget class="QMenu" name="menuFile">
     <property name="title">
      <string>File</string>
+    </property>
+    <property name="tearOffEnabled">
+     <bool>true</bool>
     </property>
     <widget class="QMenu" name="menuFileRecent">
      <property name="title">
@@ -84,6 +108,9 @@
     <property name="title">
      <string>Edit</string>
     </property>
+    <property name="tearOffEnabled">
+     <bool>true</bool>
+    </property>
     <addaction name="actionEditUndo"/>
     <addaction name="actionEditRedo"/>
     <addaction name="separator"/>
@@ -105,6 +132,9 @@
     <property name="title">
      <string>Mark</string>
     </property>
+    <property name="tearOffEnabled">
+     <bool>true</bool>
+    </property>
     <addaction name="actionMarkGoError"/>
     <addaction name="actionMarkDeleteError"/>
     <addaction name="actionMarkCleanError"/>
@@ -120,6 +150,9 @@
     <property name="title">
      <string>Settings</string>
     </property>
+    <property name="tearOffEnabled">
+     <bool>true</bool>
+    </property>
     <addaction name="actionSettingsGeneral"/>
     <addaction name="actionSettingsEditor"/>
     <addaction name="actionSettingsIPC"/>
@@ -129,6 +162,9 @@
    <widget class="QMenu" name="menuWindow">
     <property name="title">
      <string>Window</string>
+    </property>
+    <property name="tearOffEnabled">
+     <bool>true</bool>
     </property>
     <widget class="QMenu" name="menuWindowTabs">
      <property name="title">
@@ -150,6 +186,9 @@
    <widget class="QMenu" name="menuHelp">
     <property name="title">
      <string>Help</string>
+    </property>
+    <property name="tearOffEnabled">
+     <bool>true</bool>
     </property>
     <addaction name="actionHelpAbout"/>
     <addaction name="separator"/>
