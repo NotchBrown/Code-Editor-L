@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>CodeEditorLite</string>
+   <string>Code Editor</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -66,11 +66,11 @@
     </rect>
    </property>
    <widget class="QMenu" name="menuStart">
-    <property name="title">
-     <string>Start</string>
-    </property>
     <property name="tearOffEnabled">
      <bool>true</bool>
+    </property>
+    <property name="title">
+     <string>St&amp;art</string>
     </property>
     <addaction name="actionStartNewInstance"/>
     <addaction name="separator"/>
@@ -78,20 +78,20 @@
     <addaction name="actionStartExit"/>
    </widget>
    <widget class="QMenu" name="menuFile">
-    <property name="title">
-     <string>File</string>
-    </property>
     <property name="tearOffEnabled">
      <bool>true</bool>
     </property>
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
     <widget class="QMenu" name="menuFileRecent">
      <property name="title">
-      <string>Recent</string>
+      <string>&amp;Recent</string>
      </property>
     </widget>
     <widget class="QMenu" name="menuFileType">
      <property name="title">
-      <string>Type</string>
+      <string>&amp;Type</string>
      </property>
     </widget>
     <addaction name="actionFileNew"/>
@@ -103,13 +103,16 @@
     <addaction name="separator"/>
     <addaction name="menuFileType"/>
     <addaction name="actionFileProperties"/>
+    <addaction name="separator"/>
+    <addaction name="actionFilePrint"/>
+    <addaction name="actionFilePrintPreview"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
-    <property name="title">
-     <string>Edit</string>
-    </property>
     <property name="tearOffEnabled">
      <bool>true</bool>
+    </property>
+    <property name="title">
+     <string>&amp;Edit</string>
     </property>
     <addaction name="actionEditUndo"/>
     <addaction name="actionEditRedo"/>
@@ -129,11 +132,11 @@
     <addaction name="actionEditReplace"/>
    </widget>
    <widget class="QMenu" name="menuMark">
-    <property name="title">
-     <string>Mark</string>
-    </property>
     <property name="tearOffEnabled">
      <bool>true</bool>
+    </property>
+    <property name="title">
+     <string>&amp;Mark</string>
     </property>
     <addaction name="actionMarkGoError"/>
     <addaction name="actionMarkDeleteError"/>
@@ -147,11 +150,11 @@
     <addaction name="actionMarkRemoveBreak"/>
    </widget>
    <widget class="QMenu" name="menuSettings">
-    <property name="title">
-     <string>Settings</string>
-    </property>
     <property name="tearOffEnabled">
      <bool>true</bool>
+    </property>
+    <property name="title">
+     <string>Sett&amp;ings</string>
     </property>
     <addaction name="actionSettingsGeneral"/>
     <addaction name="actionSettingsEditor"/>
@@ -160,11 +163,11 @@
     <addaction name="actionSettingsHotkey"/>
    </widget>
    <widget class="QMenu" name="menuWindow">
-    <property name="title">
-     <string>Window</string>
-    </property>
     <property name="tearOffEnabled">
      <bool>true</bool>
+    </property>
+    <property name="title">
+     <string>&amp;Window</string>
     </property>
     <widget class="QMenu" name="menuWindowTabs">
      <property name="title">
@@ -184,11 +187,11 @@
     <addaction name="actionWindowIPCMessage"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
-    <property name="title">
-     <string>Help</string>
-    </property>
     <property name="tearOffEnabled">
      <bool>true</bool>
+    </property>
+    <property name="title">
+     <string>&amp;Help</string>
     </property>
     <addaction name="actionHelpAbout"/>
     <addaction name="separator"/>
@@ -223,187 +226,197 @@
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionStartNewInstance">
    <property name="text">
-    <string>Code Editor</string>
+    <string>&amp;Code Editor</string>
    </property>
   </action>
   <action name="actionStartExit">
    <property name="text">
-    <string>Exit</string>
+    <string>E&amp;xit</string>
    </property>
   </action>
   <action name="actionFileNew">
    <property name="text">
-    <string>New</string>
+    <string>&amp;New</string>
    </property>
   </action>
   <action name="actionFileOpen">
    <property name="text">
-    <string>Open...</string>
+    <string>&amp;Open...</string>
    </property>
   </action>
   <action name="actionFileSave">
    <property name="text">
-    <string>Save</string>
+    <string>&amp;Save</string>
    </property>
   </action>
   <action name="actionFileSaveAs">
    <property name="text">
-    <string>Save As...</string>
+    <string>Save A&amp;s...</string>
    </property>
   </action>
   <action name="actionFileProperties">
    <property name="text">
-    <string>Properties...</string>
+    <string>Prope&amp;rties...</string>
+   </property>
+  </action>
+  <action name="actionFilePrint">
+   <property name="text">
+    <string>&amp;Print...</string>
+   </property>
+  </action>
+  <action name="actionFilePrintPreview">
+   <property name="text">
+    <string>Print Pre&amp;view...</string>
    </property>
   </action>
   <action name="actionEditUndo">
    <property name="text">
-    <string>Undo</string>
+    <string>&amp;Undo</string>
    </property>
   </action>
   <action name="actionEditRedo">
    <property name="text">
-    <string>Redo</string>
+    <string>&amp;Redo</string>
    </property>
   </action>
   <action name="actionEditCut">
    <property name="text">
-    <string>Cut</string>
+    <string>Cu&amp;t</string>
    </property>
   </action>
   <action name="actionEditCopy">
    <property name="text">
-    <string>Copy</string>
+    <string>&amp;Copy</string>
    </property>
   </action>
   <action name="actionEditPaste">
    <property name="text">
-    <string>Paste</string>
+    <string>&amp;Paste</string>
    </property>
   </action>
   <action name="actionEditDelete">
    <property name="text">
-    <string>Delete</string>
+    <string>&amp;Delete</string>
    </property>
   </action>
   <action name="actionEditGoLine">
    <property name="text">
-    <string>Go Line...</string>
+    <string>&amp;Go Line...</string>
    </property>
   </action>
   <action name="actionEditComment">
    <property name="text">
-    <string>Comment</string>
+    <string>&amp;Comment</string>
    </property>
   </action>
   <action name="actionEditUncomment">
    <property name="text">
-    <string>Uncomment</string>
+    <string>&amp;Uncomment</string>
    </property>
   </action>
   <action name="actionEditCommentSegment">
    <property name="text">
-    <string>Comment Segment</string>
+    <string>Comment Se&amp;gment</string>
    </property>
   </action>
   <action name="actionEditUncommentSegment">
    <property name="text">
-    <string>Uncomment Segment</string>
+    <string>Uncomment Se&amp;gment</string>
    </property>
   </action>
   <action name="actionEditFind">
    <property name="text">
-    <string>Find...</string>
+    <string>&amp;Find...</string>
    </property>
   </action>
   <action name="actionEditReplace">
    <property name="text">
-    <string>Replace...</string>
+    <string>&amp;Replace...</string>
    </property>
   </action>
   <action name="actionMarkGoError">
    <property name="text">
-    <string>Go Error...</string>
+    <string>&amp;Go Error...</string>
    </property>
   </action>
   <action name="actionMarkDeleteError">
    <property name="text">
-    <string>Delete Error</string>
+    <string>&amp;Delete Error</string>
    </property>
   </action>
   <action name="actionMarkCleanError">
    <property name="text">
-    <string>Clean Error</string>
+    <string>C&amp;lean Error</string>
    </property>
   </action>
   <action name="actionMarkGoBookmark">
    <property name="text">
-    <string>Go BookMark</string>
+    <string>Go &amp;BookMark</string>
    </property>
   </action>
   <action name="actionMarkCreateBookmark">
    <property name="text">
-    <string>Create BookMark</string>
+    <string>&amp;Create BookMark</string>
    </property>
   </action>
   <action name="actionMarkManageBookmark">
    <property name="text">
-    <string>Manage Bookmark...</string>
+    <string>&amp;Manage Bookmark...</string>
    </property>
   </action>
   <action name="actionMarkCreateBreak">
    <property name="text">
-    <string>Create Break</string>
+    <string>&amp;Create Break</string>
    </property>
   </action>
   <action name="actionMarkRemoveBreak">
    <property name="text">
-    <string>Remove Break</string>
+    <string>&amp;Remove Break</string>
    </property>
   </action>
   <action name="actionSettingsGeneral">
    <property name="text">
-    <string>General...</string>
+    <string>&amp;General...</string>
    </property>
   </action>
   <action name="actionSettingsEditor">
    <property name="text">
-    <string>Editor...</string>
+    <string>&amp;Editor...</string>
    </property>
   </action>
   <action name="actionSettingsIPC">
    <property name="text">
-    <string>IPC...</string>
+    <string>&amp;IPC...</string>
    </property>
   </action>
   <action name="actionSettingsToolbar">
    <property name="text">
-    <string>Toolbar...</string>
+    <string>&amp;Toolbar...</string>
    </property>
   </action>
   <action name="actionSettingsHotkey">
    <property name="text">
-    <string>Hotkey...</string>
+    <string>&amp;Hotkey...</string>
    </property>
   </action>
   <action name="actionWindowCloseTab">
    <property name="text">
-    <string>Close Tab</string>
+    <string>&amp;Close Tab</string>
    </property>
   </action>
   <action name="actionWindowCloseAllSaved">
    <property name="text">
-    <string>Close All Saved</string>
+    <string>&amp;Close All Saved</string>
    </property>
   </action>
   <action name="actionWindowCloseAll">
    <property name="text">
-    <string>Close All</string>
+    <string>Close &amp;All</string>
    </property>
   </action>
   <action name="actionWindowCloseOther">
    <property name="text">
-    <string>Close The Other</string>
+    <string>Close The &amp;Other</string>
    </property>
   </action>
   <action name="actionWindowNavigator">
@@ -414,7 +427,7 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Navigator</string>
+    <string>&amp;Navigator</string>
    </property>
   </action>
   <action name="actionWindowSegment">
@@ -425,7 +438,7 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Segment</string>
+    <string>&amp;Segment</string>
    </property>
   </action>
   <action name="actionWindowErrorsWarnings">
@@ -436,7 +449,7 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Errors And Warnings</string>
+    <string>Errors And &amp;Warnings</string>
    </property>
   </action>
   <action name="actionWindowIPCMessage">
@@ -447,17 +460,17 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>IPC Message</string>
+    <string>&amp;IPC Message</string>
    </property>
   </action>
   <action name="actionHelpAbout">
    <property name="text">
-    <string>About</string>
+    <string>&amp;About</string>
    </property>
   </action>
   <action name="actionHelpHelp">
    <property name="text">
-    <string>Help</string>
+    <string>&amp;Help</string>
    </property>
   </action>
  </widget>

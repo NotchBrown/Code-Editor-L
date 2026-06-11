@@ -36,6 +36,8 @@ private slots:
     void onFileSave();
     void onFileSaveAs();
     void onFileProperties();
+    void onFilePrint();
+    void onFilePrintPreview();
     
     // Edit menu
     void onEditUndo();
@@ -95,6 +97,9 @@ private slots:
     void onCurrentTabChanged(int index);
     void onEditorModificationChanged(CodeEditor *editor, bool modified);
     void onEditorCursorPositionChanged(CodeEditor *editor, int line, int column);
+    
+    // File type menu
+    void onFileTypeChanged(const QString &lexerName);
 
 signals:
     void editorModificationChanged(CodeEditor *editor, bool modified);
@@ -112,6 +117,9 @@ private:
     bool saveFileAs();
     void populateFileTypeMenu();
     void updateOpenTabsMenu();
+    void updateFileTypeMenuChecked();
+    void populateRecentFilesMenu();
+    QMap<QString, QString> getSupportedLexers() const;
     
     Ui::MainWindow *ui;
     IpcServer *m_ipcServer;
@@ -124,6 +132,7 @@ private:
     IPCMessage *m_ipcMessage;
     
     QMap<QString, QPair<CodeEditor*, int>> m_fileToTabs;
+    QMap<QString, QAction*> m_lexerActions; // lexer name -> action mapping
 };
 
 #endif // MAIN_WINDOW_H

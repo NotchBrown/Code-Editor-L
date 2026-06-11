@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PrintWizardPagePageSetup</class>
+ <widget class="QWizardPage" name="PrintWizardPagePageSetup">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>600</width>
+    <height>450</height>
+   </rect>
+  </property>
+  <property name="title">
+   <string>Page Setup</string>
+  </property>
+  <property name="subTitle">
+   <string>Configure paper size, orientation, and margins</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <property name="leftMargin">
+    <number>9</number>
+   </property>
+   <property name="topMargin">
+    <number>9</number>
+   </property>
+   <property name="rightMargin">
+    <number>9</number>
+   </property>
+   <property name="bottomMargin">
+    <number>9</number>
+   </property>
+   <item>
+    <layout class="QVBoxLayout" name="leftLayout">
+     <item>
+      <widget class="QGroupBox" name="groupPaper">
+       <property name="title">
+        <string>Paper</string>
+       </property>
+       <layout class="QFormLayout" name="formLayoutPaper">
+        <item row="0" column="0">
+         <widget class="QLabel" name="labelSize">
+          <property name="text">
+           <string>&amp;Size:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="comboPaperSize"/>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="labelPreset">
+          <property name="text">
+           <string>&amp;Preset:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QComboBox" name="comboPreset">
+          <item>
+           <property name="text">
+            <string>None</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Standard</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Narrow</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Moderate</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Wide</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="labelUnit">
+          <property name="text">
+           <string>&amp;Unit:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QComboBox" name="comboUnit">
+          <item>
+           <property name="text">
+            <string>Millimeters</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Inches</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Points</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Picas</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="groupOrientation">
+       <property name="title">
+        <string>Orientation</string>
+       </property>
+       <layout class="QHBoxLayout" name="orientationLayout">
+        <item>
+         <widget class="QRadioButton" name="radioPortrait">
+          <property name="text">
+           <string>&amp;Portrait</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="radioLandscape">
+          <property name="text">
+           <string>&amp;Landscape</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="groupMargins">
+       <property name="title">
+        <string>Margins</string>
+       </property>
+       <layout class="QGridLayout" name="marginsLayout">
+        <item row="0" column="0">
+         <widget class="QLabel" name="labelLeft">
+          <property name="text">
+           <string>&amp;Left:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QDoubleSpinBox" name="spinLeft">
+          <property name="decimals">
+           <number>2</number>
+          </property>
+          <property name="minimum">
+           <double>0.00</double>
+          </property>
+          <property name="maximum">
+           <double>999.00</double>
+          </property>
+          <property name="value">
+           <double>25.40</double>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QLabel" name="labelRight">
+          <property name="text">
+           <string>&amp;Right:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="3">
+         <widget class="QDoubleSpinBox" name="spinRight">
+          <property name="decimals">
+           <number>2</number>
+          </property>
+          <property name="minimum">
+           <double>0.00</double>
+          </property>
+          <property name="maximum">
+           <double>999.00</double>
+          </property>
+          <property name="value">
+           <double>25.40</double>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="labelTop">
+          <property name="text">
+           <string>&amp;Top:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QDoubleSpinBox" name="spinTop">
+          <property name="decimals">
+           <number>2</number>
+          </property>
+          <property name="minimum">
+           <double>0.00</double>
+          </property>
+          <property name="maximum">
+           <double>999.00</double>
+          </property>
+          <property name="value">
+           <double>25.40</double>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QLabel" name="labelBottom">
+          <property name="text">
+           <string>&amp;Bottom:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="3">
+         <widget class="QDoubleSpinBox" name="spinBottom">
+          <property name="decimals">
+           <number>2</number>
+          </property>
+          <property name="minimum">
+           <double>0.00</double>
+          </property>
+          <property name="maximum">
+           <double>999.00</double>
+          </property>
+          <property name="value">
+           <double>25.40</double>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0" colspan="4">
+         <widget class="QCheckBox" name="checkFullPage">
+          <property name="text">
+           <string>Print to &amp;whole page (ignore margins)</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupPreview">
+     <property name="title">
+      <string>Preview</string>
+     </property>
+     <layout class="QVBoxLayout" name="previewLayout">
+      <item>
+       <widget class="QLabel" name="labelPreview">
+        <property name="minimumSize">
+         <size>
+          <width>200</width>
+          <height>260</height>
+         </size>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::Box</enum>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+        <property name="text">
+         <string>Page</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="labelDimensions">
+        <property name="text">
+         <string>-</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -7,9 +7,9 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-    app.setApplicationName("CodeEditorLite");
+    app.setApplicationName("Code Editor");
     app.setApplicationVersion("1.0.0");
-    app.setOrganizationName("CodeEditorLite");
+    app.setOrganizationName("WaveIn");
     
     // Set Fusion style
     app.setStyle(QStyleFactory::create("Fusion"));

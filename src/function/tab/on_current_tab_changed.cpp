@@ -6,4 +6,5 @@ void MainWindow::onCurrentTabChanged(int index)
     Q_UNUSED(index);
     updateWindowTitle();
     updateOpenTabsMenu();
+    updateFileTypeMenuChecked();
 }

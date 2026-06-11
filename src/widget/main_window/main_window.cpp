@@ -8,6 +8,7 @@
 #include "widget/ipc_message/ipc_message.h"
 #include "ipc/ipc_server.h"
 #include "project/project_manager.h"
+#include "util/recent_files_manager.h"
 #include <QVBoxLayout>
 #include <QDockWidget>
 
@@ -48,6 +49,11 @@ MainWindow::MainWindow(QWidget *parent) :
     
     setupConnections();
     populateFileTypeMenu();
+    populateRecentFilesMenu();
+    
+    // Connect recent files changed signal
+    connect(RecentFilesManager::instance(), &RecentFilesManager::recentFilesChanged,
+            this, &MainWindow::populateRecentFilesMenu);
 }
 
 MainWindow::~MainWindow()
@@ -121,6 +127,10 @@ void MainWindow::setupConnections()
         connect(ui->actionFileSaveAs, &QAction::triggered, this, &MainWindow::onFileSaveAs);
     if (ui->actionFileProperties)
         connect(ui->actionFileProperties, &QAction::triggered, this, &MainWindow::onFileProperties);
+    if (ui->actionFilePrint)
+        connect(ui->actionFilePrint, &QAction::triggered, this, &MainWindow::onFilePrint);
+    if (ui->actionFilePrintPreview)
+        connect(ui->actionFilePrintPreview, &QAction::triggered, this, &MainWindow::onFilePrintPreview);
     
     // Edit menu
     if (ui->actionEditUndo)
@@ -363,28 +373,158 @@ bool MainWindow::saveFileAs()
     return false;
 }
 
+QMap<QString, QString> MainWindow::getSupportedLexers() const
+{
+    // Return a map of display name -> lexer name
+    // Sorted alphabetically by display name
+    QMap<QString, QString> lexers;
+    
+    lexers["AVS"] = "avs";
+    lexers["Bash"] = "bash";
+    lexers["Batch"] = "batch";
+    lexers["C#"] = "csharp";
+    lexers["C/C++"] = "cpp";
+    lexers["CMake"] = "cmake";
+    lexers["CoffeeScript"] = "coffeescript";
+    lexers["CSS"] = "css";
+    lexers["D"] = "d";
+    lexers["Diff"] = "diff";
+    lexers["EDIFACT"] = "edifact";
+    lexers["Fortran"] = "fortran";
+    lexers["Fortran77"] = "fortran77";
+    lexers["HTML"] = "html";
+    lexers["IDL"] = "idl";
+    lexers["Intel Hex"] = "intelhex";
+    lexers["Java"] = "java";
+    lexers["JavaScript"] = "javascript";
+    lexers["JSON"] = "json";
+    lexers["Lua"] = "lua";
+    lexers["Makefile"] = "makefile";
+    lexers["Markdown"] = "markdown";
+    lexers["Matlab"] = "matlab";
+    lexers["None"] = "none";
+    lexers["Octave"] = "octave";
+    lexers["Pascal"] = "pascal";
+    lexers["Perl"] = "perl";
+    lexers["PO"] = "po";
+    lexers["PostScript"] = "postscript";
+    lexers["POV"] = "pov";
+    lexers["Properties"] = "properties";
+    lexers["Python"] = "python";
+    lexers["Ruby"] = "ruby";
+    lexers["Spice"] = "spice";
+    lexers["SQL"] = "sql";
+    lexers["TCL"] = "tcl";
+    lexers["TeX"] = "tex";
+    lexers["VHDL"] = "vhdl";
+    lexers["Verilog"] = "verilog";
+    lexers["XML"] = "xml";
+    lexers["YAML"] = "yaml";
+    
+    return lexers;
+}
+
 void MainWindow::populateFileTypeMenu()
 {
     // Clear existing items
     ui->menuFileType->clear();
+    m_lexerActions.clear();
     
-    // Add file type actions
-    QStringList fileTypes = {
-        "C/C++ (*.cpp *.h *.hpp *.cxx)",
-        "Python (*.py)",
-        "HTML (*.html *.htm)",
-        "JavaScript (*.js)",
-        "JSON (*.json)",
-        "XML (*.xml)",
-        "SQL (*.sql)",
-        "Lua (*.lua)",
-        "Shell (*.sh *.bash)"
-    };
+    // Get all supported lexers
+    QMap<QString, QString> lexers = getSupportedLexers();
     
-    for (const QString &type : fileTypes) {
-        QAction *action = new QAction(type, this);
-        ui->menuFileType->addAction(action);
+    // Group by first letter: A-E, F-J, K-O, P-T, U-Z
+    QStringList groups;
+    groups << "A-E" << "F-J" << "K-O" << "P-T" << "U-Z";
+    
+    // Create submenus for each group
+    QMap<QString, QMenu*> groupMenus;
+    for (const QString &group : groups) {
+        QMenu *menu = new QMenu(group, this);
+        groupMenus[group] = menu;
     }
+    
+    // Add lexer actions to appropriate group
+    for (auto it = lexers.constBegin(); it != lexers.constEnd(); ++it) {
+        QString displayName = it.key();
+        QString lexerName = it.value();
+        
+        // Determine which group this lexer belongs to
+        QChar firstChar = displayName.at(0).toUpper();
+        QString groupName;
+        
+        if (firstChar >= 'A' && firstChar <= 'E') {
+            groupName = "A-E";
+        } else if (firstChar >= 'F' && firstChar <= 'J') {
+            groupName = "F-J";
+        } else if (firstChar >= 'K' && firstChar <= 'O') {
+            groupName = "K-O";
+        } else if (firstChar >= 'P' && firstChar <= 'T') {
+            groupName = "P-T";
+        } else if (firstChar >= 'U' && firstChar <= 'Z') {
+            groupName = "U-Z";
+        } else {
+            groupName = "A-E"; // Default to first group
+        }
+        
+        // Create action
+        QAction *action = new QAction(displayName, this);
+        action->setCheckable(true);
+        action->setChecked(false);
+        
+        // Connect to slot
+        connect(action, &QAction::triggered, this, [this, lexerName]() {
+            onFileTypeChanged(lexerName);
+        });
+        
+        // Store action for later reference
+        m_lexerActions[lexerName] = action;
+        
+        // Add to appropriate submenu
+        groupMenus[groupName]->addAction(action);
+    }
+    
+    // Add submenus to main Type menu
+    for (const QString &group : groups) {
+        ui->menuFileType->addMenu(groupMenus[group]);
+    }
+    
+    // Update checked state
+    updateFileTypeMenuChecked();
+}
+
+void MainWindow::updateFileTypeMenuChecked()
+{
+    // Get current editor
+    CodeEditor *editor = currentEditor();
+    QString currentLexer = "none";
+    
+    if (editor) {
+        currentLexer = editor->currentLexerName();
+    }
+    
+    // Update all actions
+    for (auto it = m_lexerActions.constBegin(); it != m_lexerActions.constEnd(); ++it) {
+        QString lexerName = it.key();
+        QAction *action = it.value();
+        
+        action->setChecked(lexerName == currentLexer);
+    }
+}
+
+void MainWindow::onFileTypeChanged(const QString &lexerName)
+{
+    // Get current editor
+    CodeEditor *editor = currentEditor();
+    if (!editor) {
+        return;
+    }
+    
+    // Set the lexer
+    editor->setTempLexer(lexerName);
+    
+    // Update checked state
+    updateFileTypeMenuChecked();
 }
 
 void MainWindow::updateOpenTabsMenu()
@@ -405,3 +545,44 @@ void MainWindow::updateOpenTabsMenu()
 }
 
 // Slot implementations are in src/function/main_window_functions.cpp
+
+void MainWindow::populateRecentFilesMenu()
+{
+    ui->menuFileRecent->clear();
+    
+    QStringList recentFiles = RecentFilesManager::instance()->recentFiles();
+    
+    if (recentFiles.isEmpty()) {
+        QAction *action = new QAction("No recent files", this);
+        action->setEnabled(false);
+        ui->menuFileRecent->addAction(action);
+        return;
+    }
+    
+    int index = 1;
+    for (const QString &filePath : recentFiles) {
+        QString displayText = QString("%1. %2").arg(index).arg(QFileInfo(filePath).fileName());
+        QAction *action = new QAction(displayText, this);
+        
+        connect(action, &QAction::triggered, this, [this, filePath]() {
+            // Handle opening the recent file
+            CodeEditor *editor = createNewEditor(filePath);
+            if (editor) {
+                // Add to recent files (to update timestamp)
+                RecentFilesManager::instance()->addFile(filePath);
+            }
+        });
+        
+        ui->menuFileRecent->addAction(action);
+        index++;
+    }
+    
+    // Add separator and clear option
+    ui->menuFileRecent->addSeparator();
+    
+    QAction *clearAction = new QAction("Clear Recent", this);
+    connect(clearAction, &QAction::triggered, this, []() {
+        RecentFilesManager::instance()->clear();
+    });
+    ui->menuFileRecent->addAction(clearAction);
+}

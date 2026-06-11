@@ -1,5 +1,6 @@
 #include "main.h"
 #include "widget/main_window/main_window.h"
+#include "util/recent_files_manager.h"
 
 void MainWindow::onFileOpen()
 {
@@ -8,5 +9,6 @@ void MainWindow::onFileOpen()
     
     if (!filePath.isEmpty()) {
         createNewEditor(filePath);
+        RecentFilesManager::instance()->addFile(filePath);
     }
 }

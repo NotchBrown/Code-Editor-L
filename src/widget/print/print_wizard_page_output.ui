@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PrintWizardPageOutput</class>
+ <widget class="QWizardPage" name="PrintWizardPageOutput">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>600</width>
+    <height>450</height>
+   </rect>
+  </property>
+  <property name="title">
+   <string>Output Options</string>
+  </property>
+  <property name="subTitle">
+   <string>Choose output format, copies, and other printing options</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="leftMargin">
+    <number>9</number>
+   </property>
+   <property name="topMargin">
+    <number>9</number>
+   </property>
+   <property name="rightMargin">
+    <number>9</number>
+   </property>
+   <property name="bottomMargin">
+    <number>9</number>
+   </property>
+   <item>
+    <widget class="QGroupBox" name="groupOutput">
+     <property name="title">
+      <string>Output</string>
+     </property>
+     <layout class="QGridLayout" name="gridOutput">
+      <item row="0" column="0">
+       <widget class="QLabel" name="labelFormat">
+        <property name="text">
+         <string>&amp;Format:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="comboOutputFormat">
+        <item>
+         <property name="text">
+          <string>Printer (Native)</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>PDF Document</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="labelFile">
+        <property name="text">
+         <string>&amp;File:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="editOutputFile"/>
+      </item>
+      <item row="1" column="2">
+       <widget class="QPushButton" name="btnBrowse">
+        <property name="text">
+         <string>&amp;Browse...</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupCopies">
+     <property name="title">
+      <string>Copies</string>
+     </property>
+     <layout class="QGridLayout" name="gridCopies">
+      <item row="0" column="0">
+       <widget class="QLabel" name="labelCopies">
+        <property name="text">
+         <string>Number of &amp;copies:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QSpinBox" name="spinCopies">
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>999</number>
+        </property>
+        <property name="value">
+         <number>1</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" colspan="2">
+       <widget class="QCheckBox" name="checkCollate">
+        <property name="text">
+         <string>&amp;Collate copies</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupDuplex">
+     <property name="title">
+      <string>Double-Sided Printing</string>
+     </property>
+     <layout class="QGridLayout" name="gridDuplex">
+      <item row="0" column="0">
+       <widget class="QLabel" name="labelDuplex">
+        <property name="text">
+         <string>&amp;Mode:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="comboDuplex">
+        <item>
+         <property name="text">
+          <string>Single-sided (None)</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Long side (DuplexAuto)</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Short side (DuplexLongSide)</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Manual (DuplexShortSide)</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupOrder">
+     <property name="title">
+      <string>Page Order</string>
+     </property>
+     <layout class="QGridLayout" name="gridOrder">
+      <item row="0" column="0">
+       <widget class="QLabel" name="labelOrder">
+        <property name="text">
+         <string>&amp;Order:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="comboPageOrder">
+        <item>
+         <property name="text">
+          <string>First Page First</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Last Page First</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -112,7 +112,7 @@ if (-not (Test-Path $MakePath)) {
     exit 1
 }
 
-& $MakePath -f "Makefile.$BuildType"
+& $MakePath -f "Makefile.$BuildType" -j
 
 if ($LASTEXITCODE -ne 0) {
     Write-Host "Error: mingw32-make failed" -ForegroundColor Red

@@ -4,6 +4,7 @@
 #include "main.h"
 #include <Qsci/qsciscintilla.h>
 #include <Qsci/qscilexer.h>
+#include <Qsci/qsciprinter.h>
 
 class CodeEditor : public QsciScintilla
 {
@@ -20,6 +21,8 @@ public:
     bool saveFile(const QString &filePath = QString());
 
     void setLexerByName(const QString &name);
+    QString currentLexerName() const;
+    void setTempLexer(const QString &name);
 
     QString selectedText() const;
     void insertText(const QString &text);
@@ -59,6 +62,8 @@ private:
 
     QString m_filePath;
     QsciLexer *m_lexer;
+    QString m_tempLexerName;
+    QString m_currentLexerName; // Current lexer name for tracking
     QMap<QString, QString> m_extensionToLexer;
 };
 

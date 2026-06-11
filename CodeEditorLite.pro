@@ -1,7 +1,7 @@
 # CodeEditorLite Project
 # Qt5.14.2 qmake project file
 
-QT       += core gui network
+QT       += core gui network printsupport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -25,6 +25,7 @@ SOURCES += \
     src/widget/segment/segment.cpp \
     src/widget/errors_and_warnings/errors_and_warnings.cpp \
     src/widget/ipc_message/ipc_message.cpp \
+    src/widget/properties/properties.cpp \
     src/ipc/ipc_server.cpp \
     src/project/project_manager.cpp \
     src/function/start/on_start_new_instance.cpp \
@@ -34,6 +35,7 @@ SOURCES += \
     src/function/file/on_file_save.cpp \
     src/function/file/on_file_save_as.cpp \
     src/function/file/on_file_properties.cpp \
+    src/function/file/on_file_print.cpp \
     src/function/edit/on_edit_undo.cpp \
     src/function/edit/on_edit_redo.cpp \
     src/function/edit/on_edit_cut.cpp \
@@ -78,7 +80,14 @@ SOURCES += \
     src/function/tab/on_tab_close_requested.cpp \
     src/function/tab/on_current_tab_changed.cpp \
     src/function/editor/on_editor_modification_changed.cpp \
-    src/function/editor/on_editor_cursor_position_changed.cpp
+    src/function/editor/on_editor_cursor_position_changed.cpp \
+    src/util/recent_files_manager.cpp \
+    src/widget/print/print_wizard.cpp \
+    src/widget/print/print_wizard_page_printer.cpp \
+    src/widget/print/print_wizard_page_page_setup.cpp \
+    src/widget/print/print_wizard_page_output.cpp \
+    src/widget/print/print_wizard_page_layout.cpp \
+    src/widget/print/print_wizard_page_preview.cpp
 
 # Header files
 HEADERS += \
@@ -88,8 +97,16 @@ HEADERS += \
     inc/widget/segment/segment.h \
     inc/widget/errors_and_warnings/errors_and_warnings.h \
     inc/widget/ipc_message/ipc_message.h \
+    inc/widget/properties/properties.h \
     inc/ipc/ipc_server.h \
-    inc/project/project_manager.h
+    inc/project/project_manager.h \
+    inc/util/recent_files_manager.h \
+    inc/widget/print/print_wizard.h \
+    inc/widget/print/print_wizard_page_printer.h \
+    inc/widget/print/print_wizard_page_page_setup.h \
+    inc/widget/print/print_wizard_page_output.h \
+    inc/widget/print/print_wizard_page_layout.h \
+    inc/widget/print/print_wizard_page_preview.h
 
 # UI files
 FORMS += \
@@ -98,7 +115,14 @@ FORMS += \
     src/widget/navigator/navigator.ui \
     src/widget/segment/segment.ui \
     src/widget/errors_and_warnings/errors_and_warnings.ui \
-    src/widget/ipc_message/ipc_message.ui
+    src/widget/ipc_message/ipc_message.ui \
+    src/widget/properties/properties.ui \
+    src/widget/print/print_wizard.ui \
+    src/widget/print/print_wizard_page_printer.ui \
+    src/widget/print/print_wizard_page_page_setup.ui \
+    src/widget/print/print_wizard_page_output.ui \
+    src/widget/print/print_wizard_page_layout.ui \
+    src/widget/print/print_wizard_page_preview.ui
 
 # Include directories
 INCLUDEPATH += \
@@ -110,8 +134,11 @@ INCLUDEPATH += \
     inc/widget/segment \
     inc/widget/errors_and_warnings \
     inc/widget/ipc_message \
+    inc/widget/properties \
     inc/ipc \
     inc/project \
+    inc/util \
+    inc/widget/print \
     src \
     src/widget \
     src/widget/main_window \
@@ -120,8 +147,11 @@ INCLUDEPATH += \
     src/widget/segment \
     src/widget/errors_and_warnings \
     src/widget/ipc_message \
+    src/widget/properties \
     src/ipc \
-    src/project
+    src/project \
+    src/util \
+    src/widget/print
 
 # Output directories
 DESTDIR = bin
