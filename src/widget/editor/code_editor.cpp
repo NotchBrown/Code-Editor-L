@@ -61,7 +61,8 @@ CodeEditor::CodeEditor(QWidget *parent)
       m_lexer(nullptr),
       m_tempLexerName(""),
       m_currentLexerName("cpp"),
-      m_currentEncoding("UTF-8")
+      m_currentEncoding("UTF-8"),
+      m_manualLexerSet(false)
 {
     m_extensionToLexer[".cpp"] = "cpp";
     m_extensionToLexer[".h"] = "cpp";
@@ -261,6 +262,12 @@ void CodeEditor::updateLexerFromFile()
         return;
     }
     
+    // If user has manually set the lexer, don't override
+    if (m_manualLexerSet && !m_tempLexerName.isEmpty()) {
+        setLexerByName(m_tempLexerName);
+        return;
+    }
+    
     QFileInfo fileInfo(m_filePath);
     QString extension = fileInfo.suffix();
     
@@ -431,6 +438,7 @@ QString CodeEditor::currentLexerName() const
 void CodeEditor::setTempLexer(const QString &name)
 {
     m_tempLexerName = name;
+    m_manualLexerSet = true; // Mark that user has manually set the lexer
     updateLexerFromFile();
 }
 

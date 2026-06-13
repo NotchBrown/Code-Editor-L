@@ -12,14 +12,15 @@ TEMPLATE = app
 VERSION = 1.0.0
 
 # QScintilla configuration
-QSCINTILLA_PATH = $$PWD/lib/QScintilla/src
-LIBS += -L$$QSCINTILLA_PATH/release -lqscintilla2_qt5
-INCLUDEPATH += $$QSCINTILLA_PATH/Qsci
+QSCINTILLA_PATH = $$PWD/lib/qscintilla_mingw64
+LIBS += -L$$QSCINTILLA_PATH/lib -lqscintilla2_qt5
+INCLUDEPATH += $$QSCINTILLA_PATH/include/Qsci
 
 # Source files
 SOURCES += \
     src/main.cpp \
     src/widget/main_window/main_window.cpp \
+    src/widget/main_window/status_bar.cpp \
     src/widget/editor/code_editor.cpp \
     src/widget/navigator/navigator.cpp \
     src/widget/segment/segment.cpp \
@@ -93,6 +94,7 @@ SOURCES += \
 # Header files
 HEADERS += \
     inc/widget/main_window/main_window.h \
+    inc/widget/main_window/status_bar.h \
     inc/widget/editor/code_editor.h \
     inc/widget/navigator/navigator.h \
     inc/widget/segment/segment.h \

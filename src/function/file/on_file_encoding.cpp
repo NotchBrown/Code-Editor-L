@@ -8,7 +8,6 @@ void MainWindow::onFileEncoding(const QString &encoding)
 {
     CodeEditor *editor = currentEditor();
     if (!editor) {
-        QMessageBox::warning(this, "Encoding", "No active editor.");
         return;
     }
     
@@ -17,26 +16,9 @@ void MainWindow::onFileEncoding(const QString &encoding)
         return;
     }
     
-    if (editor->isModified()) {
-        QMessageBox::StandardButton reply = QMessageBox::question(this, "Encoding",
-            "The document has been modified. Do you want to save changes before changing encoding?",
-            QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
-        
-        if (reply == QMessageBox::Cancel) {
-            return;
-        } else if (reply == QMessageBox::Save) {
-            if (!editor->saveFile()) {
-                QMessageBox::warning(this, "Encoding", "Failed to save file.");
-                return;
-            }
-        }
-    }
-    
+    // Change encoding without prompting
     if (editor->reloadWithEncoding(encoding)) {
-        QMessageBox::information(this, "Encoding", 
-            QString("Encoding changed to %1").arg(encoding));
-    } else {
-        QMessageBox::warning(this, "Encoding", "Failed to change encoding.");
+        updateEncodingMenuChecked();
     }
 }
 

@@ -279,50 +279,80 @@
    <property name="text">
     <string>UTF-8</string>
    </property>
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="actionEncodingUTF8BOM">
    <property name="text">
     <string>UTF-8 with BOM</string>
+   </property>
+   <property name="checkable">
+    <bool>true</bool>
    </property>
   </action>
   <action name="actionEncodingGBK">
    <property name="text">
     <string>GBK</string>
    </property>
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="actionEncodingGB2312">
    <property name="text">
     <string>GB2312</string>
+   </property>
+   <property name="checkable">
+    <bool>true</bool>
    </property>
   </action>
   <action name="actionEncodingGB18030">
    <property name="text">
     <string>GB18030</string>
    </property>
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="actionEncodingBig5">
    <property name="text">
     <string>Big5</string>
+   </property>
+   <property name="checkable">
+    <bool>true</bool>
    </property>
   </action>
   <action name="actionEncodingASCII">
    <property name="text">
     <string>ASCII</string>
    </property>
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="actionEncodingISO88591">
    <property name="text">
     <string>ISO-8859-1</string>
+   </property>
+   <property name="checkable">
+    <bool>true</bool>
    </property>
   </action>
   <action name="actionEncodingUTF16">
    <property name="text">
     <string>UTF-16</string>
    </property>
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="actionEncodingUTF16LE">
    <property name="text">
     <string>UTF-16 LE</string>
+   </property>
+   <property name="checkable">
+    <bool>true</bool>
    </property>
   </action>
   <action name="actionFilePrint">

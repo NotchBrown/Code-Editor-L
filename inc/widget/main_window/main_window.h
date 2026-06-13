@@ -10,6 +10,7 @@ class Navigator;
 class Segment;
 class ErrorsAndWarnings;
 class IPCMessage;
+class StatusBar;
 
 namespace Ui {
 class MainWindow;
@@ -50,6 +51,7 @@ private slots:
     void onEncodingISO88591();
     void onEncodingUTF16();
     void onEncodingUTF16LE();
+    void updateEncodingMenuChecked();
     
     // Edit menu
     void onEditUndo();
@@ -145,6 +147,7 @@ private:
     
     QMap<QString, QPair<CodeEditor*, int>> m_fileToTabs;
     QMap<QString, QAction*> m_lexerActions; // lexer name -> action mapping
+    StatusBar *m_statusBar;
 };
 
 #endif // MAIN_WINDOW_H

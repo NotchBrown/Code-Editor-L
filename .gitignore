@@ -44,3 +44,5 @@ desktop.ini
 lib/QScintilla/src/build/
 lib/QScintilla/src/*.o
 lib/QScintilla/src/Makefile*
+
+.VSCodeCounter

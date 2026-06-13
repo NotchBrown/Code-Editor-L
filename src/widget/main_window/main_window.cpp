@@ -6,6 +6,7 @@
 #include "widget/segment/segment.h"
 #include "widget/errors_and_warnings/errors_and_warnings.h"
 #include "widget/ipc_message/ipc_message.h"
+#include "widget/main_window/status_bar.h"
 #include "ipc/ipc_server.h"
 #include "project/project_manager.h"
 #include "util/recent_files_manager.h"
@@ -16,12 +17,17 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     m_ipcServer(nullptr),
-    m_projectManager(nullptr)
+    m_projectManager(nullptr),
+    m_statusBar(nullptr)
 {
     ui->setupUi(this);
     
     // 初始化项目
     m_projectManager = new ProjectManager(this);
+    
+    // 创建自定义状态栏
+    m_statusBar = new StatusBar(this);
+    setStatusBar(m_statusBar);
     
     // 设置 QTabWidget 为文档模式
     QTabWidget *tabWidget = new QTabWidget(this);
@@ -49,6 +55,7 @@ MainWindow::MainWindow(QWidget *parent) :
     
     setupConnections();
     populateFileTypeMenu();
+    updateEncodingMenuChecked();
     populateRecentFilesMenu();
     
     // Connect recent files changed signal
@@ -261,17 +268,32 @@ CodeEditor* MainWindow::createNewEditor(const QString &filePath)
     });
     connect(editor, &CodeEditor::cursorPositionChanged, this, [this, editor](int line, int col) {
         emit editor_cursorPositionChanged(editor, line, col);
+        // Update status bar cursor position
+        if (m_statusBar) {
+            m_statusBar->setCursorPosition(line, col);
+        }
     });
     
     int index = -1;
     if (filePath.isEmpty()) {
         // New untitled file
         index = tabWidget->addTab(editor, tr("Untitled"));
+        if (m_statusBar) {
+            m_statusBar->setFilePath("");
+            m_statusBar->setFileType("Plain Text");
+            m_statusBar->setEncoding("UTF-8");
+        }
     } else {
         // Open existing file
         if (editor->loadFile(filePath)) {
             index = tabWidget->addTab(editor, QFileInfo(filePath).fileName());
             m_fileToTabs[filePath] = QPair<CodeEditor*, int>(editor, index);
+            // Update status bar
+            if (m_statusBar) {
+                m_statusBar->setFilePath(filePath);
+                m_statusBar->setFileType(editor->currentLexerName());
+                m_statusBar->setEncoding(editor->currentEncoding());
+            }
         } else {
             delete editor;
             return nullptr;
@@ -280,6 +302,7 @@ CodeEditor* MainWindow::createNewEditor(const QString &filePath)
     
     tabWidget->setCurrentIndex(index);
     updateWindowTitle();
+    updateEncodingMenuChecked();
     
     return editor;
 }
@@ -530,6 +553,39 @@ void MainWindow::updateFileTypeMenuChecked()
         
         action->setChecked(lexerName == currentLexer);
     }
+}
+
+void MainWindow::updateEncodingMenuChecked()
+{
+    // Get current editor
+    CodeEditor *editor = currentEditor();
+    QString currentEncoding = "UTF-8";
+    
+    if (editor) {
+        currentEncoding = editor->currentEncoding();
+    }
+    
+    // Update all encoding actions
+    if (ui->actionEncodingUTF8)
+        ui->actionEncodingUTF8->setChecked(currentEncoding == "UTF-8");
+    if (ui->actionEncodingUTF8BOM)
+        ui->actionEncodingUTF8BOM->setChecked(currentEncoding == "UTF-8 BOM");
+    if (ui->actionEncodingGBK)
+        ui->actionEncodingGBK->setChecked(currentEncoding == "GBK");
+    if (ui->actionEncodingGB2312)
+        ui->actionEncodingGB2312->setChecked(currentEncoding == "GB2312");
+    if (ui->actionEncodingGB18030)
+        ui->actionEncodingGB18030->setChecked(currentEncoding == "GB18030");
+    if (ui->actionEncodingBig5)
+        ui->actionEncodingBig5->setChecked(currentEncoding == "Big5");
+    if (ui->actionEncodingASCII)
+        ui->actionEncodingASCII->setChecked(currentEncoding == "ASCII");
+    if (ui->actionEncodingISO88591)
+        ui->actionEncodingISO88591->setChecked(currentEncoding == "ISO-8859-1");
+    if (ui->actionEncodingUTF16)
+        ui->actionEncodingUTF16->setChecked(currentEncoding == "UTF-16");
+    if (ui->actionEncodingUTF16LE)
+        ui->actionEncodingUTF16LE->setChecked(currentEncoding == "UTF-16LE");
 }
 
 void MainWindow::onFileTypeChanged(const QString &lexerName)

@@ -1,3 +1,9 @@
 {
-    "qt-ui.customWidgetsDesignerExePath": "D:\\Qt5\\Qt5.14.2\\5.14.2\\mingw73_64\\bin\\designer.exe"
+    "qt-ui.customWidgetsDesignerExePath": "D:\\Qt5\\Qt5.14.2\\5.14.2\\mingw73_64\\bin\\designer.exe",
+    "VSCodeCounter.exclude": [
+        "**/.gitignore",
+        "**/.vscode/**",
+        "**/node_modules/**",
+        "**/lib/**"
+    ]
 }

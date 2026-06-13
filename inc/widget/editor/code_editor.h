@@ -73,6 +73,7 @@ private:
     QString m_currentLexerName; // Current lexer name for tracking
     QMap<QString, QString> m_extensionToLexer;
     QString m_currentEncoding; // Current file encoding
+    bool m_manualLexerSet; // Whether user has manually set the lexer
 };
 
 #endif // CODE_EDITOR_H
