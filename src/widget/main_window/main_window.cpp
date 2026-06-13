@@ -129,8 +129,6 @@ void MainWindow::setupConnections()
         connect(ui->actionFileProperties, &QAction::triggered, this, &MainWindow::onFileProperties);
     if (ui->actionFilePrint)
         connect(ui->actionFilePrint, &QAction::triggered, this, &MainWindow::onFilePrint);
-    if (ui->actionFilePrintPreview)
-        connect(ui->actionFilePrintPreview, &QAction::triggered, this, &MainWindow::onFilePrintPreview);
     
     // Edit menu
     if (ui->actionEditUndo)

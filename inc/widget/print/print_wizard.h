@@ -50,7 +50,7 @@ protected:
 
 private slots:
     void onCurrentIdChanged(int id);
-    void onPrintClicked();
+    void onPaintRequested(QPrinter *printer);
 
 private:
     void setupPages();

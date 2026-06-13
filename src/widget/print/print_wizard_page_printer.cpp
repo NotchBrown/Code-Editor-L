@@ -2,8 +2,6 @@
 #include "ui_print_wizard_page_printer.h"
 
 #include <QPrinterInfo>
-#include <QPageLayout>
-#include <QDebug>
 
 PrintWizardPagePrinter::PrintWizardPagePrinter(QWidget *parent)
     : QWizardPage(parent),
@@ -15,7 +13,7 @@ PrintWizardPagePrinter::PrintWizardPagePrinter(QWidget *parent)
 
     // Default settings
     m_defaultPrinter = QPrinterInfo::defaultPrinter().printerName();
-    if (m_defaultPrinter.isEmpty() && QPrinterInfo::availablePrinters().size() > 0) {
+    if (m_defaultPrinter.isEmpty() && !QPrinterInfo::availablePrinters().isEmpty()) {
         m_defaultPrinter = QPrinterInfo::availablePrinters().first().printerName();
     }
     if (!m_defaultPrinter.isEmpty()) {
@@ -46,22 +44,18 @@ PrintWizardPagePrinter::~PrintWizardPagePrinter()
 void PrintWizardPagePrinter::populatePrinters()
 {
     ui->comboPrinterName->clear();
-    foreach (const QPrinterInfo &info, QPrinterInfo::availablePrinters()) {
+    QList<QPrinterInfo> printers = QPrinterInfo::availablePrinters();
+    foreach (const QPrinterInfo &info, printers) {
         ui->comboPrinterName->addItem(info.printerName());
     }
-    // Add a "Save as PDF" entry for convenience on systems that may not list it
-    if (ui->comboPrinterName->findText("Print to PDF") < 0) {
-        ui->comboPrinterName->addItem("Print to PDF");
+    // Add PDF option if no printers available
+    if (ui->comboPrinterName->count() == 0) {
+        ui->comboPrinterName->addItem("Microsoft Print to PDF");
+        ui->comboPrinterName->addItem("Save as PDF");
     }
 }
 
 void PrintWizardPagePrinter::onPrinterSelectionChanged()
-{
-    updatePrinterInfo();
-    emit completeChanged();
-}
-
-void PrintWizardPagePrinter::refreshPrinterInfo()
 {
     updatePrinterInfo();
 }
@@ -99,9 +93,9 @@ QString PrintWizardPagePrinter::printerName() const
 QPrinter::PrinterMode PrintWizardPagePrinter::printerMode() const
 {
     switch (ui->comboPrinterMode->currentIndex()) {
-        case 0:  return QPrinter::ScreenResolution;
-        case 1:  return QPrinter::PrinterResolution;
-        case 2:  return QPrinter::HighResolution;
+        case 0: return QPrinter::ScreenResolution;
+        case 1: return QPrinter::PrinterResolution;
+        case 2: return QPrinter::HighResolution;
         default: return QPrinter::ScreenResolution;
     }
 }
@@ -117,22 +111,14 @@ bool PrintWizardPagePrinter::isFontEmbeddingEnabled() const
     return ui->checkFontEmbedding->isChecked();
 }
 
-void PrintWizardPagePrinter::setPrinterName(const QString &name)
-{
-    int index = ui->comboPrinterName->findText(name);
-    if (index >= 0) {
-        ui->comboPrinterName->setCurrentIndex(index);
-    }
-    updatePrinterInfo();
-}
-
 void PrintWizardPagePrinter::setPrinterMode(QPrinter::PrinterMode mode)
 {
     int index = 0;
     switch (mode) {
-        case QPrinter::ScreenResolution:   index = 0; break;
-        case QPrinter::PrinterResolution:  index = 1; break;
-        case QPrinter::HighResolution:     index = 2; break;
+        case QPrinter::ScreenResolution: index = 0; break;
+        case QPrinter::PrinterResolution: index = 1; break;
+        case QPrinter::HighResolution: index = 2; break;
+        default: index = 0;
     }
     ui->comboPrinterMode->setCurrentIndex(index);
 }
@@ -142,9 +128,9 @@ void PrintWizardPagePrinter::setColorMode(QPrinter::ColorMode mode)
     ui->comboColorMode->setCurrentIndex(mode == QPrinter::Color ? 0 : 1);
 }
 
-void PrintWizardPagePrinter::setFontEmbeddingEnabled(bool enabled)
+void PrintWizardPagePrinter::refreshPrinterInfo()
 {
-    ui->checkFontEmbedding->setChecked(enabled);
+    updatePrinterInfo();
 }
 
 bool PrintWizardPagePrinter::isComplete() const

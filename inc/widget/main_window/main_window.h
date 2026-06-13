@@ -37,7 +37,6 @@ private slots:
     void onFileSaveAs();
     void onFileProperties();
     void onFilePrint();
-    void onFilePrintPreview();
     
     // Edit menu
     void onEditUndo();

@@ -105,7 +105,6 @@
     <addaction name="actionFileProperties"/>
     <addaction name="separator"/>
     <addaction name="actionFilePrint"/>
-    <addaction name="actionFilePrintPreview"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="tearOffEnabled">
@@ -262,11 +261,6 @@
   <action name="actionFilePrint">
    <property name="text">
     <string>&amp;Print...</string>
-   </property>
-  </action>
-  <action name="actionFilePrintPreview">
-   <property name="text">
-    <string>Print Pre&amp;view...</string>
    </property>
   </action>
   <action name="actionEditUndo">

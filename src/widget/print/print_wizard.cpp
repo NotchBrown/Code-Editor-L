@@ -7,32 +7,33 @@
 #include "widget/print/print_wizard_page_preview.h"
 #include "widget/editor/code_editor.h"
 
-#include <QPrinterInfo>
-#include <QPageSize>
-#include <QPageLayout>
 #include <QPrintPreviewWidget>
-#include <QPainter>
 #include <QFileInfo>
+#include <QDebug>
 
 PrintWizard::PrintWizard(CodeEditor *editor, QWidget *parent)
     : QWizard(parent),
       ui(new Ui::PrintWizard),
       m_editor(editor),
-      m_printer(nullptr)
+      m_printer(nullptr),
+      m_pagePrinter(nullptr),
+      m_pagePageSetup(nullptr),
+      m_pageOutput(nullptr),
+      m_pageLayout(nullptr),
+      m_pagePreview(nullptr)
 {
     ui->setupUi(this);
 
-    // Set wizard buttons text
+    // Set wizard style to classic (no ? button)
+    setWizardStyle(QWizard::ClassicStyle);
     setButtonText(QWizard::NextButton, tr("&Next >"));
     setButtonText(QWizard::BackButton, tr("< &Back"));
     setButtonText(QWizard::FinishButton, tr("&Print"));
     setButtonText(QWizard::CancelButton, tr("&Cancel"));
-    setButtonText(QWizard::HelpButton, tr("&Help"));
 
     setOption(QWizard::NoBackButtonOnStartPage, true);
-    setOption(QWizard::HaveHelpButton, true);
 
-    // Setup default printer based on editor info
+    // Setup printer
     QPrinter::PrinterMode mode = QPrinter::HighResolution;
     m_printer = new QsciPrinter(mode);
     if (m_editor) {
@@ -41,7 +42,7 @@ PrintWizard::PrintWizard(CodeEditor *editor, QWidget *parent)
             : QFileInfo(m_editor->filePath()).fileName();
         m_printer->setDocName(docName);
     }
-    m_printer->setCreator("Code Editor by WaveIn");
+    m_printer->setCreator("Code Editor Lite");
 
     // Create and add pages
     m_pagePrinter = new PrintWizardPagePrinter(this);
@@ -59,7 +60,10 @@ PrintWizard::PrintWizard(CodeEditor *editor, QWidget *parent)
     // Set editor info on layout page
     if (m_editor) {
         int totalLines = m_editor->lines();
-        int currentLine = m_editor->lines() > 0 ? m_editor->SendScintilla(QsciScintilla::SCI_LINEFROMPOSITION, m_editor->SendScintilla(QsciScintilla::SCI_GETCURRENTPOS)) : 0;
+        int currentLine = m_editor->lines() > 0 
+            ? m_editor->SendScintilla(QsciScintilla::SCI_LINEFROMPOSITION, 
+                                     m_editor->SendScintilla(QsciScintilla::SCI_GETCURRENTPOS))
+            : 0;
         bool hasSel = m_editor->hasSelectedText();
         int selStart = -1, selEnd = -1;
         if (hasSel) {
@@ -74,36 +78,11 @@ PrintWizard::PrintWizard(CodeEditor *editor, QWidget *parent)
     // Load page setup from printer default
     m_pagePageSetup->loadFromPrinter(m_printer);
 
-    // Connect signals
-    connect(this, &QWizard::currentIdChanged, this, &PrintWizard::onCurrentIdChanged);
-
-    // Setup print preview connections
-    if (m_pagePreview) {
-        QPrintPreviewWidget *pw = m_pagePreview->findChild<QPrintPreviewWidget*>();
-        if (pw) {
-            connect(pw, &QPrintPreviewWidget::paintRequested,
-                    this, [this](QPrinter *printer) {
-                        QsciPrinter *qsp = static_cast<QsciPrinter*>(printer);
-                        int from = m_pageLayout->fromLine();
-                        int to = m_pageLayout->toLine();
-                        if (m_pageLayout->printRangeType() == PrintWizard::AllPages) {
-                            from = -1;
-                            to = -1;
-                        } else if (m_pageLayout->printRangeType() == PrintWizard::CurrentPage) {
-                            from = m_pageLayout->fromLine();
-                            to = m_pageLayout->toLine();
-                        } else if (m_pageLayout->printRangeType() == PrintWizard::Selection) {
-                            from = m_pageLayout->fromLine();
-                            to = m_pageLayout->toLine();
-                        } else if (m_pageLayout->printRangeType() == PrintWizard::Range) {
-                            from = m_pageLayout->fromLine();
-                            to = m_pageLayout->toLine();
-                        }
-                        qsp->setMagnification(m_pageLayout->magnification());
-                        qsp->setWrapMode(m_pageLayout->wrapMode());
-                        qsp->printRange(m_editor, from, to);
-                    });
-        }
+    // Setup preview connection - use direct connection to avoid issues
+    QPrintPreviewWidget *pw = m_pagePreview->findChild<QPrintPreviewWidget*>("previewWidget");
+    if (pw) {
+        connect(pw, &QPrintPreviewWidget::paintRequested,
+                this, &PrintWizard::onPaintRequested);
     }
 
     setWindowTitle(tr("Print Wizard - %1").arg(m_editor
@@ -115,6 +94,37 @@ PrintWizard::PrintWizard(CodeEditor *editor, QWidget *parent)
 PrintWizard::~PrintWizard()
 {
     delete ui;
+}
+
+void PrintWizard::onPaintRequested(QPrinter *printer)
+{
+    if (!printer || !m_editor) return;
+    
+    QsciPrinter *qsp = dynamic_cast<QsciPrinter*>(printer);
+    if (!qsp) return;
+    
+    // Apply settings from layout page
+    qsp->setMagnification(m_pageLayout->magnification());
+    qsp->setWrapMode(m_pageLayout->wrapMode());
+    
+    // Handle print range
+    int from = -1;
+    int to = -1;
+    int rangeType = m_pageLayout->printRangeType();
+    
+    if (rangeType == CurrentPage) {
+        from = m_pageLayout->fromLine();
+        to = m_pageLayout->toLine();
+    } else if (rangeType == Selection) {
+        from = m_pageLayout->fromLine();
+        to = m_pageLayout->toLine();
+    } else if (rangeType == Range) {
+        from = m_pageLayout->fromLine();
+        to = m_pageLayout->toLine();
+    }
+    // AllPages: from = -1, to = -1
+    
+    qsp->printRange(m_editor, from, to);
 }
 
 void PrintWizard::changeEvent(QEvent *e)
@@ -129,29 +139,58 @@ void PrintWizard::changeEvent(QEvent *e)
     }
 }
 
-void PrintWizard::setupPages()
-{
-    // Already setup in constructor
-}
-
 void PrintWizard::onCurrentIdChanged(int id)
 {
-    // When entering preview page, update settings
+    // When entering preview page, apply settings and update preview
     if (id >= 0) {
         QWizardPage *page = this->page(id);
         if (page == m_pagePreview) {
             applyPrinterSettings();
-            m_pagePreview->updatePreview(m_printer);
-        } else if (page == m_pageLayout) {
-            // Already initialized
+            QPrintPreviewWidget *pw = m_pagePreview->findChild<QPrintPreviewWidget*>("previewWidget");
+            if (pw) {
+                pw->updatePreview();
+            }
         }
     }
 }
 
-void PrintWizard::onPrintClicked()
+QsciPrinter* PrintWizard::printer() const
 {
+    return m_printer;
+}
+
+int PrintWizard::fromLine() const
+{
+    if (!m_pageLayout) return -1;
+    int type = m_pageLayout->printRangeType();
+    if (type == AllPages) return -1;
+    return m_pageLayout->fromLine();
+}
+
+int PrintWizard::toLine() const
+{
+    if (!m_pageLayout) return -1;
+    int type = m_pageLayout->printRangeType();
+    if (type == AllPages) return -1;
+    return m_pageLayout->toLine();
+}
+
+int PrintWizard::printRangeType() const
+{
+    if (!m_pageLayout) return 0;
+    return m_pageLayout->printRangeType();
+}
+
+bool PrintWizard::performPrint()
+{
+    if (!m_editor || !m_printer) return false;
+
     applyPrinterSettings();
-    performPrint();
+
+    int from = fromLine();
+    int to = toLine();
+
+    return m_printer->printRange(m_editor, from, to) != 0;
 }
 
 void PrintWizard::applyPrinterSettings()
@@ -181,55 +220,4 @@ void PrintWizard::applyPrinterSettings()
     m_printer->setCollateCopies(m_pageOutput->collateCopies());
     m_printer->setDuplex(m_pageOutput->duplexMode());
     m_printer->setPageOrder(QPrinter::PageOrder(m_pageOutput->pageOrder()));
-
-    // Layout settings
-    m_printer->setMagnification(m_pageLayout->magnification());
-    m_printer->setWrapMode(m_pageLayout->wrapMode());
-    // printRangeType is handled by performPrint using from/to
-}
-
-void PrintWizard::updatePreview()
-{
-    if (m_pagePreview) {
-        m_pagePreview->updatePreview(m_printer);
-    }
-}
-
-QsciPrinter* PrintWizard::printer() const
-{
-    return m_printer;
-}
-
-int PrintWizard::fromLine() const
-{
-    if (!m_pageLayout) return -1;
-    int type = m_pageLayout->printRangeType();
-    if (type == PrintWizard::AllPages) return -1;
-    return m_pageLayout->fromLine();
-}
-
-int PrintWizard::toLine() const
-{
-    if (!m_pageLayout) return -1;
-    int type = m_pageLayout->printRangeType();
-    if (type == PrintWizard::AllPages) return -1;
-    return m_pageLayout->toLine();
-}
-
-int PrintWizard::printRangeType() const
-{
-    if (!m_pageLayout) return 0;
-    return m_pageLayout->printRangeType();
-}
-
-bool PrintWizard::performPrint()
-{
-    if (!m_editor || !m_printer) return false;
-
-    applyPrinterSettings();
-
-    int from = fromLine();
-    int to = toLine();
-
-    return m_printer->printRange(m_editor, from, to) != 0;
 }
