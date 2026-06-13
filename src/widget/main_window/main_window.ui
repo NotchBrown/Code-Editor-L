@@ -94,6 +94,22 @@
       <string>&amp;Type</string>
      </property>
     </widget>
+    <widget class="QMenu" name="menuFileEncoding">
+     <property name="title">
+      <string>&amp;Encoding</string>
+     </property>
+     <addaction name="actionEncodingUTF8"/>
+     <addaction name="actionEncodingUTF8BOM"/>
+     <addaction name="actionEncodingGBK"/>
+     <addaction name="actionEncodingGB2312"/>
+     <addaction name="actionEncodingGB18030"/>
+     <addaction name="actionEncodingBig5"/>
+     <addaction name="separator"/>
+     <addaction name="actionEncodingASCII"/>
+     <addaction name="actionEncodingISO88591"/>
+     <addaction name="actionEncodingUTF16"/>
+     <addaction name="actionEncodingUTF16LE"/>
+    </widget>
     <addaction name="actionFileNew"/>
     <addaction name="actionFileOpen"/>
     <addaction name="menuFileRecent"/>
@@ -102,6 +118,7 @@
     <addaction name="actionFileSaveAs"/>
     <addaction name="separator"/>
     <addaction name="menuFileType"/>
+    <addaction name="menuFileEncoding"/>
     <addaction name="actionFileProperties"/>
     <addaction name="separator"/>
     <addaction name="actionFilePrint"/>
@@ -256,6 +273,56 @@
   <action name="actionFileProperties">
    <property name="text">
     <string>Prope&amp;rties...</string>
+   </property>
+  </action>
+  <action name="actionEncodingUTF8">
+   <property name="text">
+    <string>UTF-8</string>
+   </property>
+  </action>
+  <action name="actionEncodingUTF8BOM">
+   <property name="text">
+    <string>UTF-8 with BOM</string>
+   </property>
+  </action>
+  <action name="actionEncodingGBK">
+   <property name="text">
+    <string>GBK</string>
+   </property>
+  </action>
+  <action name="actionEncodingGB2312">
+   <property name="text">
+    <string>GB2312</string>
+   </property>
+  </action>
+  <action name="actionEncodingGB18030">
+   <property name="text">
+    <string>GB18030</string>
+   </property>
+  </action>
+  <action name="actionEncodingBig5">
+   <property name="text">
+    <string>Big5</string>
+   </property>
+  </action>
+  <action name="actionEncodingASCII">
+   <property name="text">
+    <string>ASCII</string>
+   </property>
+  </action>
+  <action name="actionEncodingISO88591">
+   <property name="text">
+    <string>ISO-8859-1</string>
+   </property>
+  </action>
+  <action name="actionEncodingUTF16">
+   <property name="text">
+    <string>UTF-16</string>
+   </property>
+  </action>
+  <action name="actionEncodingUTF16LE">
+   <property name="text">
+    <string>UTF-16 LE</string>
    </property>
   </action>
   <action name="actionFilePrint">

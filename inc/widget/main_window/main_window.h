@@ -38,6 +38,19 @@ private slots:
     void onFileProperties();
     void onFilePrint();
     
+    // Encoding menu
+    void onFileEncoding(const QString &encoding);
+    void onEncodingUTF8();
+    void onEncodingUTF8BOM();
+    void onEncodingGBK();
+    void onEncodingGB2312();
+    void onEncodingGB18030();
+    void onEncodingBig5();
+    void onEncodingASCII();
+    void onEncodingISO88591();
+    void onEncodingUTF16();
+    void onEncodingUTF16LE();
+    
     // Edit menu
     void onEditUndo();
     void onEditRedo();

@@ -1,5 +1,6 @@
 #include "main.h"
 #include "widget/editor/code_editor.h"
+#include <QTextCodec>
 #include <Qsci/qscilexercpp.h>
 #include <Qsci/qscilexerpython.h>
 #include <Qsci/qscilexerhtml.h>
@@ -59,7 +60,8 @@ CodeEditor::CodeEditor(QWidget *parent)
       m_filePath(""),
       m_lexer(nullptr),
       m_tempLexerName(""),
-      m_currentLexerName("cpp")
+      m_currentLexerName("cpp"),
+      m_currentEncoding("UTF-8")
 {
     m_extensionToLexer[".cpp"] = "cpp";
     m_extensionToLexer[".h"] = "cpp";
@@ -201,18 +203,35 @@ void CodeEditor::setFilePath(const QString &path)
 bool CodeEditor::loadFile(const QString &filePath)
 {
     QFile file(filePath);
-    if (!file.open(QFile::ReadOnly | QFile::Text)) {
+    if (!file.open(QFile::ReadOnly)) {
         return false;
     }
     
-    QTextStream in(&file);
-    QString content = in.readAll();
+    QByteArray data = file.readAll();
     file.close();
+    
+    QString content = QString::fromUtf8(data);
+    
+    // Try to detect encoding if it's not valid UTF-8
+    if (content.contains(QChar(0xFFFD))) {
+        // Try other encodings
+        QTextCodec *codec = QTextCodec::codecForName("GBK");
+        if (codec) {
+            content = codec->toUnicode(data);
+            m_currentEncoding = "GBK";
+        } else {
+            content = QString::fromLocal8Bit(data);
+            m_currentEncoding = "System";
+        }
+    } else {
+        m_currentEncoding = "UTF-8";
+    }
     
     setFilePath(filePath);
     setText(content);
     setModified(false);
     
+    emit encodingChanged(m_currentEncoding);
     return true;
 }
 
@@ -227,19 +246,7 @@ bool CodeEditor::saveFile(const QString &filePath)
         return false;
     }
     
-    QFile file(path);
-    if (!file.open(QFile::WriteOnly | QFile::Text)) {
-        return false;
-    }
-    
-    QTextStream out(&file);
-    out << text();
-    file.close();
-    
-    setFilePath(path);
-    setModified(false);
-    
-    return true;
+    return saveWithEncoding(path, m_currentEncoding);
 }
 
 void CodeEditor::updateLexerFromFile()
@@ -622,4 +629,95 @@ void CodeEditor::deleteChar()
     } else {
         SendScintilla(SCI_DELETEBACK);
     }
+}
+
+// Encoding related functions
+QString CodeEditor::currentEncoding() const
+{
+    return m_currentEncoding;
+}
+
+void CodeEditor::setCurrentEncoding(const QString &encoding)
+{
+    m_currentEncoding = encoding;
+    emit encodingChanged(m_currentEncoding);
+}
+
+bool CodeEditor::reloadWithEncoding(const QString &encoding)
+{
+    if (m_filePath.isEmpty()) {
+        m_currentEncoding = encoding;
+        emit encodingChanged(m_currentEncoding);
+        return true;
+    }
+    
+    QFile file(m_filePath);
+    if (!file.open(QFile::ReadOnly)) {
+        return false;
+    }
+    
+    QByteArray data = file.readAll();
+    file.close();
+    
+    QString content;
+    if (encoding == "UTF-8") {
+        content = QString::fromUtf8(data);
+    } else if (encoding == "UTF-8 BOM") {
+        // Skip BOM if present
+        if (data.startsWith("\xEF\xBB\xBF")) {
+            content = QString::fromUtf8(data.mid(3));
+        } else {
+            content = QString::fromUtf8(data);
+        }
+    } else {
+        QTextCodec *codec = QTextCodec::codecForName(encoding.toLatin1());
+        if (codec) {
+            content = codec->toUnicode(data);
+        } else {
+            content = QString::fromLocal8Bit(data);
+        }
+    }
+    
+    QString oldText = text();
+    bool wasModified = isModified();
+    
+    setText(content);
+    m_currentEncoding = encoding;
+    setModified(wasModified);
+    
+    emit encodingChanged(m_currentEncoding);
+    return true;
+}
+
+bool CodeEditor::saveWithEncoding(const QString &filePath, const QString &encoding)
+{
+    QFile file(filePath);
+    if (!file.open(QFile::WriteOnly)) {
+        return false;
+    }
+    
+    QString content = text();
+    QByteArray data;
+    
+    if (encoding == "UTF-8") {
+        data = content.toUtf8();
+    } else if (encoding == "UTF-8 BOM") {
+        data = "\xEF\xBB\xBF" + content.toUtf8();
+    } else {
+        QTextCodec *codec = QTextCodec::codecForName(encoding.toLatin1());
+        if (codec) {
+            data = codec->fromUnicode(content);
+        } else {
+            data = content.toLocal8Bit();
+        }
+    }
+    
+    file.write(data);
+    file.close();
+    
+    setFilePath(filePath);
+    m_currentEncoding = encoding;
+    setModified(false);
+    
+    return true;
 }

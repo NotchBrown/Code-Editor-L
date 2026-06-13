@@ -19,6 +19,12 @@ public:
     
     bool loadFile(const QString &filePath);
     bool saveFile(const QString &filePath = QString());
+    
+    // Encoding support
+    QString currentEncoding() const;
+    void setCurrentEncoding(const QString &encoding);
+    bool reloadWithEncoding(const QString &encoding);
+    bool saveWithEncoding(const QString &filePath, const QString &encoding);
 
     void setLexerByName(const QString &name);
     QString currentLexerName() const;
@@ -50,6 +56,7 @@ signals:
     void filePathChanged(const QString &path);
     void modificationChanged(bool modified);
     void cursorPositionChanged(int line, int column);
+    void encodingChanged(const QString &encoding);
 
 private slots:
     void onTextChanged();
@@ -65,6 +72,7 @@ private:
     QString m_tempLexerName;
     QString m_currentLexerName; // Current lexer name for tracking
     QMap<QString, QString> m_extensionToLexer;
+    QString m_currentEncoding; // Current file encoding
 };
 
 #endif // CODE_EDITOR_H

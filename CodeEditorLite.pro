@@ -36,6 +36,7 @@ SOURCES += \
     src/function/file/on_file_save_as.cpp \
     src/function/file/on_file_properties.cpp \
     src/function/file/on_file_print.cpp \
+    src/function/file/on_file_encoding.cpp \
     src/function/edit/on_edit_undo.cpp \
     src/function/edit/on_edit_redo.cpp \
     src/function/edit/on_edit_cut.cpp \

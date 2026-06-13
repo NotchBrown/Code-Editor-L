@@ -100,31 +100,61 @@ void PrintWizard::onPaintRequested(QPrinter *printer)
 {
     if (!printer || !m_editor) return;
     
-    QsciPrinter *qsp = dynamic_cast<QsciPrinter*>(printer);
-    if (!qsp) return;
+    // Save current printer settings
+    QPrinter::OutputFormat originalFormat = m_printer->outputFormat();
+    QString originalOutputFile = m_printer->outputFileName();
     
-    // Apply settings from layout page
-    qsp->setMagnification(m_pageLayout->magnification());
-    qsp->setWrapMode(m_pageLayout->wrapMode());
-    
-    // Handle print range
-    int from = -1;
-    int to = -1;
-    int rangeType = m_pageLayout->printRangeType();
-    
-    if (rangeType == CurrentPage) {
-        from = m_pageLayout->fromLine();
-        to = m_pageLayout->toLine();
-    } else if (rangeType == Selection) {
-        from = m_pageLayout->fromLine();
-        to = m_pageLayout->toLine();
-    } else if (rangeType == Range) {
-        from = m_pageLayout->fromLine();
-        to = m_pageLayout->toLine();
+    try {
+        // Apply settings from all pages to our printer
+        applyPrinterSettings();
+        
+        // Apply same settings to the preview printer
+        printer->setPrinterName(m_printer->printerName());
+        printer->setColorMode(m_printer->colorMode());
+        printer->setPageLayout(m_printer->pageLayout());
+        printer->setFullPage(m_printer->fullPage());
+        printer->setCopyCount(m_printer->copyCount());
+        printer->setCollateCopies(m_printer->collateCopies());
+        printer->setDuplex(m_printer->duplex());
+        printer->setPageOrder(m_printer->pageOrder());
+        
+        // Create a temporary QsciPrinter for preview
+        QsciPrinter previewPrinter(QPrinter::HighResolution);
+        // Set the same settings on preview printer
+        previewPrinter.setPrinterName(printer->printerName());
+        previewPrinter.setColorMode(printer->colorMode());
+        previewPrinter.setPageLayout(printer->pageLayout());
+        previewPrinter.setFullPage(printer->fullPage());
+        
+        // Apply layout settings
+        previewPrinter.setMagnification(m_pageLayout->magnification());
+        previewPrinter.setWrapMode(m_pageLayout->wrapMode());
+        
+        // Handle print range
+        int from = -1;
+        int to = -1;
+        int rangeType = m_pageLayout->printRangeType();
+        
+        if (rangeType == CurrentPage) {
+            from = m_pageLayout->fromLine();
+            to = m_pageLayout->toLine();
+        } else if (rangeType == Selection) {
+            from = m_pageLayout->fromLine();
+            to = m_pageLayout->toLine();
+        } else if (rangeType == Range) {
+            from = m_pageLayout->fromLine();
+            to = m_pageLayout->toLine();
+        }
+        
+        // Print to the preview printer
+        previewPrinter.printRange(m_editor, from, to);
+    } catch (...) {
+        // Ignore errors during preview
     }
-    // AllPages: from = -1, to = -1
     
-    qsp->printRange(m_editor, from, to);
+    // Restore original settings
+    m_printer->setOutputFormat(originalFormat);
+    m_printer->setOutputFileName(originalOutputFile);
 }
 
 void PrintWizard::changeEvent(QEvent *e)

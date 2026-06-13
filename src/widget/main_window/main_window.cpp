@@ -130,6 +130,28 @@ void MainWindow::setupConnections()
     if (ui->actionFilePrint)
         connect(ui->actionFilePrint, &QAction::triggered, this, &MainWindow::onFilePrint);
     
+    // Encoding menu
+    if (ui->actionEncodingUTF8)
+        connect(ui->actionEncodingUTF8, &QAction::triggered, this, &MainWindow::onEncodingUTF8);
+    if (ui->actionEncodingUTF8BOM)
+        connect(ui->actionEncodingUTF8BOM, &QAction::triggered, this, &MainWindow::onEncodingUTF8BOM);
+    if (ui->actionEncodingGBK)
+        connect(ui->actionEncodingGBK, &QAction::triggered, this, &MainWindow::onEncodingGBK);
+    if (ui->actionEncodingGB2312)
+        connect(ui->actionEncodingGB2312, &QAction::triggered, this, &MainWindow::onEncodingGB2312);
+    if (ui->actionEncodingGB18030)
+        connect(ui->actionEncodingGB18030, &QAction::triggered, this, &MainWindow::onEncodingGB18030);
+    if (ui->actionEncodingBig5)
+        connect(ui->actionEncodingBig5, &QAction::triggered, this, &MainWindow::onEncodingBig5);
+    if (ui->actionEncodingASCII)
+        connect(ui->actionEncodingASCII, &QAction::triggered, this, &MainWindow::onEncodingASCII);
+    if (ui->actionEncodingISO88591)
+        connect(ui->actionEncodingISO88591, &QAction::triggered, this, &MainWindow::onEncodingISO88591);
+    if (ui->actionEncodingUTF16)
+        connect(ui->actionEncodingUTF16, &QAction::triggered, this, &MainWindow::onEncodingUTF16);
+    if (ui->actionEncodingUTF16LE)
+        connect(ui->actionEncodingUTF16LE, &QAction::triggered, this, &MainWindow::onEncodingUTF16LE);
+    
     // Edit menu
     if (ui->actionEditUndo)
         connect(ui->actionEditUndo, &QAction::triggered, this, &MainWindow::onEditUndo);
