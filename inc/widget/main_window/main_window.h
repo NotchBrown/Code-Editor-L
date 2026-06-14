@@ -52,6 +52,10 @@ private slots:
     void onEncodingUTF16();
     void onEncodingUTF16LE();
     void updateEncodingMenuChecked();
+    void updateReadOnlyMenuChecked();
+    void onFileReadOnly();
+    void onStatusBarReadOnlyToggled(bool readOnly);
+    void updateMenuStates();
     
     // Edit menu
     void onEditUndo();
@@ -111,6 +115,7 @@ private slots:
     void onCurrentTabChanged(int index);
     void onEditorModificationChanged(CodeEditor *editor, bool modified);
     void onEditorCursorPositionChanged(CodeEditor *editor, int line, int column);
+    void onCursorPosChanged(int line, int index);
     
     // File type menu
     void onFileTypeChanged(const QString &lexerName);

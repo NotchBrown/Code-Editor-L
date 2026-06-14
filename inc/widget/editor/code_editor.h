@@ -51,16 +51,18 @@ public:
     void commentBlock();
     void uncommentBlock();
     void deleteChar();
+    
+    // Read-only support
+    void setReadOnly(bool readOnly);
+    bool isReadOnly() const;
 
 signals:
     void filePathChanged(const QString &path);
     void modificationChanged(bool modified);
-    void cursorPositionChanged(int line, int column);
     void encodingChanged(const QString &encoding);
 
 private slots:
     void onTextChanged();
-    void onCursorPositionChanged(int line, int index);
 
 private:
     void setupEditor();
@@ -74,6 +76,7 @@ private:
     QMap<QString, QString> m_extensionToLexer;
     QString m_currentEncoding; // Current file encoding
     bool m_manualLexerSet; // Whether user has manually set the lexer
+    bool m_readOnly; // Whether the editor is in read-only mode
 };
 
 #endif // CODE_EDITOR_H

@@ -2,6 +2,7 @@
 #include "widget/main_window/main_window.h"
 #include "ui_main_window.h"
 #include "widget/editor/code_editor.h"
+#include <Qsci/qsciscintilla.h>
 #include "widget/navigator/navigator.h"
 #include "widget/segment/segment.h"
 #include "widget/errors_and_warnings/errors_and_warnings.h"
@@ -28,6 +29,9 @@ MainWindow::MainWindow(QWidget *parent) :
     // 创建自定义状态栏
     m_statusBar = new StatusBar(this);
     setStatusBar(m_statusBar);
+    
+    // Connect status bar read-only toggle
+    connect(m_statusBar, &StatusBar::readOnlyToggled, this, &MainWindow::onStatusBarReadOnlyToggled);
     
     // 设置 QTabWidget 为文档模式
     QTabWidget *tabWidget = new QTabWidget(this);
@@ -132,6 +136,8 @@ void MainWindow::setupConnections()
         connect(ui->actionFileSave, &QAction::triggered, this, &MainWindow::onFileSave);
     if (ui->actionFileSaveAs)
         connect(ui->actionFileSaveAs, &QAction::triggered, this, &MainWindow::onFileSaveAs);
+    if (ui->actionFileReadOnly)
+        connect(ui->actionFileReadOnly, &QAction::triggered, this, &MainWindow::onFileReadOnly);
     if (ui->actionFileProperties)
         connect(ui->actionFileProperties, &QAction::triggered, this, &MainWindow::onFileProperties);
     if (ui->actionFilePrint)
@@ -266,22 +272,20 @@ CodeEditor* MainWindow::createNewEditor(const QString &filePath)
     connect(editor, &CodeEditor::modificationChanged, this, [this, editor](bool m) {
         emit editorModificationChanged(editor, m);
     });
-    connect(editor, &CodeEditor::cursorPositionChanged, this, [this, editor](int line, int col) {
-        emit editor_cursorPositionChanged(editor, line, col);
-        // Update status bar cursor position
-        if (m_statusBar) {
-            m_statusBar->setCursorPosition(line, col);
-        }
-    });
+    // QScintilla signal from pre-compiled lib: function-pointer syntax cannot resolve
+    // inherited signals from external moc. Use SIGNAL/SLOT for runtime resolution.
+    connect(editor, SIGNAL(cursorPositionChanged(int, int)),
+            this, SLOT(onCursorPosChanged(int, int)));
     
     int index = -1;
     if (filePath.isEmpty()) {
         // New untitled file
         index = tabWidget->addTab(editor, tr("Untitled"));
         if (m_statusBar) {
-            m_statusBar->setFilePath("");
-            m_statusBar->setFileType("Plain Text");
-            m_statusBar->setEncoding("UTF-8");
+            m_statusBar->setFilePath(tr("Untitled"));
+            m_statusBar->setFileType(tr("Plain Text"));
+            m_statusBar->setEncoding(tr("UTF-8"));
+            m_statusBar->setCursorPosition(1, 1);
         }
     } else {
         // Open existing file
@@ -293,6 +297,7 @@ CodeEditor* MainWindow::createNewEditor(const QString &filePath)
                 m_statusBar->setFilePath(filePath);
                 m_statusBar->setFileType(editor->currentLexerName());
                 m_statusBar->setEncoding(editor->currentEncoding());
+                m_statusBar->setCursorPosition(1, 1);
             }
         } else {
             delete editor;
@@ -303,6 +308,8 @@ CodeEditor* MainWindow::createNewEditor(const QString &filePath)
     tabWidget->setCurrentIndex(index);
     updateWindowTitle();
     updateEncodingMenuChecked();
+    updateReadOnlyMenuChecked();
+    updateMenuStates();
     
     return editor;
 }
@@ -374,6 +381,17 @@ bool MainWindow::closeTab(int index)
     delete editor;
     
     updateWindowTitle();
+    updateMenuStates();
+    
+    // Update status bar when all tabs are closed
+    if (tabWidget->count() == 0 && m_statusBar) {
+        m_statusBar->setFilePath(tr("Ready"));
+        m_statusBar->setFileType(tr("Plain Text"));
+        m_statusBar->setEncoding(tr("UTF-8"));
+        m_statusBar->setCursorPosition(1, 1);
+        m_statusBar->setReadOnly(false);
+    }
+    
     return true;
 }
 
@@ -588,6 +606,71 @@ void MainWindow::updateEncodingMenuChecked()
         ui->actionEncodingUTF16LE->setChecked(currentEncoding == "UTF-16LE");
 }
 
+void MainWindow::updateReadOnlyMenuChecked()
+{
+    CodeEditor *editor = currentEditor();
+    bool readOnly = editor ? editor->isReadOnly() : false;
+    
+    if (ui->actionFileReadOnly) {
+        ui->actionFileReadOnly->setChecked(readOnly);
+    }
+}
+
+void MainWindow::onFileReadOnly()
+{
+    CodeEditor *editor = currentEditor();
+    if (!editor) {
+        return;
+    }
+    
+    bool readOnly = ui->actionFileReadOnly->isChecked();
+    editor->setReadOnly(readOnly);
+    
+    // Update status bar
+    if (m_statusBar) {
+        m_statusBar->setReadOnly(readOnly);
+    }
+}
+
+void MainWindow::onStatusBarReadOnlyToggled(bool readOnly)
+{
+    CodeEditor *editor = currentEditor();
+    if (!editor) {
+        return;
+    }
+    
+    editor->setReadOnly(readOnly);
+    
+    // Update menu
+    if (ui->actionFileReadOnly) {
+        ui->actionFileReadOnly->setChecked(readOnly);
+    }
+}
+
+void MainWindow::updateMenuStates()
+{
+    QTabWidget *tabWidget = findChild<QTabWidget*>("mainTabWidget");
+    bool hasOpenFile = tabWidget && tabWidget->count() > 0;
+    
+    // Disable menu items when no file is open
+    if (ui->actionFileSave)
+        ui->actionFileSave->setEnabled(hasOpenFile);
+    if (ui->actionFileSaveAs)
+        ui->actionFileSaveAs->setEnabled(hasOpenFile);
+    if (ui->actionFileReadOnly)
+        ui->actionFileReadOnly->setEnabled(hasOpenFile);
+    if (ui->actionFileProperties)
+        ui->actionFileProperties->setEnabled(hasOpenFile);
+    
+    // Disable Type menu
+    if (ui->menuFileType)
+        ui->menuFileType->setEnabled(hasOpenFile);
+    
+    // Disable Encoding menu
+    if (ui->menuFileEncoding)
+        ui->menuFileEncoding->setEnabled(hasOpenFile);
+}
+
 void MainWindow::onFileTypeChanged(const QString &lexerName)
 {
     // Get current editor
@@ -601,6 +684,11 @@ void MainWindow::onFileTypeChanged(const QString &lexerName)
     
     // Update checked state
     updateFileTypeMenuChecked();
+    
+    // Update status bar file type
+    if (m_statusBar) {
+        m_statusBar->setFileType(lexerName);
+    }
 }
 
 void MainWindow::updateOpenTabsMenu()

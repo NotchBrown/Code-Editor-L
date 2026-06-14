@@ -1,5 +1,6 @@
 #include "main.h"
 #include "widget/main_window/main_window.h"
+#include "widget/main_window/status_bar.h"
 #include "widget/editor/code_editor.h"
 #include <QMessageBox>
 #include <QTextCodec>
@@ -19,6 +20,10 @@ void MainWindow::onFileEncoding(const QString &encoding)
     // Change encoding without prompting
     if (editor->reloadWithEncoding(encoding)) {
         updateEncodingMenuChecked();
+        // Update status bar encoding
+        if (m_statusBar) {
+            m_statusBar->setEncoding(encoding);
+        }
     }
 }
 

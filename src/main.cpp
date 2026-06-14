@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QStyleFactory>
 #include "widget/main_window/main_window.h"
+#include "util/logger.h"
 
 int main(int argc, char *argv[])
 {
@@ -10,6 +11,9 @@ int main(int argc, char *argv[])
     app.setApplicationName("Code Editor");
     app.setApplicationVersion("1.0.0");
     app.setOrganizationName("WaveIn");
+    
+    // Initialize logger
+    Logger::init();
     
     // Set Fusion style
     app.setStyle(QStyleFactory::create("Fusion"));

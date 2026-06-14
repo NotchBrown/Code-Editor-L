@@ -119,6 +119,7 @@
     <addaction name="separator"/>
     <addaction name="menuFileType"/>
     <addaction name="menuFileEncoding"/>
+    <addaction name="actionFileReadOnly"/>
     <addaction name="actionFileProperties"/>
     <addaction name="separator"/>
     <addaction name="actionFilePrint"/>
@@ -273,6 +274,14 @@
   <action name="actionFileProperties">
    <property name="text">
     <string>Prope&amp;rties...</string>
+   </property>
+  </action>
+  <action name="actionFileReadOnly">
+   <property name="text">
+    <string>&amp;Read Only</string>
+   </property>
+   <property name="checkable">
+    <bool>true</bool>
    </property>
   </action>
   <action name="actionEncodingUTF8">

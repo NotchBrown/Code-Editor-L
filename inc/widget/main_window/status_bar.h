@@ -6,6 +6,7 @@
 #include <QTimer>
 #include <QHBoxLayout>
 #include <QFrame>
+#include <QPushButton>
 
 class StatusBar : public QStatusBar
 {
@@ -27,24 +28,33 @@ public:
     // 设置光标位置
     void setCursorPosition(int line, int column);
     
+    // 设置只读状态
+    void setReadOnly(bool readOnly);
+    
     // 设置临时消息（会覆盖文件位置显示）
     void showMessage(const QString &message, int duration = 0);
     
     // 清除临时消息，恢复显示文件位置
     void clearMessage();
 
+signals:
+    void readOnlyToggled(bool readOnly);
+
 private slots:
     void onMessageTimeout();
+    void onReadOnlyButtonClicked();
 
 private:
     QLabel *m_filePathLabel;      // 左侧：文件路径或消息
     QLabel *m_fileTypeLabel;      // 右侧：文件类型
     QLabel *m_encodingLabel;      // 右侧：编码
+    QPushButton *m_readOnlyButton; // 右侧：只读按钮
     QLabel *m_cursorLabel;        // 右侧：光标位置
     
     QString m_currentFilePath;    // 当前文件路径（用于恢复显示）
     QTimer *m_messageTimer;       // 消息超时定时器
     bool m_showingMessage;        // 是否正在显示消息
+    bool m_readOnly;              // 当前只读状态
 };
 
 #endif // STATUS_BAR_H

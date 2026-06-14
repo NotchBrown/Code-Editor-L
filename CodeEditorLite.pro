@@ -83,7 +83,9 @@ SOURCES += \
     src/function/tab/on_current_tab_changed.cpp \
     src/function/editor/on_editor_modification_changed.cpp \
     src/function/editor/on_editor_cursor_position_changed.cpp \
+    src/function/editor/on_cursor_pos_changed.cpp \
     src/util/recent_files_manager.cpp \
+    src/util/logger.cpp \
     src/widget/print/print_wizard.cpp \
     src/widget/print/print_wizard_page_printer.cpp \
     src/widget/print/print_wizard_page_page_setup.cpp \
@@ -104,6 +106,7 @@ HEADERS += \
     inc/ipc/ipc_server.h \
     inc/project/project_manager.h \
     inc/util/recent_files_manager.h \
+    inc/util/logger.h \
     inc/widget/print/print_wizard.h \
     inc/widget/print/print_wizard_page_printer.h \
     inc/widget/print/print_wizard_page_page_setup.h \

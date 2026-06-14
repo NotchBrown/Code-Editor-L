@@ -1,5 +1,6 @@
 #include "main.h"
 #include "widget/editor/code_editor.h"
+#include <QDebug>
 #include <QTextCodec>
 #include <Qsci/qscilexercpp.h>
 #include <Qsci/qscilexerpython.h>
@@ -62,7 +63,8 @@ CodeEditor::CodeEditor(QWidget *parent)
       m_tempLexerName(""),
       m_currentLexerName("cpp"),
       m_currentEncoding("UTF-8"),
-      m_manualLexerSet(false)
+      m_manualLexerSet(false),
+      m_readOnly(false)
 {
     m_extensionToLexer[".cpp"] = "cpp";
     m_extensionToLexer[".h"] = "cpp";
@@ -186,7 +188,8 @@ void CodeEditor::setupEditor()
 void CodeEditor::setupConnections()
 {
     connect(this, &QsciScintilla::textChanged, this, &CodeEditor::onTextChanged);
-    connect(this, &QsciScintilla::cursorPositionChanged, this, &CodeEditor::onCursorPositionChanged);
+    // Note: QsciScintilla::cursorPositionChanged is already emitted by parent class
+    // We don't need to connect it here, MainWindow will connect directly
 }
 
 QString CodeEditor::filePath() const
@@ -485,11 +488,6 @@ void CodeEditor::onTextChanged()
     emit modificationChanged(isModified());
 }
 
-void CodeEditor::onCursorPositionChanged(int line, int index)
-{
-    emit cursorPositionChanged(line + 1, index + 1);
-}
-
 int CodeEditor::currentLine() const
 {
     return SendScintilla(SCI_GETCURRENTLINE);
@@ -728,4 +726,16 @@ bool CodeEditor::saveWithEncoding(const QString &filePath, const QString &encodi
     setModified(false);
     
     return true;
+}
+
+// Read-only support
+void CodeEditor::setReadOnly(bool readOnly)
+{
+    m_readOnly = readOnly;
+    QsciScintilla::setReadOnly(readOnly);
+}
+
+bool CodeEditor::isReadOnly() const
+{
+    return m_readOnly;
 }
