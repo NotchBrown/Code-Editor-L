@@ -27,6 +27,7 @@ SOURCES += \
     src/widget/errors_and_warnings/errors_and_warnings.cpp \
     src/widget/ipc_message/ipc_message.cpp \
     src/widget/properties/properties.cpp \
+    src/widget/go_line/go_line.cpp \
     src/ipc/ipc_server.cpp \
     src/project/project_manager.cpp \
     src/function/start/on_start_new_instance.cpp \
@@ -47,8 +48,6 @@ SOURCES += \
     src/function/edit/on_edit_go_line.cpp \
     src/function/edit/on_edit_comment.cpp \
     src/function/edit/on_edit_uncomment.cpp \
-    src/function/edit/on_edit_comment_segment.cpp \
-    src/function/edit/on_edit_uncomment_segment.cpp \
     src/function/edit/on_edit_find.cpp \
     src/function/edit/on_edit_find_next.cpp \
     src/function/edit/on_edit_find_prev.cpp \
@@ -103,6 +102,7 @@ HEADERS += \
     inc/widget/errors_and_warnings/errors_and_warnings.h \
     inc/widget/ipc_message/ipc_message.h \
     inc/widget/properties/properties.h \
+    inc/widget/go_line/go_line.h \
     inc/ipc/ipc_server.h \
     inc/project/project_manager.h \
     inc/util/recent_files_manager.h \
@@ -123,12 +123,17 @@ FORMS += \
     src/widget/errors_and_warnings/errors_and_warnings.ui \
     src/widget/ipc_message/ipc_message.ui \
     src/widget/properties/properties.ui \
+    src/widget/go_line/go_line.ui \
     src/widget/print/print_wizard.ui \
     src/widget/print/print_wizard_page_printer.ui \
     src/widget/print/print_wizard_page_page_setup.ui \
     src/widget/print/print_wizard_page_output.ui \
     src/widget/print/print_wizard_page_layout.ui \
     src/widget/print/print_wizard_page_preview.ui
+
+# Resource files
+RESOURCES += \
+    src/resource/resources.qrc
 
 # Include directories
 INCLUDEPATH += \
@@ -141,6 +146,7 @@ INCLUDEPATH += \
     inc/widget/errors_and_warnings \
     inc/widget/ipc_message \
     inc/widget/properties \
+    inc/widget/go_line \
     inc/ipc \
     inc/project \
     inc/util \

@@ -21,7 +21,7 @@ void Logger::init()
     static QFile logFile(logFilePath);
     if (logFile.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text)) {
         static QTextStream logStream(&logFile);
-        qInstallMessageHandler([](QtMsgType type, const QMessageLogContext &context, const QString &msg) {
+        qInstallMessageHandler([](QtMsgType type, const QMessageLogContext & /*context*/, const QString &msg) {
             QTextStream &stream = logStream;
             QString time = QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss");
             

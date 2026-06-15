@@ -565,7 +565,7 @@ void CodeEditor::uncommentLine()
         int startLine, startCol, endLine, endCol;
         getSelection(&startLine, &startCol, &endLine, &endCol);
         
-        for (int i = startLine; i <= endLine; ++i) {
+        for (int i = endLine; i >= startLine; --i) {
             QString txt = QsciScintilla::text(i);
             if (txt.startsWith("//")) {
                 int lineStart = SendScintilla(SCI_GETLINESTART, i);

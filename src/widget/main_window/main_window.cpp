@@ -184,10 +184,6 @@ void MainWindow::setupConnections()
         connect(ui->actionEditComment, &QAction::triggered, this, &MainWindow::onEditComment);
     if (ui->actionEditUncomment)
         connect(ui->actionEditUncomment, &QAction::triggered, this, &MainWindow::onEditUncomment);
-    if (ui->actionEditCommentSegment)
-        connect(ui->actionEditCommentSegment, &QAction::triggered, this, &MainWindow::onEditCommentSegment);
-    if (ui->actionEditUncommentSegment)
-        connect(ui->actionEditUncommentSegment, &QAction::triggered, this, &MainWindow::onEditUncommentSegment);
     if (ui->actionEditFind)
         connect(ui->actionEditFind, &QAction::triggered, this, &MainWindow::onEditFind);
     if (ui->actionEditReplace)

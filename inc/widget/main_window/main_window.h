@@ -67,8 +67,6 @@ private slots:
     void onEditGoLine();
     void onEditComment();
     void onEditUncomment();
-    void onEditCommentSegment();
-    void onEditUncommentSegment();
     void onEditFind();
     void onEditFindNext();
     void onEditFindPrev();

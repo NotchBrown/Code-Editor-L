@@ -92,7 +92,7 @@ if (-not (Test-Path $QmakePath)) {
     exit 1
 }
 
-& $QmakePath -spec win32-g++ "CodeEditorLite.pro" -o "$BuildDir\Makefile"
+& $QmakePath -spec win32-g++ "CONFIG+=werror" "CodeEditorLite.pro" -o "$BuildDir\Makefile"
 
 if ($LASTEXITCODE -ne 0) {
     Write-Host "Error: qmake failed" -ForegroundColor Red
@@ -184,7 +184,7 @@ if (Test-Path $WindeployqtPath) {
     }
     
     # Copy QScintilla DLL (windeployqt cannot detect third-party libraries)
-    $QScintillaDllPath = "$ProjectRoot\lib\QScintilla\src\release\qscintilla2_qt5.dll"
+    $QScintillaDllPath = "$ProjectRoot\lib\qscintilla_mingw64\lib\qscintilla2_qt5.dll"
     $QScintillaTargetPath = "$OutputDir\qscintilla2_qt5.dll"
     
     if (Test-Path $QScintillaDllPath) {

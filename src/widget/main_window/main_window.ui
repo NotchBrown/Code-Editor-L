@@ -142,8 +142,6 @@
     <addaction name="actionEditGoLine"/>
     <addaction name="actionEditComment"/>
     <addaction name="actionEditUncomment"/>
-    <addaction name="actionEditCommentSegment"/>
-    <addaction name="actionEditUncommentSegment"/>
     <addaction name="separator"/>
     <addaction name="actionEditFind"/>
     <addaction name="actionEditReplace"/>
@@ -242,41 +240,89 @@
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionStartNewInstance">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/start/start.svg</normaloff>
+     <normalon>:/icon/start/start.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>&amp;Code Editor</string>
    </property>
   </action>
   <action name="actionStartExit">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/start/exit.svg</normaloff>
+     <normalon>:/icon/start/exit.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>E&amp;xit</string>
    </property>
   </action>
   <action name="actionFileNew">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/file/new.svg</normaloff>
+     <normalon>:/icon/file/new.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>&amp;New</string>
    </property>
   </action>
   <action name="actionFileOpen">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/file/open.svg</normaloff>
+     <normalon>:/icon/file/open.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>&amp;Open...</string>
    </property>
   </action>
   <action name="actionFileSave">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/file/save.svg</normaloff>
+     <normalon>:/icon/file/save.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>&amp;Save</string>
    </property>
   </action>
   <action name="actionFileSaveAs">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/file/save_as.svg</normaloff>
+     <normalon>:/icon/file/save_as.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>Save A&amp;s...</string>
    </property>
   </action>
   <action name="actionFileProperties">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/file/properties.svg</normaloff>
+     <normalon>:/icon/file/properties.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>Prope&amp;rties...</string>
    </property>
   </action>
   <action name="actionFileReadOnly">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/file/file.svg</normaloff>
+     <normalon>:/icon/file/file.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>&amp;Read Only</string>
    </property>
@@ -365,161 +411,331 @@
    </property>
   </action>
   <action name="actionFilePrint">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/file/print.svg</normaloff>
+     <normalon>:/icon/file/print.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>&amp;Print...</string>
    </property>
   </action>
   <action name="actionEditUndo">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/edit/undo.svg</normaloff>
+     <normalon>:/icon/edit/undo.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>&amp;Undo</string>
    </property>
   </action>
   <action name="actionEditRedo">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/edit/redo.svg</normaloff>
+     <normalon>:/icon/edit/redo.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>&amp;Redo</string>
    </property>
   </action>
   <action name="actionEditCut">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/edit/cut.svg</normaloff>
+     <normalon>:/icon/edit/cut.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>Cu&amp;t</string>
    </property>
   </action>
   <action name="actionEditCopy">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/edit/copy.svg</normaloff>
+     <normalon>:/icon/edit/copy.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>&amp;Copy</string>
    </property>
   </action>
   <action name="actionEditPaste">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/edit/paste.svg</normaloff>
+     <normalon>:/icon/edit/paste.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>&amp;Paste</string>
    </property>
   </action>
   <action name="actionEditDelete">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/edit/delete.svg</normaloff>
+     <normalon>:/icon/edit/delete.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>&amp;Delete</string>
    </property>
   </action>
   <action name="actionEditGoLine">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/edit/go_line.svg</normaloff>
+     <normalon>:/icon/edit/go_line.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>&amp;Go Line...</string>
    </property>
   </action>
   <action name="actionEditComment">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/edit/comment.svg</normaloff>
+     <normalon>:/icon/edit/comment.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>&amp;Comment</string>
    </property>
   </action>
   <action name="actionEditUncomment">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/edit/comment.svg</normaloff>
+     <normalon>:/icon/edit/comment.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>&amp;Uncomment</string>
    </property>
   </action>
-  <action name="actionEditCommentSegment">
-   <property name="text">
-    <string>Comment Se&amp;gment</string>
-   </property>
-  </action>
-  <action name="actionEditUncommentSegment">
-   <property name="text">
-    <string>Uncomment Se&amp;gment</string>
-   </property>
-  </action>
   <action name="actionEditFind">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/edit/find.svg</normaloff>
+     <normalon>:/icon/edit/find.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>&amp;Find...</string>
    </property>
   </action>
   <action name="actionEditReplace">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/edit/find.svg</normaloff>
+     <normalon>:/icon/edit/find.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>&amp;Replace...</string>
    </property>
   </action>
   <action name="actionMarkGoError">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/mark/go_error.svg</normaloff>
+     <normalon>:/icon/mark/go_error.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>&amp;Go Error...</string>
    </property>
   </action>
   <action name="actionMarkDeleteError">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/mark/go_error.svg</normaloff>
+     <normalon>:/icon/mark/go_error.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>&amp;Delete Error</string>
    </property>
   </action>
   <action name="actionMarkCleanError">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/mark/go_error.svg</normaloff>
+     <normalon>:/icon/mark/go_error.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>C&amp;lean Error</string>
    </property>
   </action>
   <action name="actionMarkGoBookmark">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/mark/go_bookmark.svg</normaloff>
+     <normalon>:/icon/mark/go_bookmark.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>Go &amp;BookMark</string>
    </property>
   </action>
   <action name="actionMarkCreateBookmark">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/mark/create_bookmark.svg</normaloff>
+     <normalon>:/icon/mark/create_bookmark.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>&amp;Create BookMark</string>
    </property>
   </action>
   <action name="actionMarkManageBookmark">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/mark/manage_bookmark.svg</normaloff>
+     <normalon>:/icon/mark/manage_bookmark.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>&amp;Manage Bookmark...</string>
    </property>
   </action>
   <action name="actionMarkCreateBreak">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/mark/create_break.svg</normaloff>
+     <normalon>:/icon/mark/create_break.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>&amp;Create Break</string>
    </property>
   </action>
   <action name="actionMarkRemoveBreak">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/mark/create_break.svg</normaloff>
+     <normalon>:/icon/mark/create_break.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>&amp;Remove Break</string>
    </property>
   </action>
   <action name="actionSettingsGeneral">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/settings/general.svg</normaloff>
+     <normalon>:/icon/settings/general.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>&amp;General...</string>
    </property>
   </action>
   <action name="actionSettingsEditor">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/settings/edit.svg</normaloff>
+     <normalon>:/icon/settings/edit.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>&amp;Editor...</string>
    </property>
   </action>
   <action name="actionSettingsIPC">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/settings/ipc.svg</normaloff>
+     <normalon>:/icon/settings/ipc.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>&amp;IPC...</string>
    </property>
   </action>
   <action name="actionSettingsToolbar">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/settings/toolbar.svg</normaloff>
+     <normalon>:/icon/settings/toolbar.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>&amp;Toolbar...</string>
    </property>
   </action>
   <action name="actionSettingsHotkey">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/settings/hotkey.svg</normaloff>
+     <normalon>:/icon/settings/hotkey.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>&amp;Hotkey...</string>
    </property>
   </action>
   <action name="actionWindowCloseTab">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/window/close_tab.svg</normaloff>
+     <normalon>:/icon/window/close_tab.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>&amp;Close Tab</string>
    </property>
   </action>
   <action name="actionWindowCloseAllSaved">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/window/close_all_saved.svg</normaloff>
+     <normalon>:/icon/window/close_all_saved.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>&amp;Close All Saved</string>
    </property>
   </action>
   <action name="actionWindowCloseAll">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/window/close_all_saved.svg</normaloff>
+     <normalon>:/icon/window/close_all_saved.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>Close &amp;All</string>
    </property>
   </action>
   <action name="actionWindowCloseOther">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/window/close_the_other.svg</normaloff>
+     <normalon>:/icon/window/close_the_other.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>Close The &amp;Other</string>
    </property>
   </action>
   <action name="actionWindowNavigator">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/settings/general.svg</normaloff>
+     <normalon>:/icon/settings/general.svg</normalon>
+    </iconset>
+   </property>
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -531,6 +747,12 @@
    </property>
   </action>
   <action name="actionWindowSegment">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/edit/edit.svg</normaloff>
+     <normalon>:/icon/edit/edit.svg</normalon>
+    </iconset>
+   </property>
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -542,6 +764,12 @@
    </property>
   </action>
   <action name="actionWindowErrorsWarnings">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/mark/go_error.svg</normaloff>
+     <normalon>:/icon/mark/go_error.svg</normalon>
+    </iconset>
+   </property>
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -553,6 +781,12 @@
    </property>
   </action>
   <action name="actionWindowIPCMessage">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/settings/ipc.svg</normaloff>
+     <normalon>:/icon/settings/ipc.svg</normalon>
+    </iconset>
+   </property>
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -564,11 +798,23 @@
    </property>
   </action>
   <action name="actionHelpAbout">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/help/about.svg</normaloff>
+     <normalon>:/icon/help/about.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>&amp;About</string>
    </property>
   </action>
   <action name="actionHelpHelp">
+   <property name="icon">
+    <iconset resource="../../resource/resources.qrc">
+     <normaloff>:/icon/help/help.svg</normaloff>
+     <normalon>:/icon/help/help.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>&amp;Help</string>
    </property>

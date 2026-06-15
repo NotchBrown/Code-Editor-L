@@ -1,0 +1,47 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource prefix="/icon">
+        <file alias="file/new.svg">icon/file/new.svg</file>
+        <file alias="file/open.svg">icon/file/open.svg</file>
+        <file alias="file/save.svg">icon/file/save.svg</file>
+        <file alias="file/save_as.svg">icon/file/save_as.svg</file>
+        <file alias="file/print.svg">icon/file/print.svg</file>
+        <file alias="file/properties.svg">icon/file/properties.svg</file>
+        <file alias="file/encoding.svg">icon/file/encoding.svg</file>
+        <file alias="file/type.svg">icon/file/type.svg</file>
+        <file alias="file/recent.svg">icon/file/recent.svg</file>
+        <file alias="edit/undo.svg">icon/edit/undo.svg</file>
+        <file alias="edit/redo.svg">icon/edit/redo.svg</file>
+        <file alias="edit/cut.svg">icon/edit/cut.svg</file>
+        <file alias="edit/copy.svg">icon/edit/copy.svg</file>
+        <file alias="edit/paste.svg">icon/edit/paste.svg</file>
+        <file alias="edit/delete.svg">icon/edit/delete.svg</file>
+        <file alias="edit/find.svg">icon/edit/find.svg</file>
+        <file alias="edit/go_line.svg">icon/edit/go_line.svg</file>
+        <file alias="edit/comment.svg">icon/edit/comment.svg</file>
+        <file alias="edit/edit.svg">icon/edit/edit.svg</file>
+        <file alias="mark/go_error.svg">icon/mark/go_error.svg</file>
+        <file alias="mark/create_bookmark.svg">icon/mark/create_bookmark.svg</file>
+        <file alias="mark/manage_bookmark.svg">icon/mark/manage_bookmark.svg</file>
+        <file alias="mark/go_bookmark.svg">icon/mark/go_bookmark.svg</file>
+        <file alias="mark/create_break.svg">icon/mark/create_break.svg</file>
+        <file alias="mark/mark.svg">icon/mark/mark.svg</file>
+        <file alias="settings/general.svg">icon/settings/general.svg</file>
+        <file alias="settings/edit.svg">icon/settings/edit.svg</file>
+        <file alias="settings/ipc.svg">icon/settings/ipc.svg</file>
+        <file alias="settings/toolbar.svg">icon/settings/toolbar.svg</file>
+        <file alias="settings/hotkey.svg">icon/settings/hotkey.svg</file>
+        <file alias="settings/settings.svg">icon/settings/settings.svg</file>
+        <file alias="window/close_tab.svg">icon/window/close_tab.svg</file>
+        <file alias="window/close_all_saved.svg">icon/window/close_all_saved.svg</file>
+        <file alias="window/close_the_other.svg">icon/window/close_the_other.svg</file>
+        <file alias="start/exit.svg">icon/start/exit.svg</file>
+        <file alias="start/start.svg">icon/start/start.svg</file>
+        <file alias="help/about.svg">icon/help/about.svg</file>
+        <file alias="help/help.svg">icon/help/help.svg</file>
+    </qresource>
+    <qresource prefix="/font">
+        <file alias="SourceHanSansHWSC-Regular.otf">font/14_SourceHanSansHWSC/OTF/SimplifiedChineseHW/SourceHanSansHWSC-Regular.otf</file>
+        <file alias="SourceHanSansHWSC-Bold.otf">font/14_SourceHanSansHWSC/OTF/SimplifiedChineseHW/SourceHanSansHWSC-Bold.otf</file>
+    </qresource>
+</RCC>

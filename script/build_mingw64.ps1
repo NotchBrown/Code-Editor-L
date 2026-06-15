@@ -92,7 +92,7 @@ if (-not (Test-Path $QmakePath)) {
     exit 1
 }
 
-& $QmakePath -spec win32-g++ "CodeEditorLite.pro" -o "$BuildDir\Makefile"
+& $QmakePath -spec win32-g++ "CONFIG+=werror" "CodeEditorLite.pro" -o "$BuildDir\Makefile"
 
 if ($LASTEXITCODE -ne 0) {
     Write-Host "Error: qmake failed" -ForegroundColor Red
@@ -175,6 +175,14 @@ if (Test-Path $WindeployqtPath) {
         Write-Host "  Copied Qt5PrintSupport.dll" -ForegroundColor Green
     }
     
+    # Copy QtSvg DLL (required for SVG icons)
+    $QtSvgDllPath = "$QtBinPath\Qt5Svg.dll"
+    $QtSvgTargetPath = "$OutputDir\Qt5Svg.dll"
+    if (Test-Path $QtSvgDllPath) {
+        Copy-Item -Path $QtSvgDllPath -Destination $QtSvgTargetPath -Force
+        Write-Host "  Copied Qt5Svg.dll" -ForegroundColor Green
+    }
+    
     # Copy QtNetwork DLL
     $QtNetworkDllPath = "$QtBinPath\Qt5Network.dll"
     $QtNetworkTargetPath = "$OutputDir\Qt5Network.dll"
@@ -184,7 +192,7 @@ if (Test-Path $WindeployqtPath) {
     }
     
     # Copy QScintilla DLL (windeployqt cannot detect third-party libraries)
-    $QScintillaDllPath = "$ProjectRoot\lib\QScintilla\src\release\qscintilla2_qt5.dll"
+    $QScintillaDllPath = "$ProjectRoot\lib\qscintilla_mingw64\lib\qscintilla2_qt5.dll"
     $QScintillaTargetPath = "$OutputDir\qscintilla2_qt5.dll"
     
     if (Test-Path $QScintillaDllPath) {
@@ -204,6 +212,18 @@ if (Test-Path $WindeployqtPath) {
         Write-Host "  Copied platforms\qwindows.dll" -ForegroundColor Green
     } else {
         Write-Host "  Warning: Platform plugins not found at $PlatformsSourcePath" -ForegroundColor Yellow
+    }
+    
+    # Copy imageformat plugins (CRITICAL for SVG icons)
+    $ImageformatsSourcePath = "$QtDir\plugins\imageformats"
+    $ImageformatsTargetPath = "$OutputDir\imageformats"
+    
+    if (Test-Path $ImageformatsSourcePath) {
+        New-Item -ItemType Directory -Path $ImageformatsTargetPath -Force | Out-Null
+        Copy-Item -Path "$ImageformatsSourcePath\qsvg.dll" -Destination $ImageformatsTargetPath -Force
+        Write-Host "  Copied imageformats\qsvg.dll" -ForegroundColor Green
+    } else {
+        Write-Host "  Warning: Imageformat plugins not found at $ImageformatsSourcePath" -ForegroundColor Yellow
     }
     
     # Copy MinGW runtime DLLs
