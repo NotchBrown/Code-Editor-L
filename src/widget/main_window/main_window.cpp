@@ -12,6 +12,7 @@
 #include "ipc/ipc_server.h"
 #include "project/project_manager.h"
 #include "util/recent_files_manager.h"
+#include "util/hotkey_manager.h"
 #include <QVBoxLayout>
 #include <QDockWidget>
 
@@ -80,6 +81,10 @@ MainWindow::MainWindow(QWidget *parent) :
     // Connect recent files changed signal
     connect(RecentFilesManager::instance(), &RecentFilesManager::recentFilesChanged,
             this, &MainWindow::populateRecentFilesMenu);
+    
+    // Load hotkey settings from config file and apply to all actions
+    HotkeyManager::instance()->load();
+    HotkeyManager::instance()->applyAll(this);
 }
 
 MainWindow::~MainWindow()

@@ -87,13 +87,15 @@ SOURCES += \
     src/util/recent_files_manager.cpp \
     src/util/logger.cpp \
     src/util/resource_manager.cpp \
+    src/util/hotkey_manager.cpp \
     src/widget/print/print_wizard.cpp \
     src/widget/print/print_wizard_page_printer.cpp \
     src/widget/print/print_wizard_page_page_setup.cpp \
     src/widget/print/print_wizard_page_output.cpp \
     src/widget/print/print_wizard_page_layout.cpp \
     src/widget/print/print_wizard_page_preview.cpp \
-    src/widget/find_and_replace/find_and_replace.cpp
+    src/widget/find_and_replace/find_and_replace.cpp \
+    src/widget/hotkey/hotkey.cpp
 
 # Header files
 HEADERS += \
@@ -111,13 +113,15 @@ HEADERS += \
     inc/util/recent_files_manager.h \
     inc/util/logger.h \
     inc/util/resource_manager.h \
+    inc/util/hotkey_manager.h \
     inc/widget/print/print_wizard.h \
     inc/widget/print/print_wizard_page_printer.h \
     inc/widget/print/print_wizard_page_page_setup.h \
     inc/widget/print/print_wizard_page_output.h \
     inc/widget/print/print_wizard_page_layout.h \
     inc/widget/print/print_wizard_page_preview.h \
-    inc/widget/find_and_replace/find_and_replace.h
+    inc/widget/find_and_replace/find_and_replace.h \
+    inc/widget/hotkey/hotkey.h
 
 # UI files
 FORMS += \
@@ -135,7 +139,8 @@ FORMS += \
     src/widget/print/print_wizard_page_page_setup.ui \
     src/widget/print/print_wizard_page_output.ui \
     src/widget/print/print_wizard_page_layout.ui \
-    src/widget/print/print_wizard_page_preview.ui
+    src/widget/print/print_wizard_page_preview.ui \
+    src/widget/hotkey/hotkey.ui
 
 # Resource files
 RESOURCES += \
@@ -168,6 +173,8 @@ INCLUDEPATH += \
     src/widget/properties \
     src/widget/find_and_replace \
     inc/widget/find_and_replace \
+    inc/widget/hotkey \
+    src/widget/hotkey \
     src/ipc \
     src/project \
     src/util \
