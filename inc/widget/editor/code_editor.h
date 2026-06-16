@@ -42,6 +42,11 @@ public:
     
     void toggleBookmark(int line);
     void clearAllBookmarks();
+    bool hasBookmark(int line) const;
+    int findNextBookmark(int line) const;
+    int findPreviousBookmark(int line) const;
+    QList<int> allBookmarkLines() const;
+    
     void toggleBreakpoint(int line);
     void clearBreakpoint(int line);
     void clearAllBreakpoints();

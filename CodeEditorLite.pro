@@ -95,7 +95,9 @@ SOURCES += \
     src/widget/print/print_wizard_page_layout.cpp \
     src/widget/print/print_wizard_page_preview.cpp \
     src/widget/find_and_replace/find_and_replace.cpp \
-    src/widget/hotkey/hotkey.cpp
+    src/widget/hotkey/hotkey.cpp \
+    src/widget/bookmark/go_bookmark.cpp \
+    src/widget/bookmark/manage_bookmark.cpp
 
 # Header files
 HEADERS += \
@@ -121,7 +123,9 @@ HEADERS += \
     inc/widget/print/print_wizard_page_layout.h \
     inc/widget/print/print_wizard_page_preview.h \
     inc/widget/find_and_replace/find_and_replace.h \
-    inc/widget/hotkey/hotkey.h
+    inc/widget/hotkey/hotkey.h \
+    inc/widget/bookmark/go_bookmark.h \
+    inc/widget/bookmark/manage_bookmark.h
 
 # UI files
 FORMS += \
@@ -140,7 +144,9 @@ FORMS += \
     src/widget/print/print_wizard_page_output.ui \
     src/widget/print/print_wizard_page_layout.ui \
     src/widget/print/print_wizard_page_preview.ui \
-    src/widget/hotkey/hotkey.ui
+    src/widget/hotkey/hotkey.ui \
+    src/widget/bookmark/go_bookmark.ui \
+    src/widget/bookmark/manage_bookmark.ui
 
 # Resource files
 RESOURCES += \
@@ -175,6 +181,8 @@ INCLUDEPATH += \
     inc/widget/find_and_replace \
     inc/widget/hotkey \
     src/widget/hotkey \
+    inc/widget/bookmark \
+    src/widget/bookmark \
     src/ipc \
     src/project \
     src/util \

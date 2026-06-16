@@ -1,11 +1,11 @@
 #include "main.h"
 #include "widget/main_window/main_window.h"
-#include "widget/editor/code_editor.h"
+#include "widget/bookmark/go_bookmark.h"
 
 void MainWindow::onMarkGoBookmark()
 {
-    CodeEditor *editor = currentEditor();
-    if (editor) {
-        editor->goToLine(editor->currentLine());
-    }
+    GoBookmark *dlg = new GoBookmark(this);
+    dlg->setWindowModality(Qt::NonModal);
+    dlg->setAttribute(Qt::WA_DeleteOnClose, true);
+    dlg->show();
 }

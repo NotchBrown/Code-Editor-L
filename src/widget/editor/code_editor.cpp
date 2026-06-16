@@ -49,12 +49,11 @@
 #include <QFont>
 
 const int SCI_SETUNDODEPTH = 262;
-const int SCI_DELETERANGE = 227;
-const int SCI_GETLINESTART = 216;
-const int SCI_GETCURRENTPOS = 200;
-const int SCI_GETCURRENTLINE = 201;
-const int SCI_GETLINEENDPOSITION = 234;
-const int SCI_GETLINECOUNT = 204;
+const int SCI_DELETERANGE = 2645;
+const int SCI_POSITIONFROMLINE = 2167;
+const int SCI_GETCURRENTPOS = 2008;
+const int SCI_GETLINEENDPOSITION = 2136;
+const int SCI_GETLINECOUNT = 2154;
 const int SCI_GETSTYLEAT = 2010;
 const int SCI_GETLINEINDENTPOSITION = 2128;
 const int SCI_LINEFROMPOSITION = 2166;
@@ -191,6 +190,12 @@ void CodeEditor::setupEditor()
     setMarginType(1, QsciScintilla::SymbolMargin);
     setMarginWidth(1, 16);
     setMarginSensitivity(1, true);
+    setMarginMarkerMask(1, 0x1FFFFFFF);  // show all markers in margin 1
+    
+    // Define bookmark marker (marker number 1) using the built-in Bookmark symbol
+    markerDefine(QsciScintilla::Bookmark, 1);
+    setMarkerBackgroundColor(QColor(0, 120, 215), 1);   // Blue bookmark
+    setMarkerForegroundColor(QColor(255, 255, 255), 1);  // White foreground
     
     setLexerByName("cpp");
 }
@@ -581,17 +586,21 @@ void CodeEditor::onTextChanged()
 
 int CodeEditor::currentLine() const
 {
-    return SendScintilla(SCI_GETCURRENTLINE);
+    int line, index;
+    getCursorPosition(&line, &index);
+    return line;
 }
 
 int CodeEditor::currentColumn() const
 {
-    return SendScintilla(SCI_GETCURRENTPOS) - SendScintilla(SCI_GETLINESTART, SendScintilla(SCI_GETCURRENTLINE));
+    int line, index;
+    getCursorPosition(&line, &index);
+    return index;
 }
 
 void CodeEditor::toggleBookmark(int line)
 {
-    if (markersAtLine(line) & (1 << 0)) {
+    if (markersAtLine(line) & (1 << 1)) {
         markerDelete(line, 1);
     } else {
         markerAdd(line, 1);
@@ -601,6 +610,36 @@ void CodeEditor::toggleBookmark(int line)
 void CodeEditor::clearAllBookmarks()
 {
     markerDeleteAll(1);
+}
+
+bool CodeEditor::hasBookmark(int line) const
+{
+    return (markersAtLine(line) & (1 << 1)) != 0;
+}
+
+int CodeEditor::findNextBookmark(int line) const
+{
+    // markerFindNext starts from line+1 by default
+    int next = const_cast<CodeEditor*>(this)->markerFindNext(line, 1 << 1);
+    return next;
+}
+
+int CodeEditor::findPreviousBookmark(int line) const
+{
+    int prev = const_cast<CodeEditor*>(this)->markerFindPrevious(line, 1 << 1);
+    return prev;
+}
+
+QList<int> CodeEditor::allBookmarkLines() const
+{
+    QList<int> result;
+    int totalLines = QsciScintilla::lines();
+    for (int i = 0; i < totalLines; ++i) {
+        if (hasBookmark(i)) {
+            result.append(i);
+        }
+    }
+    return result;
 }
 
 void CodeEditor::toggleBreakpoint(int line)
@@ -668,7 +707,9 @@ void CodeEditor::applyLineComment(const QString &delim)
         if (endCol == 0 && endLine > startLine)
             endLine--;
     } else {
-        startLine = endLine = SendScintilla(SCI_GETCURRENTLINE);
+        int line, col;
+        getCursorPosition(&line, &col);
+        startLine = endLine = line;
     }
 
     SendScintilla(SCI_BEGINUNDOACTION);
@@ -693,7 +734,9 @@ void CodeEditor::removeLineComment(const QString &delim)
         if (endCol == 0 && endLine > startLine)
             endLine--;
     } else {
-        startLine = endLine = SendScintilla(SCI_GETCURRENTLINE);
+        int line, col;
+        getCursorPosition(&line, &col);
+        startLine = endLine = line;
     }
 
     SendScintilla(SCI_BEGINUNDOACTION);
