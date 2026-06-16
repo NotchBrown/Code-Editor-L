@@ -197,6 +197,11 @@ void CodeEditor::setupEditor()
     setMarkerBackgroundColor(QColor(0, 120, 215), 1);   // Blue bookmark
     setMarkerForegroundColor(QColor(255, 255, 255), 1);  // White foreground
     
+    // Define breakpoint marker (marker number 2) using a red circle
+    markerDefine(QsciScintilla::Circle, 2);
+    setMarkerBackgroundColor(QColor(220, 50, 50), 2);    // Red circle
+    setMarkerForegroundColor(QColor(255, 255, 255), 2);  // White foreground
+    
     setLexerByName("cpp");
 }
 

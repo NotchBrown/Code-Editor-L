@@ -60,6 +60,7 @@ SOURCES += \
     src/function/mark/on_mark_manage_bookmark.cpp \
     src/function/mark/on_mark_create_break.cpp \
     src/function/mark/on_mark_remove_break.cpp \
+    src/function/mark/on_mark_clean_break.cpp \
     src/function/settings/on_settings_general.cpp \
     src/function/settings/on_settings_editor.cpp \
     src/function/settings/on_settings_ipc.cpp \

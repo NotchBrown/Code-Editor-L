@@ -255,6 +255,8 @@ void MainWindow::setupConnections()
         connect(ui->actionMarkCreateBreak, &QAction::triggered, this, &MainWindow::onMarkCreateBreak);
     if (ui->actionMarkRemoveBreak)
         connect(ui->actionMarkRemoveBreak, &QAction::triggered, this, &MainWindow::onMarkRemoveBreak);
+    if (ui->actionMarkCleanBreak)
+        connect(ui->actionMarkCleanBreak, &QAction::triggered, this, &MainWindow::onMarkCleanBreak);
     
     // Settings menu
     if (ui->actionSettingsGeneral)

@@ -82,6 +82,7 @@ private slots:
     void onMarkManageBookmark();
     void onMarkCreateBreak();
     void onMarkRemoveBreak();
+    void onMarkCleanBreak();
     
     // Settings menu
     void onSettingsGeneral();

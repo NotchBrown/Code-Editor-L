@@ -175,6 +175,7 @@
     <addaction name="separator"/>
     <addaction name="actionMarkCreateBreak"/>
     <addaction name="actionMarkRemoveBreak"/>
+    <addaction name="actionMarkCleanBreak"/>
    </widget>
    <widget class="QMenu" name="menuSettings">
     <property name="tearOffEnabled">
@@ -588,6 +589,11 @@
   <action name="actionMarkRemoveBreak">
    <property name="text">
     <string>&amp;Remove Break</string>
+   </property>
+  </action>
+  <action name="actionMarkCleanBreak">
+   <property name="text">
+    <string>C&amp;lean Break</string>
    </property>
   </action>
   <action name="actionSettingsGeneral">
