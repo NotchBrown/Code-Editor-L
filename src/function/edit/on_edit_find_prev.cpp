@@ -1,11 +1,17 @@
 #include "main.h"
 #include "widget/main_window/main_window.h"
-#include "widget/editor/code_editor.h"
+#include "ui_main_window.h"
+#include "widget/find_and_replace/find_and_replace.h"
 
 void MainWindow::onEditFindPrev()
 {
     CodeEditor *editor = currentEditor();
-    if (editor) {
-        editor->findFirst("", false, false, false, false, false, 0, 0, false, false, false);
+    if (!editor) return;
+
+    QDockWidget *dock = findChild<QDockWidget*>("dockFindReplace");
+    if (dock && !dock->isVisible()) {
+        dock->setVisible(true);
     }
+    m_findAndReplace->setEditor(editor);
+    m_findAndReplace->onFindPrev();
 }

@@ -73,6 +73,7 @@ SOURCES += \
     src/function/window/on_window_segment.cpp \
     src/function/window/on_window_errors_warnings.cpp \
     src/function/window/on_window_ipc_message.cpp \
+    src/function/window/on_window_find_and_replace.cpp \
     src/function/view/on_view_fullscreen.cpp \
     src/function/view/on_view_statusbar.cpp \
     src/function/view/on_view_toolbar.cpp \
@@ -90,7 +91,8 @@ SOURCES += \
     src/widget/print/print_wizard_page_page_setup.cpp \
     src/widget/print/print_wizard_page_output.cpp \
     src/widget/print/print_wizard_page_layout.cpp \
-    src/widget/print/print_wizard_page_preview.cpp
+    src/widget/print/print_wizard_page_preview.cpp \
+    src/widget/find_and_replace/find_and_replace.cpp
 
 # Header files
 HEADERS += \
@@ -112,7 +114,8 @@ HEADERS += \
     inc/widget/print/print_wizard_page_page_setup.h \
     inc/widget/print/print_wizard_page_output.h \
     inc/widget/print/print_wizard_page_layout.h \
-    inc/widget/print/print_wizard_page_preview.h
+    inc/widget/print/print_wizard_page_preview.h \
+    inc/widget/find_and_replace/find_and_replace.h
 
 # UI files
 FORMS += \
@@ -120,6 +123,7 @@ FORMS += \
     src/widget/editor/code_editor.ui \
     src/widget/navigator/navigator.ui \
     src/widget/segment/segment.ui \
+    src/widget/find_and_replace/find_and_replace.ui \
     src/widget/errors_and_warnings/errors_and_warnings.ui \
     src/widget/ipc_message/ipc_message.ui \
     src/widget/properties/properties.ui \
@@ -160,6 +164,8 @@ INCLUDEPATH += \
     src/widget/errors_and_warnings \
     src/widget/ipc_message \
     src/widget/properties \
+    src/widget/find_and_replace \
+    inc/widget/find_and_replace \
     src/ipc \
     src/project \
     src/util \

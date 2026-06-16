@@ -5,6 +5,7 @@
 #include <Qsci/qsciscintilla.h>
 #include "widget/navigator/navigator.h"
 #include "widget/segment/segment.h"
+#include "widget/find_and_replace/find_and_replace.h"
 #include "widget/errors_and_warnings/errors_and_warnings.h"
 #include "widget/ipc_message/ipc_message.h"
 #include "widget/main_window/status_bar.h"
@@ -56,6 +57,20 @@ MainWindow::MainWindow(QWidget *parent) :
     
     // Create DockWidgets
     createDockWidgets();
+
+    // Connect FindAndReplace progress signals to status bar
+    if (m_findAndReplace) {
+        connect(m_findAndReplace, &FindAndReplace::searchProgress, this, [this](int current, int total, const QString &name) {
+            m_statusBar->showMessage(QString(tr("Searching %1: %2/%3")).arg(name).arg(current).arg(total));
+        });
+        connect(m_findAndReplace, &FindAndReplace::searchFinished, this, [this](int total) {
+            if (total > 0) {
+                m_statusBar->showMessage(tr("Found %1 match(es)").arg(total), 5000);
+            } else {
+                m_statusBar->showMessage(tr("No matches found"), 3000);
+            }
+        });
+    }
     
     setupConnections();
     populateFileTypeMenu();
@@ -87,6 +102,14 @@ void MainWindow::createDockWidgets()
     m_segment = new Segment();
     dockSegment->setWidget(m_segment);
     addDockWidget(Qt::RightDockWidgetArea, dockSegment);
+
+    // Find and Replace dock - Right (tabbed with Segment)
+    QDockWidget *dockFindReplace = new QDockWidget(tr("Find and Replace"), this);
+    dockFindReplace->setObjectName("dockFindReplace");
+    m_findAndReplace = new FindAndReplace();
+    dockFindReplace->setWidget(m_findAndReplace);
+    addDockWidget(Qt::RightDockWidgetArea, dockFindReplace);
+    tabifyDockWidget(dockSegment, dockFindReplace);
     
     // Errors and Warnings dock - Bottom
     QDockWidget *dockErrorsWarnings = new QDockWidget(tr("Errors and Warnings"), this);
@@ -105,6 +128,7 @@ void MainWindow::createDockWidgets()
     // Hide docks by default
     dockNavigator->hide();
     dockSegment->hide();
+    dockFindReplace->hide();
     dockErrorsWarnings->hide();
     dockIPCMessage->hide();
 }
@@ -234,6 +258,8 @@ void MainWindow::setupConnections()
         connect(ui->actionWindowNavigator, &QAction::triggered, this, &MainWindow::onWindowNavigator);
     if (ui->actionWindowSegment)
         connect(ui->actionWindowSegment, &QAction::triggered, this, &MainWindow::onWindowSegment);
+    if (ui->actionWindowFindAndReplace)
+        connect(ui->actionWindowFindAndReplace, &QAction::triggered, this, &MainWindow::onWindowFindAndReplace);
     if (ui->actionWindowErrorsWarnings)
         connect(ui->actionWindowErrorsWarnings, &QAction::triggered, this, &MainWindow::onWindowErrorsWarnings);
     if (ui->actionWindowIPCMessage)

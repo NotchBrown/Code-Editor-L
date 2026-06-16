@@ -8,6 +8,7 @@ class IpcServer;
 class ProjectManager;
 class Navigator;
 class Segment;
+class FindAndReplace;
 class ErrorsAndWarnings;
 class IPCMessage;
 class StatusBar;
@@ -96,6 +97,7 @@ private slots:
     void onWindowCloseOther();
     void onWindowNavigator();
     void onWindowSegment();
+    void onWindowFindAndReplace();
     void onWindowErrorsWarnings();
     void onWindowIPCMessage();
     
@@ -145,6 +147,7 @@ private:
     // DockWidget instances
     Navigator *m_navigator;
     Segment *m_segment;
+    FindAndReplace *m_findAndReplace;
     ErrorsAndWarnings *m_errorsWarnings;
     IPCMessage *m_ipcMessage;
     
