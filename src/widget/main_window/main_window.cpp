@@ -100,6 +100,10 @@ void MainWindow::createDockWidgets()
     m_navigator = new Navigator();
     dockNavigator->setWidget(m_navigator);
     addDockWidget(Qt::LeftDockWidgetArea, dockNavigator);
+    connect(dockNavigator, &QDockWidget::visibilityChanged, this, [this](bool visible) {
+        if (ui->actionWindowNavigator)
+            ui->actionWindowNavigator->setChecked(visible);
+    });
     
     // Segment dock - Right
     QDockWidget *dockSegment = new QDockWidget(tr("Segment"), this);
@@ -107,6 +111,10 @@ void MainWindow::createDockWidgets()
     m_segment = new Segment();
     dockSegment->setWidget(m_segment);
     addDockWidget(Qt::RightDockWidgetArea, dockSegment);
+    connect(dockSegment, &QDockWidget::visibilityChanged, this, [this](bool visible) {
+        if (ui->actionWindowSegment)
+            ui->actionWindowSegment->setChecked(visible);
+    });
 
     // Find and Replace dock - Right (tabbed with Segment)
     QDockWidget *dockFindReplace = new QDockWidget(tr("Find and Replace"), this);
@@ -115,6 +123,10 @@ void MainWindow::createDockWidgets()
     dockFindReplace->setWidget(m_findAndReplace);
     addDockWidget(Qt::RightDockWidgetArea, dockFindReplace);
     tabifyDockWidget(dockSegment, dockFindReplace);
+    connect(dockFindReplace, &QDockWidget::visibilityChanged, this, [this](bool visible) {
+        if (ui->actionWindowFindAndReplace)
+            ui->actionWindowFindAndReplace->setChecked(visible);
+    });
     
     // Errors and Warnings dock - Bottom
     QDockWidget *dockErrorsWarnings = new QDockWidget(tr("Errors and Warnings"), this);
@@ -122,6 +134,10 @@ void MainWindow::createDockWidgets()
     m_errorsWarnings = new ErrorsAndWarnings();
     dockErrorsWarnings->setWidget(m_errorsWarnings);
     addDockWidget(Qt::BottomDockWidgetArea, dockErrorsWarnings);
+    connect(dockErrorsWarnings, &QDockWidget::visibilityChanged, this, [this](bool visible) {
+        if (ui->actionWindowErrorsWarnings)
+            ui->actionWindowErrorsWarnings->setChecked(visible);
+    });
     
     // IPC Message dock - Bottom (tabbed with Errors and Warnings)
     QDockWidget *dockIPCMessage = new QDockWidget(tr("IPC Message"), this);
@@ -129,6 +145,10 @@ void MainWindow::createDockWidgets()
     m_ipcMessage = new IPCMessage();
     dockIPCMessage->setWidget(m_ipcMessage);
     tabifyDockWidget(dockErrorsWarnings, dockIPCMessage);
+    connect(dockIPCMessage, &QDockWidget::visibilityChanged, this, [this](bool visible) {
+        if (ui->actionWindowIPCMessage)
+            ui->actionWindowIPCMessage->setChecked(visible);
+    });
     
     // Hide docks by default
     dockNavigator->hide();
