@@ -48,3 +48,7 @@ lib/QScintilla/src/Makefile*
 .VSCodeCounter
 .vscode
 
+# AI tools and agents
+.github/
+AGENTS.md
+
