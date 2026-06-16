@@ -4,8 +4,11 @@
 #include <QStyleFactory>
 #include <QFontDatabase>
 #include <QFont>
+#include <QDir>
+#include <QIcon>
 #include "widget/main_window/main_window.h"
 #include "util/logger.h"
+#include "util/resource_manager.h"
 
 int main(int argc, char *argv[])
 {
@@ -20,29 +23,52 @@ int main(int argc, char *argv[])
     // Set Fusion style first to ensure font is applied correctly
     app.setStyle(QStyleFactory::create("Fusion"));
     
-    // Load default font from resource
-    int fontId = QFontDatabase::addApplicationFont(":/font/SourceHanSansHWSC-Regular.otf");
+    // Get application path
+    QString appPath = QCoreApplication::applicationDirPath();
+    
+    // Initialize resource manager with external resources
+    ResourceManager::instance().init(appPath);
+    
+    // Load fonts from external resources first, fallback to embedded
+    QString fontDir = QDir(appPath).filePath("resources/font/14_SourceHanSansHWSC/OTF/SimplifiedChineseHW");
+    
+    // Load regular font
+    QString regularFontPath = QDir(fontDir).filePath("SourceHanSansHWSC-Regular.otf");
+    if (!QFile::exists(regularFontPath)) {
+        regularFontPath = ":/font/SourceHanSansHWSC-Regular.otf";
+    }
+    
+    int fontId = QFontDatabase::addApplicationFont(regularFontPath);
     if (fontId != -1) {
         QStringList fontFamilies = QFontDatabase::applicationFontFamilies(fontId);
         if (!fontFamilies.isEmpty()) {
             QString fontFamily = fontFamilies.at(0);
             QFont defaultFont(fontFamily, 10);
             app.setFont(defaultFont);
-            qDebug() << "Default font loaded:" << fontFamily;
+            qDebug() << "Default font loaded from:" << regularFontPath;
         }
     } else {
-        qDebug() << "Failed to load default font from resource";
+        qDebug() << "Failed to load default font from:" << regularFontPath;
+        // Fallback to system font
+        QFont defaultFont("Microsoft YaHei", 10);
+        app.setFont(defaultFont);
+        qDebug() << "Falling back to system font: Microsoft YaHei";
     }
     
-    // Load bold font as well
-    int boldFontId = QFontDatabase::addApplicationFont(":/font/SourceHanSansHWSC-Bold.otf");
+    // Load bold font
+    QString boldFontPath = QDir(fontDir).filePath("SourceHanSansHWSC-Bold.otf");
+    if (!QFile::exists(boldFontPath)) {
+        boldFontPath = ":/font/SourceHanSansHWSC-Bold.otf";
+    }
+    
+    int boldFontId = QFontDatabase::addApplicationFont(boldFontPath);
     if (boldFontId != -1) {
         QStringList boldFontFamilies = QFontDatabase::applicationFontFamilies(boldFontId);
         if (!boldFontFamilies.isEmpty()) {
-            qDebug() << "Bold font loaded:" << boldFontFamilies.at(0);
+            qDebug() << "Bold font loaded from:" << boldFontPath;
         }
     } else {
-        qDebug() << "Failed to load bold font from resource";
+        qDebug() << "Failed to load bold font from:" << boldFontPath;
     }
 
     QCommandLineParser parser;

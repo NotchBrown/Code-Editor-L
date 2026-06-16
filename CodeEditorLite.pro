@@ -86,6 +86,7 @@ SOURCES += \
     src/function/editor/on_cursor_pos_changed.cpp \
     src/util/recent_files_manager.cpp \
     src/util/logger.cpp \
+    src/util/resource_manager.cpp \
     src/widget/print/print_wizard.cpp \
     src/widget/print/print_wizard_page_printer.cpp \
     src/widget/print/print_wizard_page_page_setup.cpp \
@@ -109,6 +110,7 @@ HEADERS += \
     inc/project/project_manager.h \
     inc/util/recent_files_manager.h \
     inc/util/logger.h \
+    inc/util/resource_manager.h \
     inc/widget/print/print_wizard.h \
     inc/widget/print/print_wizard_page_printer.h \
     inc/widget/print/print_wizard_page_page_setup.h \

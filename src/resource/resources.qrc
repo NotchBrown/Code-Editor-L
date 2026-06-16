@@ -42,8 +42,4 @@
         <file alias="help/about.svg">icon/help/about.svg</file>
         <file alias="help/help.svg">icon/help/help.svg</file>
     </qresource>
-    <qresource prefix="/font">
-        <file alias="SourceHanSansHWSC-Regular.otf">font/14_SourceHanSansHWSC/OTF/SimplifiedChineseHW/SourceHanSansHWSC-Regular.otf</file>
-        <file alias="SourceHanSansHWSC-Bold.otf">font/14_SourceHanSansHWSC/OTF/SimplifiedChineseHW/SourceHanSansHWSC-Bold.otf</file>
-    </qresource>
 </RCC>

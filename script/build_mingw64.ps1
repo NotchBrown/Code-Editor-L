@@ -242,6 +242,35 @@ if (Test-Path $WindeployqtPath) {
 }
 
 # ========================================
+# Copy External Resources (fonts and icons)
+# ========================================
+Write-Host "`nCopying external resources..." -ForegroundColor Cyan
+
+$ResourcesDir = "$OutputDir\resources"
+$IconSourceDir = "$ProjectRoot\src\resource\icon"
+$FontSourceDir = "$ProjectRoot\src\resource\font"
+
+# Copy icons
+$IconTargetDir = "$ResourcesDir\icon"
+if (Test-Path $IconSourceDir) {
+    New-Item -ItemType Directory -Path $IconTargetDir -Force | Out-Null
+    Copy-Item -Path "$IconSourceDir\**" -Destination $IconTargetDir -Recurse -Force
+    Write-Host "  Copied icons to resources/icon" -ForegroundColor Green
+} else {
+    Write-Host "  Warning: Icon source directory not found at $IconSourceDir" -ForegroundColor Yellow
+}
+
+# Copy fonts
+$FontTargetDir = "$ResourcesDir\font"
+if (Test-Path $FontSourceDir) {
+    New-Item -ItemType Directory -Path $FontTargetDir -Force | Out-Null
+    Copy-Item -Path "$FontSourceDir\**" -Destination $FontTargetDir -Recurse -Force
+    Write-Host "  Copied fonts to resources/font" -ForegroundColor Green
+} else {
+    Write-Host "  Warning: Font source directory not found at $FontSourceDir" -ForegroundColor Yellow
+}
+
+# ========================================
 # Clean Intermediate Files
 # ========================================
 Write-Host "`nCleaning intermediate files..." -ForegroundColor Cyan
