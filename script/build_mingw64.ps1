@@ -31,11 +31,21 @@ param(
 )
 
 # ========================================
-# Configuration - Update these paths as needed
+# Configuration - Load user environment config
 # ========================================
-$QtDir = "D:\Qt5\Qt5.14.2\5.14.2\mingw73_64"
-$MinGWPath = "D:\Qt5\Qt5.14.2\Tools\mingw730_64\bin"
 $ProjectRoot = Split-Path -Parent $PSScriptRoot
+$EnvConfigPath = Join-Path $PSScriptRoot "env_config.ps1"
+
+if (Test-Path $EnvConfigPath) {
+    . $EnvConfigPath
+    Write-Host "  Loaded environment config: $EnvConfigPath" -ForegroundColor Cyan
+} else {
+    Write-Host "  No env_config.ps1 found, using defaults." -ForegroundColor Yellow
+    Write-Host "  Copy script\env_config.ps1.example to script\env_config.ps1 and edit it." -ForegroundColor Yellow
+    # Default fallback paths
+    $script:QtDir = "C:\Users\gzb17\Qt5\5.14.2\mingw73_64"
+    $script:MinGWPath = "C:\Users\gzb17\Qt5\Tools\mingw730_64\bin"
+}
 
 # ========================================
 # Initialize Environment

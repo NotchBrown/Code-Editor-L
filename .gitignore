@@ -52,3 +52,6 @@ lib/QScintilla/src/Makefile*
 .github/
 AGENTS.md
 
+# User-specific environment config
+script/env_config.ps1
+

@@ -1,0 +1,12 @@
+# ========================================
+# CodeEditorLite — 环境路径配置
+# ========================================
+# 使用方法：复制本文件为 env_config.ps1，修改其中的路径为你的实际安装位置。
+# env_config.ps1 已在 .gitignore 中，不会被提交。
+# ========================================
+
+# Qt 安装根目录（包含 5.14.2/mingw73_64 子目录的路径）
+$script:QtDir = "C:\Users\gzb17\Qt5\5.14.2\mingw73_64"
+
+# MinGW 工具链路径（包含 g++.exe, mingw32-make.exe 的目录）
+$script:MinGWPath = "C:\Users\gzb17\Qt5\Tools\mingw730_64\bin"
