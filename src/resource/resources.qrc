@@ -8,8 +8,10 @@
         <file alias="file/print.svg">icon/file/print.svg</file>
         <file alias="file/properties.svg">icon/file/properties.svg</file>
         <file alias="file/encoding.svg">icon/file/encoding.svg</file>
-        <file alias="file/type.svg">icon/file/type.svg</file>
+        <file alias="file/file.svg">icon/file/file.svg</file>
         <file alias="file/recent.svg">icon/file/recent.svg</file>
+        <file alias="file/type.svg">icon/file/type.svg</file>
+
         <file alias="edit/undo.svg">icon/edit/undo.svg</file>
         <file alias="edit/redo.svg">icon/edit/redo.svg</file>
         <file alias="edit/cut.svg">icon/edit/cut.svg</file>
