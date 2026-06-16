@@ -48,8 +48,6 @@ public:
     
     void commentLine();
     void uncommentLine();
-    void commentBlock();
-    void uncommentBlock();
     void deleteChar();
     
     // Read-only support
@@ -65,15 +63,32 @@ private slots:
     void onTextChanged();
 
 private:
+    // Comment syntax definition per language
+    struct CommentSyntax {
+        QString line;        // Line comment delimiter, e.g. "//", "#"
+        QString blockStart;  // Block comment start, e.g. "/*", "<!--"
+        QString blockEnd;    // Block comment end, e.g. "*/", "-->"
+    };
+
     void setupEditor();
     void setupConnections();
     void updateLexerFromFile();
+    void initCommentSyntax();
+    CommentSyntax commentSyntaxForLanguage(const QString &lang) const;
+
+    // Comment/uncomment helpers
+    void applyLineComment(const QString &delim);
+    void removeLineComment(const QString &delim);
+    void applyBlockComment(const QString &open, const QString &close);
+    bool tryRemoveBlockComment(const QString &open, const QString &close);
+    QString textRange(int start, int end) const;
 
     QString m_filePath;
     QsciLexer *m_lexer;
     QString m_tempLexerName;
     QString m_currentLexerName; // Current lexer name for tracking
     QMap<QString, QString> m_extensionToLexer;
+    QMap<QString, CommentSyntax> m_commentSyntax;
     QString m_currentEncoding; // Current file encoding
     bool m_manualLexerSet; // Whether user has manually set the lexer
     bool m_readOnly; // Whether the editor is in read-only mode

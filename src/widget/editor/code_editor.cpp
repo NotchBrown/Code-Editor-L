@@ -55,6 +55,15 @@ const int SCI_GETCURRENTPOS = 200;
 const int SCI_GETCURRENTLINE = 201;
 const int SCI_GETLINEENDPOSITION = 234;
 const int SCI_GETLINECOUNT = 204;
+const int SCI_GETSTYLEAT = 2010;
+const int SCI_GETLINEINDENTPOSITION = 2128;
+const int SCI_LINEFROMPOSITION = 2166;
+const int SCI_BEGINUNDOACTION = 2078;
+const int SCI_ENDUNDOACTION = 2079;
+const int SCI_INSERTTEXT = 2003;
+const int SCI_GETCHARAT = 2007;
+const int SCI_WORDSTARTPOSITION = 2266;
+const int SCI_WORDENDPOSITION = 2267;
 
 CodeEditor::CodeEditor(QWidget *parent)
     : QsciScintilla(parent),
@@ -138,6 +147,7 @@ CodeEditor::CodeEditor(QWidget *parent)
     m_extensionToLexer[".vhd"] = "vhdl";
     m_extensionToLexer[".v"] = "verilog";
     
+    initCommentSyntax();
     setupEditor();
     setupConnections();
 }
@@ -190,6 +200,87 @@ void CodeEditor::setupConnections()
     connect(this, &QsciScintilla::textChanged, this, &CodeEditor::onTextChanged);
     // Note: QsciScintilla::cursorPositionChanged is already emitted by parent class
     // We don't need to connect it here, MainWindow will connect directly
+}
+
+void CodeEditor::initCommentSyntax()
+{
+    // C-family: // and /* */
+    m_commentSyntax["cpp"] = {"//", "/*", "*/"};
+    m_commentSyntax["javascript"] = {"//", "/*", "*/"};
+    m_commentSyntax["java"] = {"//", "/*", "*/"};
+    m_commentSyntax["csharp"] = {"//", "/*", "*/"};
+    m_commentSyntax["d"] = {"//", "/*", "*/"};
+    m_commentSyntax["idl"] = {"//", "/*", "*/"};
+    m_commentSyntax["pascal"] = {"//", "{", "}"};
+    m_commentSyntax["php"] = {"//", "/*", "*/"};
+    m_commentSyntax["verilog"] = {"//", "/*", "*/"};
+    m_commentSyntax["pov"] = {"//", "/*", "*/"};
+    m_commentSyntax["avs"] = {"//", "/*", "*/"};
+
+    // Shell-style: #
+    m_commentSyntax["python"] = {"#", "\"\"\"", "\"\"\""};
+    m_commentSyntax["bash"] = {"#", "", ""};
+    m_commentSyntax["perl"] = {"#", "", ""};
+    m_commentSyntax["ruby"] = {"#", "=begin", "=end"};
+    m_commentSyntax["yaml"] = {"#", "", ""};
+    m_commentSyntax["makefile"] = {"#", "", ""};
+    m_commentSyntax["cmake"] = {"#", "", ""};
+    m_commentSyntax["tcl"] = {"#", "", ""};
+    m_commentSyntax["coffeescript"] = {"#", "###", "###"};
+    m_commentSyntax["properties"] = {"#", "", ""};
+    m_commentSyntax["po"] = {"#", "", ""};
+
+    // SQL: --
+    m_commentSyntax["sql"] = {"--", "/*", "*/"};
+
+    // Lua: --
+    m_commentSyntax["lua"] = {"--", "--[[", "]]"};
+
+    // HTML/XML: <!-- -->
+    m_commentSyntax["html"] = {"", "<!--", "-->"};
+    m_commentSyntax["xml"] = {"", "<!--", "-->"};
+
+    // CSS: /* */
+    m_commentSyntax["css"] = {"", "/*", "*/"};
+
+    // TeX: %
+    m_commentSyntax["tex"] = {"%", "", ""};
+
+    // Fortran: !
+    m_commentSyntax["fortran"] = {"!", "/*", "*/"};
+    m_commentSyntax["fortran77"] = {"c", "/*", "*/"};
+
+    // MATLAB: %
+    m_commentSyntax["matlab"] = {"%", "%{", "%}"};
+
+    // Assembly: ;
+    m_commentSyntax["asm"] = {";", "", ""};
+    m_commentSyntax["spice"] = {";", "", ""};
+
+    // VHDL: --
+    m_commentSyntax["vhdl"] = {"--", "", ""};
+
+    // Batch: REM
+    m_commentSyntax["batch"] = {"REM ", "", ""};
+
+    // PostScript: %
+    m_commentSyntax["postscript"] = {"%", "", ""};
+
+    // Default fallback for unknown languages: C-style
+}
+
+CodeEditor::CommentSyntax CodeEditor::commentSyntaxForLanguage(const QString &lang) const
+{
+    if (m_commentSyntax.contains(lang)) {
+        return m_commentSyntax[lang];
+    }
+    // Default to C-style for unknown languages
+    return {"//", "/*", "*/"};
+}
+
+QString CodeEditor::textRange(int start, int end) const
+{
+    return QsciScintilla::text(start, end);
 }
 
 QString CodeEditor::filePath() const
@@ -531,101 +622,161 @@ void CodeEditor::clearAllBreakpoints()
     markerDeleteAll(2);
 }
 
+// ============================================================
+// Comment / Uncomment  —  业界标准做法：
+//   位置匹配 (SCI_GETLINEINDENTPOSITION) + 字符匹配 (mid/startsWith) + 范围删除 (SCI_DELETERANGE)
+//   菜单只有 Comment/Uncomment 两个入口，各自按语言分别处理行注释与块注释
+// ============================================================
+
 void CodeEditor::commentLine()
 {
-    if (!hasSelectedText()) {
-        int line = SendScintilla(SCI_GETCURRENTLINE);
-        QString txt = QsciScintilla::text(line);
-        if (!txt.startsWith("//")) {
-            insertAt("//", line, 0);
-        }
-    } else {
-        int startLine, startCol, endLine, endCol;
-        getSelection(&startLine, &startCol, &endLine, &endCol);
-        
-        for (int i = startLine; i <= endLine; ++i) {
-            QString txt = QsciScintilla::text(i);
-            if (!txt.startsWith("//")) {
-                insertAt("//", i, 0);
-            }
-        }
+    CommentSyntax syntax = commentSyntaxForLanguage(m_currentLexerName);
+
+    // 优先行注释，没有则用块注释
+    if (!syntax.line.isEmpty()) {
+        applyLineComment(syntax.line);
+    } else if (!syntax.blockStart.isEmpty() && !syntax.blockEnd.isEmpty()) {
+        applyBlockComment(syntax.blockStart, syntax.blockEnd);
     }
 }
 
 void CodeEditor::uncommentLine()
 {
-    if (!hasSelectedText()) {
-        int line = SendScintilla(SCI_GETCURRENTLINE);
-        QString txt = QsciScintilla::text(line);
-        if (txt.startsWith("//")) {
-            int lineStart = SendScintilla(SCI_GETLINESTART, line);
-            SendScintilla(SCI_DELETERANGE, lineStart, 2);
-        }
-    } else {
-        int startLine, startCol, endLine, endCol;
-        getSelection(&startLine, &startCol, &endLine, &endCol);
-        
-        for (int i = endLine; i >= startLine; --i) {
-            QString txt = QsciScintilla::text(i);
-            if (txt.startsWith("//")) {
-                int lineStart = SendScintilla(SCI_GETLINESTART, i);
-                SendScintilla(SCI_DELETERANGE, lineStart, 2);
-            }
-        }
+    CommentSyntax syntax = commentSyntaxForLanguage(m_currentLexerName);
+
+    // 先尝试移除块注释 (通过样式检测或文本搜索)
+    if (!syntax.blockStart.isEmpty() && !syntax.blockEnd.isEmpty()) {
+        if (tryRemoveBlockComment(syntax.blockStart, syntax.blockEnd))
+            return;
+    }
+
+    // 再尝试移除行注释
+    if (!syntax.line.isEmpty()) {
+        removeLineComment(syntax.line);
     }
 }
 
-void CodeEditor::commentBlock()
+// ---------- 私有辅助函数 ----------
+
+void CodeEditor::applyLineComment(const QString &delim)
 {
-    if (!hasSelectedText()) {
-        int line = SendScintilla(SCI_GETCURRENTLINE);
-        insertAt("/* ", line, 0);
-        QString lineText = QsciScintilla::text(line);
-        insertAt(" */", line, lineText.length());
-    } else {
-        int startLine, startCol, endLine, endCol;
+    int startLine, endLine;
+    if (hasSelectedText()) {
+        int startCol, endCol;
         getSelection(&startLine, &startCol, &endLine, &endCol);
-        
-        insertAt("/* ", startLine, 0);
-        QString endText = QsciScintilla::text(endLine);
-        if (endText.endsWith("\n")) {
-            insertAt(" */", endLine, endText.length() - 1);
-        } else {
-            insertAt(" */", endLine, endText.length());
+        // 如果选区末尾恰在行首 (只选了前一行尾的换行)，不包含该行
+        if (endCol == 0 && endLine > startLine)
+            endLine--;
+    } else {
+        startLine = endLine = SendScintilla(SCI_GETCURRENTLINE);
+    }
+
+    SendScintilla(SCI_BEGINUNDOACTION);
+    for (int line = startLine; line <= endLine; ++line) {
+        int indentPos = SendScintilla(SCI_GETLINEINDENTPOSITION, line);
+        // 双重验证：位置 + 字符匹配，避免重复注释
+        int lineEnd = SendScintilla(SCI_GETLINEENDPOSITION, line);
+        QString lineText = textRange(indentPos, lineEnd);
+        if (!lineText.startsWith(delim)) {
+            SendScintilla(SCI_INSERTTEXT, indentPos, delim.toUtf8().constData());
         }
     }
+    SendScintilla(SCI_ENDUNDOACTION);
 }
 
-void CodeEditor::uncommentBlock()
+void CodeEditor::removeLineComment(const QString &delim)
 {
-    if (!hasSelectedText()) {
-        int line = SendScintilla(SCI_GETCURRENTLINE);
-        QString txt = QsciScintilla::text(line);
-        if (txt.startsWith("/* ")) {
-            int lineStart = SendScintilla(SCI_GETLINESTART, line);
-            SendScintilla(SCI_DELETERANGE, lineStart, 3);
-        }
-        txt = QsciScintilla::text(line);
-        if (txt.endsWith(" */")) {
-            int lineEnd = SendScintilla(SCI_GETLINEENDPOSITION, line);
-            SendScintilla(SCI_DELETERANGE, lineEnd - 3, 3);
-        }
-    } else {
-        int startLine, startCol, endLine, endCol;
+    int startLine, endLine;
+    if (hasSelectedText()) {
+        int startCol, endCol;
         getSelection(&startLine, &startCol, &endLine, &endCol);
-        
-        QString startText = QsciScintilla::text(startLine);
-        if (startText.startsWith("/* ")) {
-            int lineStart = SendScintilla(SCI_GETLINESTART, startLine);
-            SendScintilla(SCI_DELETERANGE, lineStart, 3);
-        }
-        
-        QString endText = QsciScintilla::text(endLine);
-        if (endText.endsWith(" */")) {
-            int lineEnd = SendScintilla(SCI_GETLINEENDPOSITION, endLine);
-            SendScintilla(SCI_DELETERANGE, lineEnd - 3, 3);
+        if (endCol == 0 && endLine > startLine)
+            endLine--;
+    } else {
+        startLine = endLine = SendScintilla(SCI_GETCURRENTLINE);
+    }
+
+    SendScintilla(SCI_BEGINUNDOACTION);
+    // 倒序遍历，保证删除后行号不变
+    for (int line = endLine; line >= startLine; --line) {
+        int indentPos = SendScintilla(SCI_GETLINEINDENTPOSITION, line);
+        int lineEnd = SendScintilla(SCI_GETLINEENDPOSITION, line);
+        QString lineText = textRange(indentPos, lineEnd);
+        // 位置匹配 + 字符匹配：在缩进位置检测注释符
+        if (lineText.startsWith(delim)) {
+            SendScintilla(SCI_DELETERANGE, indentPos, delim.length());
         }
     }
+    SendScintilla(SCI_ENDUNDOACTION);
+}
+
+void CodeEditor::applyBlockComment(const QString &open, const QString &close)
+{
+    int selStart, selEnd;
+    if (hasSelectedText()) {
+        int sLine, sCol, eLine, eCol;
+        getSelection(&sLine, &sCol, &eLine, &eCol);
+        selStart = positionFromLineIndex(sLine, sCol);
+        selEnd   = positionFromLineIndex(eLine, eCol);
+    } else {
+        // 无选区：包裹光标所在单词
+        selStart = SendScintilla(SCI_GETCURRENTPOS);
+        // 尝试扩展到一个单词
+        int wordStart = SendScintilla(SCI_WORDSTARTPOSITION, selStart, true);
+        int wordEnd   = SendScintilla(SCI_WORDENDPOSITION, selStart, true);
+        if (wordStart < wordEnd) {
+            selStart = wordStart;
+            selEnd   = wordEnd;
+        }
+    }
+
+    SendScintilla(SCI_BEGINUNDOACTION);
+    // 先插 close (不改变 open 位置)，再插 open
+    SendScintilla(SCI_INSERTTEXT, selEnd, close.toUtf8().constData());
+    SendScintilla(SCI_INSERTTEXT, selStart, open.toUtf8().constData());
+    SendScintilla(SCI_ENDUNDOACTION);
+}
+
+bool CodeEditor::tryRemoveBlockComment(const QString &open, const QString &close)
+{
+    int checkStart, checkEnd;
+
+    if (hasSelectedText()) {
+        int sLine, sCol, eLine, eCol;
+        getSelection(&sLine, &sCol, &eLine, &eCol);
+        checkStart = positionFromLineIndex(sLine, sCol);
+        checkEnd   = positionFromLineIndex(eLine, eCol);
+    } else {
+        checkStart = SendScintilla(SCI_GETCURRENTPOS);
+        checkEnd   = checkStart;
+    }
+
+    // 方法1: 样式检测 — 如果光标/选区位置处于注释样式中
+    int styleAtStart = SendScintilla(SCI_GETSTYLEAT, checkStart) & 0x1f;
+    int styleAtEnd   = SendScintilla(SCI_GETSTYLEAT, checkEnd) & 0x1f;
+
+    // 注释样式的值因语言而异，通用做法是检查文本匹配
+    // 方法2: 在选区前后搜索块注释分隔符 (优先)
+    QString fullText = QsciScintilla::text();
+
+    // 向前搜索 open (从选区起点往前 open.length() 开始搜)
+    int openPos = fullText.lastIndexOf(open, checkStart + open.length() - 1);
+    // 向后搜索 close (从选区终点往后 close.length() 开始搜)
+    int closePos = fullText.indexOf(close, checkEnd - close.length() + 1);
+
+    if (openPos == -1 || closePos == -1 || openPos >= closePos)
+        return false;
+
+    // 确认 open 和 close 之间包含选区/光标
+    if (checkStart >= openPos && checkEnd <= closePos + close.length()) {
+        SendScintilla(SCI_BEGINUNDOACTION);
+        SendScintilla(SCI_DELETERANGE, closePos, close.length());
+        SendScintilla(SCI_DELETERANGE, openPos, open.length());
+        SendScintilla(SCI_ENDUNDOACTION);
+        return true;
+    }
+
+    return false;
 }
 
 void CodeEditor::deleteChar()
