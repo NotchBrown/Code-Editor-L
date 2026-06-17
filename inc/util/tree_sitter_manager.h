@@ -83,9 +83,6 @@ private:
     void extractSymbolsViaQuery(const QString &source, const QString &lexerName,
                                 QList<SymbolInfo> &symbols);
 
-    // Get query string for a language (based on official tags.scm)
-    static QString tagsQueryForLanguage(const QString &lexerName);
-
     // Map query capture name to SymbolInfo::Type
     static SymbolInfo::Type captureToSymbolType(const char *captureName);
 

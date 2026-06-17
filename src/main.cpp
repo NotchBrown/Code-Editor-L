@@ -6,6 +6,7 @@
 #include <QFont>
 #include <QDir>
 #include <QIcon>
+#include <QTimer>
 #include "widget/main_window/main_window.h"
 #include "util/logger.h"
 #include "util/resource_manager.h"
@@ -85,7 +86,18 @@ int main(int argc, char *argv[])
     QCommandLineOption debugOption("debug", "Enable debug mode");
     parser.addOption(debugOption);
 
+    // Positional argument: file path (standard Windows: drop file onto .exe)
+    parser.addPositionalArgument("file", "File to open");
+
     parser.process(app);
+
+    // Determine which file to open (positional arg takes priority over -f)
+    QString fileToOpen;
+    if (!parser.positionalArguments().isEmpty()) {
+        fileToOpen = parser.positionalArguments().first();
+    } else if (parser.isSet(fileOption)) {
+        fileToOpen = parser.value(fileOption);
+    }
 
     MainWindow window;
 
@@ -95,9 +107,11 @@ int main(int argc, char *argv[])
         qDebug() << "IPC server initialized on port" << port;
     }
 
-    QString fileToOpen = parser.value(fileOption);
     if (!fileToOpen.isEmpty()) {
         qDebug() << "Opening file:" << fileToOpen;
+        QTimer::singleShot(200, [&]() {
+            window.createNewEditor(fileToOpen);
+        });
     }
 
     if (parser.isSet(debugOption)) {

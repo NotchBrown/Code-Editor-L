@@ -1,8 +1,10 @@
 #include "util/tree_sitter_manager.h"
+#include "util/query_rules.h"
 #include <QCoreApplication>
 #include <QDir>
 #include <QDebug>
 #include <QSet>
+#include <QFile>
 
 TreeSitterManager* TreeSitterManager::m_instance = nullptr;
 
@@ -42,35 +44,12 @@ TreeSitterManager* TreeSitterManager::instance()
 }
 
 // ---------------------------------------------------------------------------
-// Language / grammar mapping
+// Language / grammar mapping (delegated to query_rules.h)
 // ---------------------------------------------------------------------------
-
-// Map QScintilla lexer name → tree-sitter grammar DLL basename
-static QString lexerToGrammarName(const QString &lexerName)
-{
-    if (lexerName == "c")            return "ts_c";
-    if (lexerName == "cpp")          return "ts_cpp";
-    if (lexerName == "python")       return "ts_python";
-    if (lexerName == "javascript")   return "ts_javascript";
-    if (lexerName == "java")         return "ts_java";
-    if (lexerName == "csharp")       return "ts_csharp";
-    if (lexerName == "go")           return "ts_go";
-    if (lexerName == "rust")         return "ts_rust";
-    if (lexerName == "php")          return "ts_php";
-    if (lexerName == "ruby")         return "ts_ruby";
-    if (lexerName == "bash")         return "ts_bash";
-    if (lexerName == "html")         return "ts_html";
-    if (lexerName == "css")          return "ts_css";
-    if (lexerName == "json")         return "ts_json";
-    if (lexerName == "scala")        return "ts_scala";
-    if (lexerName == "ocaml")        return "ts_ocaml";
-    if (lexerName == "julia")        return "ts_julia";
-    return QString();
-}
 
 QString TreeSitterManager::grammarPath(const QString &lexerName)
 {
-    QString grammarName = lexerToGrammarName(lexerName);
+    QString grammarName = ::lexerToGrammarName(lexerName);
     if (grammarName.isEmpty()) return QString();
 
     QStringList searchPaths;
@@ -89,7 +68,24 @@ QString TreeSitterManager::grammarPath(const QString &lexerName)
 
 bool TreeSitterManager::supportsLanguage(const QString &lexerName) const
 {
-    return !lexerToGrammarName(lexerName).isEmpty();
+    // Must have query rules AND grammar DLL
+    if (::tagsQueryForLanguage(lexerName).isEmpty()) return false;
+
+    QString grammarName = ::lexerToGrammarName(lexerName);
+    if (grammarName.isEmpty()) return false;
+
+    QStringList searchPaths;
+    searchPaths << QCoreApplication::applicationDirPath() + "/grammars";
+    searchPaths << QDir::currentPath() + "/grammars";
+    searchPaths << "D:/Qt5Project/CodeEditorLite/lib/tree_sitter_mingw64/grammars";
+
+    for (const QString &dir : searchPaths) {
+        QString fullPath = dir + "/" + grammarName + ".dll";
+        if (QFile::exists(fullPath)) {
+            return true;
+        }
+    }
+    return false;
 }
 
 const TSLanguage* TreeSitterManager::loadLanguage(const QString &lexerName)
@@ -112,10 +108,8 @@ const TSLanguage* TreeSitterManager::loadLanguage(const QString &lexerName)
     }
 
     // Build the language function name from grammar DLL naming
-    // Grammar DLLs export: tree_sitter_c(), tree_sitter_cpp(), tree_sitter_python(), etc.
-    // The function name in the DLL matches the grammar name part after "ts_"
-    QString grammarName = lexerToGrammarName(lexerName);  // e.g. "ts_cpp"
-    QString funcName = "tree_sitter_" + grammarName.mid(3); // e.g. "tree_sitter_cpp"
+    QString grammarName = lexerToGrammarName(lexerName);  // e.g. "ts_cpp" or "ts_c-sharp"
+    QString funcName = grammarToFuncName(grammarName);    // e.g. "tree_sitter_cpp" or "tree_sitter_c_sharp"
 
     typedef const TSLanguage* (*LangFunc)();
     LangFunc func = reinterpret_cast<LangFunc>(lib->resolve(funcName.toLatin1().constData()));
@@ -162,64 +156,8 @@ TSParser* TreeSitterManager::getParser(const QString &lexerName)
 }
 
 // ---------------------------------------------------------------------------
-// Symbol extraction
+// Symbol extraction (queries in query_rules.cpp)
 // ---------------------------------------------------------------------------
-
-// ---------------------------------------------------------------------------
-// Query-based symbol extraction (VS Code / Eclipse style)
-// ---------------------------------------------------------------------------
-
-QString TreeSitterManager::tagsQueryForLanguage(const QString &lexerName)
-{
-    // Based on official tags.scm from each tree-sitter grammar repository
-    if (lexerName == "c") {
-        return R"(
-(struct_specifier name: (type_identifier) @name) @definition.struct
-(declaration type: (union_specifier name: (type_identifier) @name)) @definition.class
-(function_definition
-  declarator: (function_declarator
-    declarator: (identifier) @name)) @definition.function
-(type_definition declarator: (type_identifier) @name) @definition.type
-(enum_specifier name: (type_identifier) @name) @definition.type
-(preproc_def name: (identifier) @name) @definition.macro
-(preproc_function_def name: (identifier) @name) @definition.macro
-)";
-    }
-    if (lexerName == "cpp") {
-        return R"(
-(function_definition
-  declarator: (function_declarator
-    declarator: (identifier) @name)) @definition.function
-(function_definition
-  declarator: (function_declarator
-    declarator: (qualified_identifier
-      name: (identifier) @name))) @definition.function
-(class_specifier name: (type_identifier) @name) @definition.class
-(struct_specifier name: (type_identifier) @name) @definition.struct
-(enum_specifier name: (type_identifier) @name) @definition.type
-(type_definition declarator: (type_identifier) @name) @definition.type
-)";
-    }
-    if (lexerName == "python") {
-        return R"(
-(class_definition name: (identifier) @name) @definition.class
-(function_definition name: (identifier) @name) @definition.function
-(assignment left: (identifier) @name) @definition.variable
-)";
-    }
-    if (lexerName == "javascript" || lexerName == "js") {
-        return R"(
-(method_definition name: (property_identifier) @name) @definition.method
-(class_declaration name: (_) @name) @definition.class
-(function_declaration name: (identifier) @name) @definition.function
-(function_expression name: (identifier) @name) @definition.function
-(generator_function_declaration name: (identifier) @name) @definition.function
-(variable_declaration (variable_declarator name: (identifier) @name)) @definition.variable
-(lexical_declaration (variable_declarator name: (identifier) @name)) @definition.variable
-)";
-    }
-    return QString();
-}
 
 SymbolInfo::Type TreeSitterManager::captureToSymbolType(const char *captureName)
 {
@@ -237,6 +175,8 @@ SymbolInfo::Type TreeSitterManager::captureToSymbolType(const char *captureName)
     if (n == "reference.macro")    return SymbolInfo::Macro;
     if (n == "definition.module")  return SymbolInfo::Module;
     if (n == "definition.interface") return SymbolInfo::Interface;
+    if (n == "definition.enum")    return SymbolInfo::Enum;
+    if (n == "definition.union")   return SymbolInfo::Union;
     return SymbolInfo::Unknown;
 }
 
@@ -260,7 +200,16 @@ QString TreeSitterManager::extractSymbolName(const TSQueryMatch &match,
             uint32_t s = ts_node_start_byte(cap.node);
             uint32_t e = ts_node_end_byte(cap.node);
             if (e > s && s < (uint32_t)utf8Source.size()) {
-                return extractByteRange(utf8Source, s, e);
+                QString result = extractByteRange(utf8Source, s, e);
+                // Debug: verify extraction for non-empty names
+                if (!result.isEmpty() && result.length() <= 100) {
+                    qDebug() << "[TreeSitter] extractName: byte=[" << s << "," << e << ")"
+                             << "got=\"" << result << "\"";
+                }
+                return result;
+            } else {
+                qWarning() << "[TreeSitter] extractName: INVALID byte range [" << s << "," << e << "]"
+                           << "utf8Size=" << utf8Source.size();
             }
         }
     }

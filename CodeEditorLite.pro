@@ -94,6 +94,7 @@ SOURCES += \
     src/util/logger.cpp \
     src/util/resource_manager.cpp \
     src/util/tree_sitter_manager.cpp \
+    src/util/query_rules.cpp \
     src/util/hotkey_manager.cpp \
     src/widget/print/print_wizard.cpp \
     src/widget/print/print_wizard_page_printer.cpp \
@@ -123,6 +124,7 @@ HEADERS += \
     inc/util/logger.h \
     inc/util/resource_manager.h \
     inc/util/tree_sitter_manager.h \
+    inc/util/query_rules.h \
     inc/util/hotkey_manager.h \
     inc/widget/print/print_wizard.h \
     inc/widget/print/print_wizard_page_printer.h \
@@ -212,6 +214,14 @@ win32 {
     QMAKE_POST_LINK += $$quote(copy /y $$shell_path($$TREE_SITTER_GRAMMAR_SRC/ts_cpp.dll) $$shell_path($$DESTDIR/grammars/) &)
     QMAKE_POST_LINK += $$quote(copy /y $$shell_path($$TREE_SITTER_GRAMMAR_SRC/ts_python.dll) $$shell_path($$DESTDIR/grammars/) &)
     QMAKE_POST_LINK += $$quote(copy /y $$shell_path($$TREE_SITTER_GRAMMAR_SRC/ts_javascript.dll) $$shell_path($$DESTDIR/grammars/) &)
+    QMAKE_POST_LINK += $$quote(copy /y $$shell_path($$TREE_SITTER_GRAMMAR_SRC/ts_bash.dll) $$shell_path($$DESTDIR/grammars/) &)
+    QMAKE_POST_LINK += $$quote(copy /y $$shell_path($$TREE_SITTER_GRAMMAR_SRC/ts_java.dll) $$shell_path($$DESTDIR/grammars/) &)
+    QMAKE_POST_LINK += $$quote(copy /y $$shell_path($$TREE_SITTER_GRAMMAR_SRC/ts_c-sharp.dll) $$shell_path($$DESTDIR/grammars/) &)
+    QMAKE_POST_LINK += $$quote(copy /y $$shell_path($$TREE_SITTER_GRAMMAR_SRC/ts_ruby.dll) $$shell_path($$DESTDIR/grammars/) &)
+    QMAKE_POST_LINK += $$quote(copy /y $$shell_path($$TREE_SITTER_GRAMMAR_SRC/ts_html.dll) $$shell_path($$DESTDIR/grammars/) &)
+    QMAKE_POST_LINK += $$quote(copy /y $$shell_path($$TREE_SITTER_GRAMMAR_SRC/ts_css.dll) $$shell_path($$DESTDIR/grammars/) &)
+    QMAKE_POST_LINK += $$quote(copy /y $$shell_path($$TREE_SITTER_GRAMMAR_SRC/ts_json.dll) $$shell_path($$DESTDIR/grammars/) &)
+    QMAKE_POST_LINK += $$quote(copy /y $$shell_path($$TREE_SITTER_GRAMMAR_SRC/ts_verilog.dll) $$shell_path($$DESTDIR/grammars/) &)
     QMAKE_POST_LINK += $$quote(copy /y $$shell_path($$TREE_SITTER_BIN_SRC/libtree-sitter.dll) $$shell_path($$DESTDIR/) &)
 }
 

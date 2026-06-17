@@ -26,6 +26,7 @@ public:
     ~MainWindow();
 
     void initIpcServer(int port = 0);
+    CodeEditor* createNewEditor(const QString &filePath = QString());
 
 private slots:
     // Start menu
@@ -129,7 +130,6 @@ private:
     void setupConnections();
     void createDockWidgets();
     
-    CodeEditor* createNewEditor(const QString &filePath = QString());
     CodeEditor* currentEditor() const;
     void updateWindowTitle();
     bool closeTab(int index);
