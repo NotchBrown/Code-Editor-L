@@ -31,12 +31,23 @@
    </property>
    <item>
     <widget class="QTreeWidget" name="treeWidget">
-     <property name="headerHidden">
+     <property name="alternatingRowColors">
       <bool>true</bool>
+     </property>
+     <property name="headerHidden">
+      <bool>false</bool>
+     </property>
+     <property name="sortingEnabled">
+      <bool>false</bool>
      </property>
      <column>
       <property name="text">
-       <string notr="true">1</string>
+       <string>Symbol</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Line</string>
       </property>
      </column>
     </widget>

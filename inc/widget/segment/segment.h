@@ -2,6 +2,9 @@
 #define SEGMENT_H
 
 #include "main.h"
+#include "util/tree_sitter_manager.h"
+
+class CodeEditor;
 
 namespace Ui {
 class Segment;
@@ -15,7 +18,13 @@ public:
     explicit Segment(QWidget *parent = nullptr);
     ~Segment();
 
+    // Update segment info based on cursor position
+    void updateAtPosition(CodeEditor *editor, int line, int column);
+
 private:
+    void clearInfo();
+    void addInfoRow(const QString &label, const QString &value);
+
     Ui::Segment *ui;
 };
 

@@ -1,3 +1,6 @@
 [submodule "lib/QScintilla"]
 	path = lib/QScintilla
 	url = https://github.com/brCreate/QScintilla
+[submodule "lib/tree-sitter"]
+	path = lib/tree-sitter
+	url = https://github.com/NotchBrown/tree-sitter-fork_from_0_26_9-.git

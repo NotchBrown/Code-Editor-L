@@ -16,6 +16,11 @@ QSCINTILLA_PATH = $$PWD/lib/qscintilla_mingw64
 LIBS += -L$$QSCINTILLA_PATH/lib -lqscintilla2_qt5
 INCLUDEPATH += $$QSCINTILLA_PATH/include/Qsci
 
+# Tree-sitter configuration
+TREE_SITTER_PATH = $$PWD/lib/tree_sitter_mingw64
+LIBS += -L$$TREE_SITTER_PATH/lib -llibtree-sitter
+INCLUDEPATH += $$TREE_SITTER_PATH/include
+
 # Source files
 SOURCES += \
     src/main.cpp \
@@ -88,6 +93,7 @@ SOURCES += \
     src/util/recent_files_manager.cpp \
     src/util/logger.cpp \
     src/util/resource_manager.cpp \
+    src/util/tree_sitter_manager.cpp \
     src/util/hotkey_manager.cpp \
     src/widget/print/print_wizard.cpp \
     src/widget/print/print_wizard_page_printer.cpp \
@@ -116,6 +122,7 @@ HEADERS += \
     inc/util/recent_files_manager.h \
     inc/util/logger.h \
     inc/util/resource_manager.h \
+    inc/util/tree_sitter_manager.h \
     inc/util/hotkey_manager.h \
     inc/widget/print/print_wizard.h \
     inc/widget/print/print_wizard_page_printer.h \
@@ -195,6 +202,18 @@ OBJECTS_DIR = build/obj
 MOC_DIR = build/moc
 RCC_DIR = build/rcc
 UI_DIR = build/ui
+
+# Post-build: copy tree-sitter grammar DLLs and runtime library
+TREE_SITTER_GRAMMAR_SRC = $$PWD/lib/tree_sitter_mingw64/grammars
+TREE_SITTER_BIN_SRC = $$PWD/lib/tree_sitter_mingw64/bin
+win32 {
+    QMAKE_POST_LINK += $$quote(mkdir $$shell_path($$DESTDIR/grammars) 2>nul &)
+    QMAKE_POST_LINK += $$quote(copy /y $$shell_path($$TREE_SITTER_GRAMMAR_SRC/ts_c.dll) $$shell_path($$DESTDIR/grammars/) &)
+    QMAKE_POST_LINK += $$quote(copy /y $$shell_path($$TREE_SITTER_GRAMMAR_SRC/ts_cpp.dll) $$shell_path($$DESTDIR/grammars/) &)
+    QMAKE_POST_LINK += $$quote(copy /y $$shell_path($$TREE_SITTER_GRAMMAR_SRC/ts_python.dll) $$shell_path($$DESTDIR/grammars/) &)
+    QMAKE_POST_LINK += $$quote(copy /y $$shell_path($$TREE_SITTER_GRAMMAR_SRC/ts_javascript.dll) $$shell_path($$DESTDIR/grammars/) &)
+    QMAKE_POST_LINK += $$quote(copy /y $$shell_path($$TREE_SITTER_BIN_SRC/libtree-sitter.dll) $$shell_path($$DESTDIR/) &)
+}
 
 # Compiler flags
 QMAKE_CXXFLAGS += -std=c++11 -Wall -Wextra

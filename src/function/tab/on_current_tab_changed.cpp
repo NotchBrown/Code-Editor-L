@@ -3,6 +3,8 @@
 #include "widget/main_window/status_bar.h"
 #include "widget/editor/code_editor.h"
 #include "widget/find_and_replace/find_and_replace.h"
+#include "widget/navigator/navigator.h"
+#include "widget/segment/segment.h"
 
 void MainWindow::onCurrentTabChanged(int index)
 {
@@ -27,6 +29,12 @@ void MainWindow::onCurrentTabChanged(int index)
             }
         }
         m_findAndReplace->setAllEditors(allEditors);
+    }
+
+    // Update Navigator and Segment
+    if (editor) {
+        if (m_navigator) m_navigator->updateOutline(editor);
+        if (m_segment) m_segment->updateAtPosition(editor, 0, 0);
     }
 
     // Update status bar for current editor
