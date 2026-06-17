@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<!-- HTML test file for tree-sitter symbol extraction -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeEditorLite Test</title>
+    <link rel="stylesheet" href="test.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Sidebar -->
+        <div id="sidebar">
+            <div class="logo">
+                <h1>CodeEditorLite</h1>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="#files" class="active">Files</a></li>
+                    <li><a href="#search">Search</a></li>
+                    <li><a href="#git">Git</a></li>
+                    <li><a href="#extensions">Extensions</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div id="main-content">
+            <div class="toolbar">
+                <button id="btn-new" class="toolbar-btn" title="New File">
+                    <span class="icon">📄</span>
+                </button>
+                <button id="btn-open" class="toolbar-btn" title="Open File">
+                    <span class="icon">📂</span>
+                </button>
+                <button id="btn-save" class="toolbar-btn" title="Save">
+                    <span class="icon">💾</span>
+                </button>
+                <span class="separator"></span>
+                <button id="btn-undo" class="toolbar-btn" title="Undo">
+                    <span class="icon">↩️</span>
+                </button>
+                <button id="btn-redo" class="toolbar-btn" title="Redo">
+                    <span class="icon">↪️</span>
+                </button>
+            </div>
+
+            <div class="editor-pane">
+                <div class="editor-tabs">
+                    <span class="tab active">main.cpp</span>
+                    <span class="tab">test.py</span>
+                    <span class="tab">index.js</span>
+                </div>
+                <div class="editor-content" contenteditable="true">
+                    <div class="line"><span class="keyword">#include</span> <span class="string">&lt;iostream&gt;</span></div>
+                    <div class="line"></div>
+                    <div class="line"><span class="keyword">int</span> <span class="function">main</span>() {</div>
+                    <div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div>
+                    <div class="line">}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Status Bar -->
+        <div id="status-bar">
+            <span class="status-item">Line 1, Column 1</span>
+            <span class="status-item">UTF-8</span>
+            <span class="status-item">C++</span>
+            <span class="status-item">Spaces: 4</span>
+        </div>
+    </div>
+
+    <script src="test.js"></script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+/* CSS test file for tree-sitter symbol extraction */
+/* Should extract: class selector, id selector, tag selector */
+
+/* ---- Reset ----
+ * omitted
+ */
+
+/* ---- Tag selector ---- */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #1e1e1e;
+    color: #d4d4d4;
+}
+
+/* ---- ID selector ---- */
+#main-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+#sidebar {
+    width: 250px;
+    background-color: #252526;
+    border-right: 1px solid #3c3c3c;
+}
+
+/* ---- Class selector ---- */
+.container {
+    display: flex;
+    flex-direction: row;
+    min-height: 100vh;
+}
+
+.toolbar {
+    background-color: #333333;
+    padding: 4px 8px;
+    border-bottom: 1px solid #3c3c3c;
+}
+
+.editor-pane {
+    flex: 1;
+    padding: 0;
+    overflow: hidden;
+}
+
+.status-bar {
+    background-color: #007acc;
+    color: white;
+    padding: 2px 10px;
+    font-size: 12px;
+}
+
+/* ---- Pseudo-class ---- */
+.button:hover {
+    background-color: #094771;
+}
+
+.button:active {
+    background-color: #052642;
+}
+
+/* ---- Media query ---- */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+    
+    #sidebar {
+        width: 100%;
+    }
+}
+
+/* ---- Keyframe animation ---- */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { transform: translateX(-100%); }
+    to   { transform: translateX(0); }
+}
+
+/* ---- Nested element ---- */
+.toolbar button {
+    background: none;
+    border: none;
+    color: #cccccc;
+    cursor: pointer;
+    padding: 4px 8px;
+}
+
+.toolbar button:hover {
+    background-color: #444444;
+}

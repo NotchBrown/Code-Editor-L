@@ -1,0 +1,61 @@
+{
+    "name": "CodeEditorLite",
+    "version": "1.0.0",
+    "description": "Lightweight code editor with tree-sitter support",
+    "author": "CodeEditorLite Team",
+    "license": "MIT",
+    "config": {
+        "editor": {
+            "fontSize": 14,
+            "fontFamily": "Consolas",
+            "tabSize": 4,
+            "wordWrap": false,
+            "lineNumbers": true,
+            "minimap": {
+                "enabled": true,
+                "width": 60
+            }
+        },
+        "theme": {
+            "name": "dark",
+            "backgroundColor": "#1e1e1e",
+            "foregroundColor": "#d4d4d4",
+            "syntax": {
+                "keyword": "#569cd6",
+                "string": "#ce9178",
+                "comment": "#6a9955",
+                "number": "#b5cea8"
+            }
+        },
+        "languages": [
+            {
+                "name": "C++",
+                "extensions": [".cpp", ".h", ".hpp", ".cc"],
+                "grammar": "ts_cpp"
+            },
+            {
+                "name": "Python",
+                "extensions": [".py"],
+                "grammar": "ts_python"
+            },
+            {
+                "name": "JavaScript",
+                "extensions": [".js", ".jsx", ".mjs"],
+                "grammar": "ts_javascript"
+            },
+            {
+                "name": "Verilog",
+                "extensions": [".v", ".vh", ".sv"],
+                "grammar": "ts_verilog"
+            }
+        ],
+        "shortcuts": {
+            "save": "Ctrl+S",
+            "open": "Ctrl+O",
+            "find": "Ctrl+F",
+            "replace": "Ctrl+H",
+            "build": "F7",
+            "run": "F5"
+        }
+    }
+}
