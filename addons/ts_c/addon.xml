@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<addon>
+    <name>ts_c</name>
+    <vendor>CodeEditorLite Team</vendor>
+    <displayName>c Analyzer</displayName>
+    <version>1.0.0</version>
+    <description>Tree-sitter analysis for c</description>
+    <files>
+        <file platform="win">ts_c.dll</file>
+        <file platform="mac">libts_c.dylib</file>
+        <file platform="linux">libts_c.so</file>
+    </files>
+    <capabilities>
+        <capability>symbol_outline</capability>
+        <capability>segment_info</capability>
+    </capabilities>
+</addon>

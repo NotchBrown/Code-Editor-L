@@ -269,6 +269,8 @@ void MainWindow::setupConnections()
         connect(ui->actionSettingsToolbar, &QAction::triggered, this, &MainWindow::onSettingsToolbar);
     if (ui->actionSettingsHotkey)
         connect(ui->actionSettingsHotkey, &QAction::triggered, this, &MainWindow::onSettingsHotkey);
+    if (ui->actionSettingsAddons)
+        connect(ui->actionSettingsAddons, &QAction::triggered, this, &MainWindow::onSettingsAddons);
     
     // Window menu
     if (ui->actionWindowCloseTab)

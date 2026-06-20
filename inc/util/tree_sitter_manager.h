@@ -2,49 +2,11 @@
 #define TREE_SITTER_MANAGER_H
 
 #include "main.h"
+#include "component/language_component.h"
 #include <QLibrary>
 #include <tree_sitter/api.h>
 
 class CodeEditor;
-
-// ---------------------------------------------------------------------------
-// Data structures for parsed symbols
-// ---------------------------------------------------------------------------
-
-struct SymbolInfo {
-    enum Type {
-        Function,
-        Method,
-        Class,
-        Struct,
-        Enum,
-        Union,
-        Namespace,
-        Variable,
-        Typedef,
-        Macro,
-        Interface,
-        Module,
-        Unknown
-    };
-
-    Type    type;
-    QString name;       // symbol name (or nearby text if unnamed)
-    int     line;       // 0-based line where symbol starts
-    int     startByte;  // byte offset in document
-    int     endByte;    // end byte offset
-    int     depth;      // nesting depth
-};
-
-struct SegmentInfo {
-    QString typeName;       // e.g. "if_statement", "function_definition"
-    QString summary;        // human-readable summary
-    int     startLine;
-    int     endLine;
-    int     startByte;
-    int     endByte;
-    QList<QPair<QString, QString>> properties;  // key-value pairs
-};
 
 // ---------------------------------------------------------------------------
 // TreeSitterManager - singleton that wraps tree-sitter parsing

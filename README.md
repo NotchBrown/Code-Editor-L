@@ -6,7 +6,7 @@
 
 ## 概述
 
-CodeEditorLite 是一个轻量级代码编辑器，专注于提供快速响应的编辑体验和深度的代码结构分析能力。
+CodeEditorLite 是一个轻量级代码编辑器，专注于提供快速响应的编辑体验和深度的代码结构分析能力。支持通过 addon 组件扩展语言高级功能。
 
 ## 语言支持性
 
@@ -67,13 +67,14 @@ CodeEditorLite 是一个轻量级代码编辑器，专注于提供快速响应�
 15. 命令行打开文件支持
 
 计划中：
-1. Segment 面板增强 -- 显示更丰富的上下文信息（函数参数、变量类型、作用域链）
-2. IPC 通信 -- 实现 JSON over TCP 的请求/响应 IPC 协议，支持外部进程接入
-3. 静态实时检查 -- 基于 tree-sitter 查询的代码问题检测（未使用变量、类型不匹配等）
-4. 自动补全 -- 基于 tree-sitter AST 的符号感知补全
-5. 辅助例化器 -- Verilog 模块例化代码生成（Alt+Tab）
-6. 更多 tree-sitter grammar 构建（Go/Rust/PHP/Scala/TypeScript 等）
-7. (伪)项目管理器增强 -- 经由Socket Message控制的文件树浏览、工程构建
+1. 组件化重构 -- 将 tree-sitter 等语言分析功能抽取为独立 addon 组件
+2. Segment 面板增强 -- 显示更丰富的上下文信息（函数参数、变量类型、作用域链）
+3. IPC 通信 -- 实现 JSON over TCP 的请求/响应 IPC 协议，支持外部进程接入
+4. 静态实时检查 -- 基于 tree-sitter 查询的代码问题检测（未使用变量、类型不匹配等）
+5. 自动补全 -- 基于 tree-sitter AST 的符号感知补全
+6. 辅助例化器 -- Verilog 模块例化代码生成（Alt+Tab）
+7. 更多 tree-sitter grammar 构建（Go/Rust/PHP/Scala/TypeScript 等）
+8. (伪)项目管理器增强 -- 经由Socket Message控制的文件树浏览、工程构建
 
 ---
 
@@ -124,6 +125,7 @@ CodeEditorLite/
     qscintilla_mingw64/  -- 预编译库
     tree_sitter_mingw64/ -- tree-sitter 库 + grammars
     grammar_repos/       -- grammar 源码
+  addons/       -- 语言分析组件（可选加载）
   doc/          -- 文档
   script/       -- 构建脚本
   test/         -- 测试文件

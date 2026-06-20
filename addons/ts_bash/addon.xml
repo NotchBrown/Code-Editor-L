@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<addon>
+    <name>ts_bash</name>
+    <vendor>CodeEditorLite Team</vendor>
+    <displayName>bash Analyzer</displayName>
+    <version>1.0.0</version>
+    <description>Tree-sitter analysis for bash</description>
+    <files>
+        <file platform="win">ts_bash.dll</file>
+        <file platform="mac">libts_bash.dylib</file>
+        <file platform="linux">libts_bash.so</file>
+    </files>
+    <capabilities>
+        <capability>symbol_outline</capability>
+        <capability>segment_info</capability>
+    </capabilities>
+</addon>

@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<addon>
+    <name>ts_ruby</name>
+    <vendor>CodeEditorLite Team</vendor>
+    <displayName>ruby Analyzer</displayName>
+    <version>1.0.0</version>
+    <description>Tree-sitter analysis for ruby</description>
+    <files>
+        <file platform="win">ts_ruby.dll</file>
+        <file platform="mac">libts_ruby.dylib</file>
+        <file platform="linux">libts_ruby.so</file>
+    </files>
+    <capabilities>
+        <capability>symbol_outline</capability>
+        <capability>segment_info</capability>
+    </capabilities>
+</addon>

@@ -2,6 +2,8 @@
 #include "widget/segment/segment.h"
 #include "widget/editor/code_editor.h"
 #include "ui_segment.h"
+#include "util/tree_sitter_manager.h"
+#include "component/addon_manager.h"
 #include <QHeaderView>
 
 Segment::Segment(QWidget *parent) :

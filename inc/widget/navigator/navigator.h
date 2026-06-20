@@ -2,7 +2,7 @@
 #define NAVIGATOR_H
 
 #include "main.h"
-#include "util/tree_sitter_manager.h"
+#include "component/language_component.h"
 #include <QTreeWidgetItem>
 
 class CodeEditor;

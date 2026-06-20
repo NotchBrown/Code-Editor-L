@@ -189,6 +189,8 @@
     <addaction name="actionSettingsIPC"/>
     <addaction name="actionSettingsToolbar"/>
     <addaction name="actionSettingsHotkey"/>
+    <addaction name="separator"/>
+    <addaction name="actionSettingsAddons"/>
    </widget>
    <widget class="QMenu" name="menuWindow">
     <property name="tearOffEnabled">
@@ -634,6 +636,11 @@
    </property>
    <property name="text">
     <string>&amp;Toolbar...</string>
+   </property>
+  </action>
+  <action name="actionSettingsAddons">
+   <property name="text">
+    <string>Add-Ons &amp;Manager...</string>
    </property>
   </action>
   <action name="actionSettingsHotkey">

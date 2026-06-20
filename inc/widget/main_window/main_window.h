@@ -86,6 +86,7 @@ private slots:
     void onMarkCleanBreak();
     
     // Settings menu
+    void onSettingsAddons();
     void onSettingsGeneral();
     void onSettingsEditor();
     void onSettingsIPC();

@@ -2,8 +2,121 @@
 #include "widget/navigator/navigator.h"
 #include "widget/editor/code_editor.h"
 #include "ui_navigator.h"
+#include "component/addon_manager.h"
 #include <QHeaderView>
 #include <QDebug>
+#include <QRegularExpression>
+
+// ---------------------------------------------------------------------------
+// Language-specific fallback symbol extraction (when no addon component)
+// ---------------------------------------------------------------------------
+
+static void fallbackSymbolsForLanguage(const QString &lexerName,
+                                        CodeEditor *editor,
+                                        QList<SymbolInfo> &symbols)
+{
+    int lineCount = editor->lines();
+    for (int i = 0; i < lineCount; ++i) {
+        QString raw = editor->text(i);
+        QString trimmed = raw.trimmed();
+        if (trimmed.isEmpty()) continue;
+        QChar last = trimmed.at(trimmed.length() - 1);
+
+        if (lexerName == "ruby") {
+            QRegularExpression rx(R"(^\s*(def|class|module)\s+(\S+))");
+            auto m = rx.match(raw);
+            if (m.hasMatch()) {
+                SymbolInfo info;
+                QString kw = m.captured(1);
+                info.name = m.captured(2); info.line = i;
+                info.type = (kw == "class") ? SymbolInfo::Class
+                          : (kw == "module") ? SymbolInfo::Namespace
+                          : SymbolInfo::Function;
+                symbols.append(info); continue;
+            }
+        }
+        if (lexerName == "python") {
+            QRegularExpression rx(R"(^(\s*)(def|class)\s+(\S+))");
+            auto m = rx.match(raw);
+            if (m.hasMatch() && m.captured(1).length() < 4) {
+                SymbolInfo info;
+                info.name = m.captured(3); info.line = i;
+                info.type = (m.captured(2) == "class") ? SymbolInfo::Class : SymbolInfo::Function;
+                symbols.append(info); continue;
+            }
+        }
+        if (lexerName == "fortran" || lexerName == "fortran77") {
+            QRegularExpression rx(R"(^\s*(subroutine|function|module|program)\s+(\S+))",
+                                  QRegularExpression::CaseInsensitiveOption);
+            auto m = rx.match(raw);
+            if (m.hasMatch()) {
+                SymbolInfo info;
+                info.name = m.captured(2); info.line = i;
+                QString kw = m.captured(1).toLower();
+                info.type = (kw == "module" || kw == "program") ? SymbolInfo::Namespace : SymbolInfo::Function;
+                symbols.append(info); continue;
+            }
+        }
+        if (lexerName == "verilog") {
+            QRegularExpression rx(R"(^\s*(module|function|task)\s+(\S+))",
+                                  QRegularExpression::CaseInsensitiveOption);
+            auto m = rx.match(raw);
+            if (m.hasMatch()) {
+                SymbolInfo info;
+                info.name = m.captured(2); info.line = i;
+                info.type = (m.captured(1).toLower() == "module") ? SymbolInfo::Class : SymbolInfo::Function;
+                symbols.append(info); continue;
+            }
+        }
+        if (lexerName == "makefile") {
+            QRegularExpression rx(R"(^([a-zA-Z_][a-zA-Z0-9_.-]*)\s*:)", QRegularExpression::MultilineOption);
+            auto m = rx.match(raw);
+            if (m.hasMatch() && raw.contains(':')) {
+                SymbolInfo info;
+                info.name = m.captured(1); info.line = i;
+                info.type = SymbolInfo::Function;
+                symbols.append(info); continue;
+            }
+        }
+        if (lexerName == "html") {
+            QRegularExpression rx(R"(<(\w+)[^>]*(id|class)\s*=\s*["']([^"']+)["'][^>]*>)");
+            auto m = rx.match(trimmed);
+            if (m.hasMatch()) {
+                SymbolInfo info;
+                info.name = m.captured(1) + "#" + m.captured(3);
+                info.line = i; info.type = SymbolInfo::Unknown;
+                symbols.append(info); continue;
+            }
+        }
+        // C-like fallback: { } blocks
+        if (last == '{') {
+            QString beforeBrace = trimmed.left(trimmed.length() - 1).trimmed();
+            QRegularExpression rx2(R"(^\s*(class|struct|enum|union|interface|namespace)\s+(\w+))");
+            auto m2 = rx2.match(trimmed);
+            if (m2.hasMatch()) {
+                SymbolInfo info;
+                info.name = m2.captured(2); info.line = i;
+                QString kw = m2.captured(1);
+                if (kw == "class") info.type = SymbolInfo::Class;
+                else if (kw == "struct") info.type = SymbolInfo::Struct;
+                else if (kw == "enum") info.type = SymbolInfo::Enum;
+                else if (kw == "union") info.type = SymbolInfo::Union;
+                else if (kw == "interface") info.type = SymbolInfo::Interface;
+                else if (kw == "namespace") info.type = SymbolInfo::Namespace;
+                else info.type = SymbolInfo::Unknown;
+                symbols.append(info); continue;
+            }
+            QRegularExpression rx3(R"((\w+)\s*\([^)]*\)\s*)");
+            auto m3 = rx3.match(beforeBrace);
+            if (m3.hasMatch()) {
+                SymbolInfo info;
+                info.name = m3.captured(1); info.line = i;
+                info.type = SymbolInfo::Function;
+                symbols.append(info); continue;
+            }
+        }
+    }
+}
 
 Navigator::Navigator(QWidget *parent) :
     QWidget(parent),
@@ -63,34 +176,20 @@ void Navigator::updateOutline(CodeEditor *editor)
     QString source = editor->text();
 
     qDebug() << "[Navigator] updateOutline: lexer=" << lexerName
-             << "sourceLen=" << source.length()
-             << "supportsTS=" << TreeSitterManager::instance()->supportsLanguage(lexerName);
+             << "sourceLen=" << source.length();
 
-    TreeSitterManager *ts = TreeSitterManager::instance();
-
-    // Use tree-sitter for supported languages, fallback to QScintilla
+    // Try addon component first, fall back to QScintilla heuristics
     QList<SymbolInfo> symbols;
-    if (ts->supportsLanguage(lexerName)) {
-        symbols = ts->parseSymbols(source, lexerName);
-    } else {
-        qDebug() << "[Navigator] fallback: using fold/indent heuristics for" << lexerName;
-        // Fallback: use QScintilla via fold structure + basic line parsing
-        // For unsupported languages, show fold regions
-        int lineCount = editor->lines();
-        for (int i = 0; i < lineCount; ++i) {
-            QString lineText = editor->text(i).trimmed();
-            if (lineText.isEmpty()) continue;
+    ILanguageComponent *comp = AddonManager::instance()->componentForLanguage(lexerName);
 
-            // Simple heuristic: lines ending with { or : might be structure
-            QChar last = lineText.isEmpty() ? QChar() : lineText.at(lineText.length() - 1);
-            if (last == '{' || last == ':') {
-                SymbolInfo info;
-                info.type = SymbolInfo::Unknown;
-                info.name = lineText.left(60);
-                info.line = i;
-                symbols.append(info);
-            }
-        }
+    if (comp && (comp->capabilities() & CapSymbolOutline)) {
+        symbols = comp->parseSymbols(source, lexerName);
+        qDebug() << "[Navigator] used component:" << comp->componentName()
+                 << "found" << symbols.size() << "symbols";
+    } else {
+        qDebug() << "[Navigator] fallback: QScintilla heuristics for" << lexerName;
+        // QScintilla-based symbol extraction
+        fallbackSymbolsForLanguage(lexerName, editor, symbols);
     }
 
     qDebug() << "[Navigator] updateOutline: total symbols=" << symbols.size();

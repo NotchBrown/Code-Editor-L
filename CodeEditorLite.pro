@@ -71,6 +71,9 @@ SOURCES += \
     src/function/settings/on_settings_ipc.cpp \
     src/function/settings/on_settings_toolbar.cpp \
     src/function/settings/on_settings_hotkey.cpp \
+    src/function/settings/on_settings_addons.cpp \
+    src/component/addon_manager.cpp \
+    src/widget/addons/addons_dialog.cpp \
     src/function/window/on_window_close_tab.cpp \
     src/function/window/on_window_close_all_saved.cpp \
     src/function/window/on_window_close_all.cpp \
@@ -95,6 +98,7 @@ SOURCES += \
     src/util/resource_manager.cpp \
     src/util/tree_sitter_manager.cpp \
     src/util/query_rules.cpp \
+    src/component/component_manager.cpp \
     src/util/hotkey_manager.cpp \
     src/widget/print/print_wizard.cpp \
     src/widget/print/print_wizard_page_printer.cpp \
@@ -125,6 +129,11 @@ HEADERS += \
     inc/util/resource_manager.h \
     inc/util/tree_sitter_manager.h \
     inc/util/query_rules.h \
+    inc/component/language_component.h \
+    inc/component/component_manager.h \
+    inc/component/addon_info.h \
+    inc/component/addon_manager.h \
+    inc/widget/addons/addons_dialog.h \
     inc/util/hotkey_manager.h \
     inc/widget/print/print_wizard.h \
     inc/widget/print/print_wizard_page_printer.h \
@@ -195,6 +204,8 @@ INCLUDEPATH += \
     src/widget/bookmark \
     src/ipc \
     src/project \
+    inc/component \
+    inc/widget/addons \
     src/util \
     src/widget/print
 

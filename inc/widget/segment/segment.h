@@ -2,7 +2,7 @@
 #define SEGMENT_H
 
 #include "main.h"
-#include "util/tree_sitter_manager.h"
+#include "component/language_component.h"
 
 class CodeEditor;
 

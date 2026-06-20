@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<addon>
+    <name>ts_json</name>
+    <vendor>CodeEditorLite Team</vendor>
+    <displayName>json Analyzer</displayName>
+    <version>1.0.0</version>
+    <description>Tree-sitter analysis for json</description>
+    <files>
+        <file platform="win">ts_json.dll</file>
+        <file platform="mac">libts_json.dylib</file>
+        <file platform="linux">libts_json.so</file>
+    </files>
+    <capabilities>
+        <capability>symbol_outline</capability>
+        <capability>segment_info</capability>
+    </capabilities>
+</addon>
