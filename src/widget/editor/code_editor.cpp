@@ -145,6 +145,16 @@ CodeEditor::CodeEditor(QWidget *parent)
     m_extensionToLexer[".vhdl"] = "vhdl";
     m_extensionToLexer[".vhd"] = "vhdl";
     m_extensionToLexer[".v"] = "verilog";
+    m_extensionToLexer[".go"] = "go";
+    m_extensionToLexer[".rs"] = "rust";
+    m_extensionToLexer[".scala"] = "scala";
+    m_extensionToLexer[".sc"] = "scala";
+    m_extensionToLexer[".hs"] = "haskell";
+    m_extensionToLexer[".lhs"] = "haskell";
+    m_extensionToLexer[".ts"] = "typescript";
+    m_extensionToLexer[".tsx"] = "tsx";
+    m_extensionToLexer[".mts"] = "typescript";
+    m_extensionToLexer[".cts"] = "typescript";
     
     initCommentSyntax();
     setupEditor();
@@ -504,6 +514,28 @@ void CodeEditor::setLexerByName(const QString &name)
     } else if (name == "avs") {
         m_lexer = new QsciLexerAVS(this);
         m_currentLexerName = "avs";
+    } else if (name == "php") {
+        // No QsciLexerPHP, use CPP as fallback
+        m_lexer = new QsciLexerCPP(this);
+        m_currentLexerName = "php";
+    } else if (name == "go") {
+        m_lexer = new QsciLexerCPP(this);
+        m_currentLexerName = "go";
+    } else if (name == "rust") {
+        m_lexer = new QsciLexerCPP(this);
+        m_currentLexerName = "rust";
+    } else if (name == "scala") {
+        m_lexer = new QsciLexerCPP(this);
+        m_currentLexerName = "scala";
+    } else if (name == "haskell") {
+        m_lexer = new QsciLexerCPP(this);
+        m_currentLexerName = "haskell";
+    } else if (name == "typescript") {
+        m_lexer = new QsciLexerJavaScript(this);
+        m_currentLexerName = "typescript";
+    } else if (name == "tsx") {
+        m_lexer = new QsciLexerJavaScript(this);
+        m_currentLexerName = "tsx";
     } else if (name == "edifact") {
         m_lexer = new QsciLexerEDIFACT(this);
         m_currentLexerName = "edifact";

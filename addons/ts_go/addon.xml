@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<addon>
+    <name>ts_go</name>
+    <vendor>CodeEditorLite Team</vendor>
+    <displayName>go Analyzer</displayName>
+    <version>1.0.0</version>
+    <description>Tree-sitter analysis for go</description>
+    <files>
+        <file platform="win">ts_go.dll</file>
+        <file platform="mac">libts_go.dylib</file>
+        <file platform="linux">libts_go.so</file>
+    </files>
+    <capabilities>
+        <capability>symbol_outline</capability>
+        <capability>segment_info</capability>
+    </capabilities>
+</addon>

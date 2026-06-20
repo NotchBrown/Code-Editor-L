@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<addon>
+    <name>ts_php</name>
+    <vendor>CodeEditorLite Team</vendor>
+    <displayName>php Analyzer</displayName>
+    <version>1.0.0</version>
+    <description>Tree-sitter analysis for php</description>
+    <files>
+        <file platform="win">ts_php.dll</file>
+        <file platform="mac">libts_php.dylib</file>
+        <file platform="linux">libts_php.so</file>
+    </files>
+    <capabilities>
+        <capability>symbol_outline</capability>
+        <capability>segment_info</capability>
+    </capabilities>
+</addon>

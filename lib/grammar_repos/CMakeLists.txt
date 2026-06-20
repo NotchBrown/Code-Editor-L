@@ -44,6 +44,39 @@ function(add_tree_sitter_grammar name)
     )
 endfunction()
 
+# Function for sub-grammars (e.g., TypeScript's typescript/ and tsx/ subdirectories)
+function(add_tree_sitter_subgrammar repo subdir)
+    set(SOURCES "tree-sitter-${repo}/${subdir}/src/parser.c")
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tree-sitter-${repo}/${subdir}/src/scanner.c")
+        list(APPEND SOURCES "tree-sitter-${repo}/${subdir}/src/scanner.c")
+    endif()
+    
+    add_library("ts_${subdir}" SHARED ${SOURCES})
+    target_include_directories("ts_${subdir}" PRIVATE 
+        "${CMAKE_CURRENT_SOURCE_DIR}/tree-sitter-${repo}/${subdir}/src"
+        ${TREE_SITTER_INCLUDE_DIR}
+    )
+    target_compile_definitions("ts_${subdir}" PRIVATE TREE_SITTER_HIDE_SYMBOLS)
+    
+    set_target_properties("ts_${subdir}" PROPERTIES
+        LIBRARY_OUTPUT_DIRECTORY "${GRAMMAR_OUTPUT_DIR}"
+        RUNTIME_OUTPUT_DIRECTORY "${GRAMMAR_OUTPUT_DIR}"
+        PREFIX ""
+    )
+    
+    if(WIN32)
+        set_target_properties("ts_${subdir}" PROPERTIES
+            SUFFIX ".dll"
+        )
+    endif()
+    
+    add_custom_command(TARGET "ts_${subdir}" POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+            "$<TARGET_FILE:ts_${subdir}>"
+            "${GRAMMAR_OUTPUT_DIR}/$<TARGET_FILE_NAME:ts_${subdir}>"
+    )
+endfunction()
+
 # Build grammars
 add_tree_sitter_grammar("c")
 add_tree_sitter_grammar("cpp")
@@ -57,3 +90,15 @@ add_tree_sitter_grammar("html")
 add_tree_sitter_grammar("css")
 add_tree_sitter_grammar("json")
 add_tree_sitter_grammar("verilog")
+
+# ── New languages ──
+# PHP: two sub-grammars in one repo (php for HTML-embedded, php_only for pure PHP)
+add_tree_sitter_subgrammar("php" "php")
+add_tree_sitter_subgrammar("php" "php_only")
+add_tree_sitter_grammar("go")
+add_tree_sitter_grammar("rust")
+add_tree_sitter_grammar("scala")
+add_tree_sitter_grammar("haskell")
+# TypeScript: two sub-grammars in one repo
+add_tree_sitter_subgrammar("typescript" "typescript")
+add_tree_sitter_subgrammar("typescript" "tsx")

@@ -23,6 +23,13 @@ $languages = @(
     @{name="ts_ruby";    lexer="ruby";     grammar="ts_ruby.dll"}
     @{name="ts_json";    lexer="json";     grammar="ts_json.dll"}
     @{name="ts_verilog"; lexer="verilog";  grammar="ts_verilog.dll"}
+    @{name="ts_php";     lexer="php";      grammar="ts_php.dll"}
+    @{name="ts_go";      lexer="go";       grammar="ts_go.dll"}
+    @{name="ts_rust";    lexer="rust";     grammar="ts_rust.dll"}
+    @{name="ts_scala";   lexer="scala";    grammar="ts_scala.dll"}
+    @{name="ts_haskell"; lexer="haskell";  grammar="ts_haskell.dll"}
+    @{name="ts_typescript"; lexer="typescript"; grammar="ts_typescript.dll"}
+    @{name="ts_tsx";     lexer="tsx";      grammar="ts_tsx.dll"}
 )
 
 Write-Output "=== Building per-language addons ==="

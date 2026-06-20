@@ -30,6 +30,8 @@ static QString grammarDllName()
 {
     QString n = langName();
     if (n == "csharp") return "ts_c-sharp";
+    if (n == "php") return "ts_php";
+    if (n == "php_only") return "ts_php_only";
     return "ts_" + n;
 }
 
@@ -37,6 +39,8 @@ static QString grammarFuncName()
 {
     QString n = langName();
     if (n == "csharp") return "tree_sitter_c_sharp";
+    if (n == "php") return "tree_sitter_php";
+    if (n == "php_only") return "tree_sitter_php_only";
     return "tree_sitter_" + n;
 }
 
@@ -131,6 +135,68 @@ static QString queryString()
     if (n == "verilog") {
         return R"(
 (module_header (simple_identifier) @name) @definition.class
+)";
+    }
+    if (n == "php" || n == "php_only") {
+        return R"(
+(namespace_definition (namespace_name) @name) @definition.module
+(interface_declaration name: (name) @name) @definition.interface
+(trait_declaration name: (name) @name) @definition.interface
+(class_declaration name: (name) @name) @definition.class
+(function_definition name: (name) @name) @definition.function
+(method_declaration name: (name) @name) @definition.function
+)";
+    }
+    if (n == "go") {
+        return R"(
+(function_declaration (identifier) @name) @definition.function
+(method_declaration (field_identifier) @name) @definition.method
+(type_spec (type_identifier) @name) @definition.type
+)";
+    }
+    if (n == "rust") {
+        return R"(
+(declaration_list (function_item (identifier) @name)) @definition.method
+(function_item (identifier) @name) @definition.function
+(struct_item (type_identifier) @name) @definition.class
+(enum_item (type_identifier) @name) @definition.class
+(union_item (type_identifier) @name) @definition.class
+(type_item (type_identifier) @name) @definition.class
+(trait_item (type_identifier) @name) @definition.interface
+(mod_item (identifier) @name) @definition.module
+(macro_definition (identifier) @name) @definition.macro
+)";
+    }
+    if (n == "scala") {
+        return R"(
+(package_clause (package_identifier) @name) @definition.module
+(trait_definition (identifier) @name) @definition.interface
+(enum_definition (identifier) @name) @definition.enum
+(class_definition (identifier) @name) @definition.class
+(object_definition (identifier) @name) @definition.class
+(function_definition (identifier) @name) @definition.function
+(val_definition (identifier) @name) @definition.variable
+(var_definition (identifier) @name) @definition.variable
+(type_definition (type_identifier) @name) @definition.type
+)";
+    }
+    if (n == "haskell") {
+        return R"(
+(module (module_id) @name) @definition.module
+(decl name: (variable) @name) @definition.function
+)";
+    }
+    if (n == "typescript" || n == "tsx") {
+        return R"(
+(function_signature (identifier) @name) @definition.function
+(method_signature (property_identifier) @name) @definition.method
+(abstract_method_signature (property_identifier) @name) @definition.method
+(abstract_class_declaration (type_identifier) @name) @definition.class
+(interface_declaration (type_identifier) @name) @definition.interface
+(module (identifier) @name) @definition.module
+(function_declaration (identifier) @name) @definition.function
+(class_declaration name: (_) @name) @definition.class
+(method_definition (property_identifier) @name) @definition.method
 )";
     }
     // html, css — queries need AST investigation, return empty for fallback
