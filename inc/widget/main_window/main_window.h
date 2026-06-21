@@ -28,6 +28,9 @@ public:
     void initIpcServer(int port = 0);
     CodeEditor* createNewEditor(const QString &filePath = QString());
 
+    /// 应用自动保存设置到指定编辑器
+    void applyAutoSaveToEditor(CodeEditor *editor);
+
 private slots:
     // Start menu
     void onStartNewInstance();

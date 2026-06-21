@@ -11,8 +11,10 @@ ResourceManager& ResourceManager::instance()
 void ResourceManager::init(const QString& appPath)
 {
     QDir appDir(appPath);
-    m_resourcesPath = appDir.filePath("resources");
-    
+    // 资源目录从 bin/resources/ 改为 bin/../resource/
+    appDir.cdUp();
+    m_resourcesPath = appDir.filePath("resource");
+
     // Create resources directory if not exists
     QDir resourcesDir(m_resourcesPath);
     if (!resourcesDir.exists()) {

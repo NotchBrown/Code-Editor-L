@@ -15,8 +15,11 @@ class HotkeyDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit HotkeyDialog(QWidget *parent = nullptr);
+    explicit HotkeyDialog(QWidget *parent = nullptr, QWidget *mainWindow = nullptr);
     ~HotkeyDialog();
+
+    /// 设置主窗口（用于查找 QAction）
+    void setMainWindow(QWidget *mw);
 
 private slots:
     // Row-level operations
@@ -52,6 +55,7 @@ private:
 
     // Store original shortcuts so we can cancel
     QMap<QString, QKeySequence> m_originalShortcuts;
+    QWidget *m_mainWindow; // MainWindow reference for finding QActions
 
     // Column indices
     enum Column {

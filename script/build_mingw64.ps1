@@ -256,7 +256,7 @@ if (Test-Path $WindeployqtPath) {
 # ========================================
 Write-Host "`nCopying external resources..." -ForegroundColor Cyan
 
-$ResourcesDir = "$OutputDir\resources"
+$ResourcesDir = "$BuildDir\resource"
 $IconSourceDir = "$ProjectRoot\src\resource\icon"
 $FontSourceDir = "$ProjectRoot\src\resource\font"
 
@@ -278,6 +278,47 @@ if (Test-Path $FontSourceDir) {
     Write-Host "  Copied fonts to resources/font" -ForegroundColor Green
 } else {
     Write-Host "  Warning: Font source directory not found at $FontSourceDir" -ForegroundColor Yellow
+}
+
+# Generate fonts.xml for pre-installed fonts (Debug only)
+if ($Debug) {
+    $FontXmlPath = "$FontTargetDir\fonts.xml"
+    if (Test-Path $FontTargetDir) {
+        $fonts = Get-ChildItem -Path $FontTargetDir -Recurse -Include *.ttf, *.otf, *.ttc -File
+        if ($fonts.Count -gt 0) {
+            # Read copyright from font files
+            $xmlContent = '<?xml version="1.0"?>
+<fonts>
+'
+            # Track unique families (use filename as key since we can't read font tables easily in PS)
+            $seen = @{}
+            foreach ($f in $fonts) {
+                $relPath = $f.FullName.Substring($FontTargetDir.Length + 1)
+                $family = $f.BaseName -replace '[-_].*$', ''  # approximate family name
+                if (-not $seen.ContainsKey($relPath)) {
+                    $seen[$relPath] = $true
+                    # Extract copyright from the font file (first 4KB)
+                    $bytes = [System.IO.File]::ReadAllBytes($f.FullName)
+                    $headText = [System.Text.Encoding]::UTF8.GetString($bytes, 0, [Math]::Min(4096, $bytes.Length))
+                    $copyright = ""
+                    if ($headText -match '(Copyright[^)]*\))') {
+                        $copyright = $matches[1].Trim()
+                    } elseif ($headText -match '(\(c\)[^)]*\))') {
+                        $copyright = $matches[1].Trim()
+                    }
+                    # Escape XML
+                    $copyright = $copyright -replace '&', '&amp;' -replace '<', '&lt;' -replace '>', '&gt;' -replace "'", '&apos;' -replace '"', '&quot;'
+                    $xmlContent += "  <font family=`"$family`" file=`"$relPath`" style=`"Regular`""
+                    if ($copyright) { $xmlContent += " copyright=`"$copyright`"" }
+                    $xmlContent += "/>`n"
+                }
+            }
+            $xmlContent += '</fonts>
+'
+            Set-Content -Path $FontXmlPath -Value $xmlContent -Encoding UTF8
+            Write-Host "  Generated fonts.xml ($($seen.Count) fonts)" -ForegroundColor Green
+        }
+    }
 }
 
 # ========================================

@@ -1,10 +1,9 @@
 #include "main.h"
 #include "widget/main_window/main_window.h"
-#include "widget/hotkey/hotkey.h"
-#include "ui_main_window.h"
+#include "widget/settings/settings_dialog.h"
 
 void MainWindow::onSettingsHotkey()
 {
-    HotkeyDialog dlg(this);
+    SettingsDialog dlg(this, SettingsDialog::TabHotkey);
     dlg.exec();
 }

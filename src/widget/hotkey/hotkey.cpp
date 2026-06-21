@@ -11,9 +11,10 @@
 // Construction
 // ---------------------------------------------------------------------------
 
-HotkeyDialog::HotkeyDialog(QWidget *parent)
+HotkeyDialog::HotkeyDialog(QWidget *parent, QWidget *mainWindow)
     : QDialog(parent),
-      ui(new Ui::HotkeyDialog)
+      ui(new Ui::HotkeyDialog),
+      m_mainWindow(mainWindow ? mainWindow : parent)
 {
     ui->setupUi(this);
 
@@ -66,8 +67,8 @@ void HotkeyDialog::populateActions()
     HotkeyManager *hkm = HotkeyManager::instance();
     QMap<QString, QKeySequence> defaults = hkm->defaultShortcuts();
 
-    // We get actions from the parent MainWindow
-    QWidget *mainWindow = parentWidget();
+    // We get actions from the main window
+    QWidget *mainWindow = m_mainWindow;
     if (!mainWindow) {
         // Fallback: just list defaults
         for (auto it = defaults.constBegin(); it != defaults.constEnd(); ++it) {
@@ -277,7 +278,7 @@ void HotkeyDialog::onRejectClicked()
     }
     // Reload from manager (which still has originals)
     hkm->load(); // re-read from file to be safe
-    hkm->applyAll(parentWidget());
+    hkm->applyAll(m_mainWindow);
     reject();
 }
 
@@ -287,10 +288,15 @@ void HotkeyDialog::onRejectClicked()
 
 void HotkeyDialog::applyToActions()
 {
-    QWidget *mainWindow = parentWidget();
-    if (!mainWindow) return;
+    if (!m_mainWindow) return;
+    HotkeyManager::instance()->applyAll(m_mainWindow);
+}
 
-    HotkeyManager::instance()->applyAll(mainWindow);
+void HotkeyDialog::setMainWindow(QWidget *mw)
+{
+    m_mainWindow = mw;
+    // Re-populate if main window changed
+    if (m_mainWindow) populateActions();
 }
 
 // ---------------------------------------------------------------------------

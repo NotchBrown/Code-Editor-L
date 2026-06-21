@@ -13,6 +13,7 @@
 #include "project/project_manager.h"
 #include "util/recent_files_manager.h"
 #include "util/hotkey_manager.h"
+#include "util/settings_manager.h"
 #include <QVBoxLayout>
 #include <QDockWidget>
 
@@ -150,12 +151,18 @@ void MainWindow::createDockWidgets()
             ui->actionWindowIPCMessage->setChecked(visible);
     });
     
-    // Hide docks by default
-    dockNavigator->hide();
-    dockSegment->hide();
-    dockFindReplace->hide();
-    dockErrorsWarnings->hide();
-    dockIPCMessage->hide();
+    // Show docks based on settings
+    QStringList defaultPanels = SettingsManager::instance().defaultPanels();
+    if (defaultPanels.contains("navigator"))        dockNavigator->show();
+    else                                            dockNavigator->hide();
+    if (defaultPanels.contains("segment"))          dockSegment->show();
+    else                                            dockSegment->hide();
+    if (defaultPanels.contains("find_and_replace")) dockFindReplace->show();
+    else                                            dockFindReplace->hide();
+    if (defaultPanels.contains("errors_warnings"))  dockErrorsWarnings->show();
+    else                                            dockErrorsWarnings->hide();
+    if (defaultPanels.contains("ipc_message"))      dockIPCMessage->show();
+    else                                            dockIPCMessage->hide();
 }
 
 void MainWindow::setupConnections()
@@ -319,6 +326,9 @@ CodeEditor* MainWindow::createNewEditor(const QString &filePath)
     
     CodeEditor *editor = new CodeEditor(this);
     
+    // ── Auto-save setup ──
+    applyAutoSaveToEditor(editor);
+
     // Connect editor signals
     connect(editor, &CodeEditor::modificationChanged, this, [this, editor](bool m) {
         emit editorModificationChanged(editor, m);
@@ -358,11 +368,18 @@ CodeEditor* MainWindow::createNewEditor(const QString &filePath)
     
     tabWidget->setCurrentIndex(index);
     updateWindowTitle();
-    updateEncodingMenuChecked();
-    updateReadOnlyMenuChecked();
-    updateMenuStates();
     
     return editor;
+}
+
+void MainWindow::applyAutoSaveToEditor(CodeEditor *editor)
+{
+    auto &sm = SettingsManager::instance();
+    if (sm.autoSaveEnabled() && sm.autoSaveInterval() > 0) {
+        editor->autoSaveTimer()->setInterval(sm.autoSaveInterval() * 1000);
+    } else {
+        editor->autoSaveTimer()->setInterval(0); // disabled
+    }
 }
 
 CodeEditor* MainWindow::currentEditor() const
