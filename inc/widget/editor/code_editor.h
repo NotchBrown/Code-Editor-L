@@ -5,6 +5,7 @@
 #include <Qsci/qsciscintilla.h>
 #include <Qsci/qscilexer.h>
 #include <Qsci/qsciprinter.h>
+#include <QTimer>
 
 class CodeEditor : public QsciScintilla
 {
@@ -59,6 +60,21 @@ public:
     void setReadOnly(bool readOnly);
     bool isReadOnly() const;
 
+    // ── 设置应用 ──
+    /// 应用当前语言的编辑器设置（字体、补全、换行等）
+    void applyEditorSettings();
+
+    // ── 自动保存 ──
+    QTimer *autoSaveTimer() const { return m_autoSaveTimer; }
+
+    // ── 自动补全 ──
+    /// 设置静态关键字补全（基于 QScintilla 词法分析器的关键字）
+    void setupStaticCompletion();
+    /// 设置高级补全（基于 AddOn / tree-sitter）
+    void setupAdvancedCompletion();
+    /// 触发自动补全
+    void triggerCompletion();
+
 signals:
     void filePathChanged(const QString &path);
     void modificationChanged(bool modified);
@@ -97,6 +113,9 @@ private:
     QString m_currentEncoding; // Current file encoding
     bool m_manualLexerSet; // Whether user has manually set the lexer
     bool m_readOnly; // Whether the editor is in read-only mode
+
+    // ── 自动保存 ──
+    QTimer *m_autoSaveTimer;
 };
 
 #endif // CODE_EDITOR_H

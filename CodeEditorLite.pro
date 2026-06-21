@@ -109,7 +109,12 @@ SOURCES += \
     src/widget/find_and_replace/find_and_replace.cpp \
     src/widget/hotkey/hotkey.cpp \
     src/widget/bookmark/go_bookmark.cpp \
-    src/widget/bookmark/manage_bookmark.cpp
+    src/widget/bookmark/manage_bookmark.cpp \
+    src/util/font_manager.cpp \
+    src/util/settings_manager.cpp \
+    src/widget/settings/general_settings_page.cpp \
+    src/widget/settings/editor_settings_page.cpp \
+    src/widget/settings/settings_dialog.cpp
 
 # Header files
 HEADERS += \
@@ -135,6 +140,11 @@ HEADERS += \
     inc/component/addon_manager.h \
     inc/widget/addons/addons_dialog.h \
     inc/util/hotkey_manager.h \
+    inc/util/font_manager.h \
+    inc/util/settings_manager.h \
+    inc/widget/settings/general_settings_page.h \
+    inc/widget/settings/editor_settings_page.h \
+    inc/widget/settings/settings_dialog.h \
     inc/widget/print/print_wizard.h \
     inc/widget/print/print_wizard_page_printer.h \
     inc/widget/print/print_wizard_page_page_setup.h \
@@ -165,7 +175,10 @@ FORMS += \
     src/widget/print/print_wizard_page_preview.ui \
     src/widget/hotkey/hotkey.ui \
     src/widget/bookmark/go_bookmark.ui \
-    src/widget/bookmark/manage_bookmark.ui
+    src/widget/bookmark/manage_bookmark.ui \
+    src/widget/settings/general_settings_page.ui \
+    src/widget/settings/editor_settings_page.ui \
+    src/widget/settings/settings_dialog.ui
 
 # Resource files
 RESOURCES += \
@@ -206,8 +219,10 @@ INCLUDEPATH += \
     src/project \
     inc/component \
     inc/widget/addons \
+    inc/widget/settings \
     src/util \
-    src/widget/print
+    src/widget/print \
+    src/widget/settings
 
 # Output directories
 DESTDIR = bin
@@ -221,18 +236,7 @@ TREE_SITTER_GRAMMAR_SRC = $$PWD/lib/tree_sitter_mingw64/grammars
 TREE_SITTER_BIN_SRC = $$PWD/lib/tree_sitter_mingw64/bin
 win32 {
     QMAKE_POST_LINK += $$quote(mkdir $$shell_path($$DESTDIR/grammars) 2>nul &)
-    QMAKE_POST_LINK += $$quote(copy /y $$shell_path($$TREE_SITTER_GRAMMAR_SRC/ts_c.dll) $$shell_path($$DESTDIR/grammars/) &)
-    QMAKE_POST_LINK += $$quote(copy /y $$shell_path($$TREE_SITTER_GRAMMAR_SRC/ts_cpp.dll) $$shell_path($$DESTDIR/grammars/) &)
-    QMAKE_POST_LINK += $$quote(copy /y $$shell_path($$TREE_SITTER_GRAMMAR_SRC/ts_python.dll) $$shell_path($$DESTDIR/grammars/) &)
-    QMAKE_POST_LINK += $$quote(copy /y $$shell_path($$TREE_SITTER_GRAMMAR_SRC/ts_javascript.dll) $$shell_path($$DESTDIR/grammars/) &)
-    QMAKE_POST_LINK += $$quote(copy /y $$shell_path($$TREE_SITTER_GRAMMAR_SRC/ts_bash.dll) $$shell_path($$DESTDIR/grammars/) &)
-    QMAKE_POST_LINK += $$quote(copy /y $$shell_path($$TREE_SITTER_GRAMMAR_SRC/ts_java.dll) $$shell_path($$DESTDIR/grammars/) &)
-    QMAKE_POST_LINK += $$quote(copy /y $$shell_path($$TREE_SITTER_GRAMMAR_SRC/ts_c-sharp.dll) $$shell_path($$DESTDIR/grammars/) &)
-    QMAKE_POST_LINK += $$quote(copy /y $$shell_path($$TREE_SITTER_GRAMMAR_SRC/ts_ruby.dll) $$shell_path($$DESTDIR/grammars/) &)
-    QMAKE_POST_LINK += $$quote(copy /y $$shell_path($$TREE_SITTER_GRAMMAR_SRC/ts_html.dll) $$shell_path($$DESTDIR/grammars/) &)
-    QMAKE_POST_LINK += $$quote(copy /y $$shell_path($$TREE_SITTER_GRAMMAR_SRC/ts_css.dll) $$shell_path($$DESTDIR/grammars/) &)
-    QMAKE_POST_LINK += $$quote(copy /y $$shell_path($$TREE_SITTER_GRAMMAR_SRC/ts_json.dll) $$shell_path($$DESTDIR/grammars/) &)
-    QMAKE_POST_LINK += $$quote(copy /y $$shell_path($$TREE_SITTER_GRAMMAR_SRC/ts_verilog.dll) $$shell_path($$DESTDIR/grammars/) &)
+    QMAKE_POST_LINK += $$quote(copy /y $$shell_path($$TREE_SITTER_GRAMMAR_SRC/*.dll) $$shell_path($$DESTDIR/grammars/) &)
     QMAKE_POST_LINK += $$quote(copy /y $$shell_path($$TREE_SITTER_BIN_SRC/libtree-sitter.dll) $$shell_path($$DESTDIR/) &)
 }
 

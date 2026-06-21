@@ -47,6 +47,8 @@
 #include <Qsci/qsciscintilla.h>
 #include <Qsci/qscilexer.h>
 #include <QFont>
+#include <QTimer>
+#include <cstring>
 
 const int SCI_SETUNDODEPTH = 262;
 const int SCI_DELETERANGE = 2645;
@@ -72,7 +74,8 @@ CodeEditor::CodeEditor(QWidget *parent)
       m_currentLexerName("cpp"),
       m_currentEncoding("UTF-8"),
       m_manualLexerSet(false),
-      m_readOnly(false)
+      m_readOnly(false),
+      m_autoSaveTimer(nullptr)
 {
     m_extensionToLexer[".cpp"] = "cpp";
     m_extensionToLexer[".h"] = "cpp";
@@ -211,8 +214,16 @@ void CodeEditor::setupEditor()
     markerDefine(QsciScintilla::Circle, 2);
     setMarkerBackgroundColor(QColor(220, 50, 50), 2);    // Red circle
     setMarkerForegroundColor(QColor(255, 255, 255), 2);  // White foreground
-    
-    setLexerByName("cpp");
+
+    // Initialize auto-save timer
+    m_autoSaveTimer = new QTimer(this);
+    m_autoSaveTimer->setSingleShot(true);
+    connect(m_autoSaveTimer, &QTimer::timeout, this, [this]() {
+        saveFile();
+    });
+
+    // Apply editor settings (font, completion, wrap, etc.)
+    applyEditorSettings();
 }
 
 void CodeEditor::setupConnections()
@@ -619,6 +630,54 @@ void CodeEditor::replaceText(const QString &find, const QString &replace, bool a
 void CodeEditor::onTextChanged()
 {
     emit modificationChanged(isModified());
+
+    // Auto-save: reset timer on each text change
+    if (m_autoSaveTimer && m_autoSaveTimer->interval() > 0) {
+        m_autoSaveTimer->start();
+    }
+}
+
+// ── 设置应用 ──
+
+void CodeEditor::applyEditorSettings()
+{
+    // 设置将在 lexer 变更时调用，暂空
+    // 实际由 MainWindow 在切换文件时触发
+}
+
+void CodeEditor::setupStaticCompletion()
+{
+    QsciLexer *lex = lexer();
+    if (!lex) return;
+
+    // 判断是否有关键字
+    const char *kws = lex->keywords(1);
+    if (!kws || strlen(kws) == 0) {
+        setAutoCompletionSource(QsciScintilla::AcsNone);
+        return;
+    }
+
+    setAutoCompletionSource(QsciScintilla::AcsAPIs);
+    setAutoCompletionThreshold(2);
+    setAutoCompletionCaseSensitivity(false);
+    setAutoCompletionReplaceWord(true);
+    setAutoCompletionUseSingle(QsciScintilla::AcusNever);
+}
+
+void CodeEditor::setupAdvancedCompletion()
+{
+    // 高级补全通过 AddOn 的 getCompletions() 实现
+    // 需要后续实现按键事件中调用 AddonManager
+    // 这里启用文档级别的补全作为基础
+    setAutoCompletionSource(QsciScintilla::AcsDocument);
+    setAutoCompletionThreshold(2);
+}
+
+void CodeEditor::triggerCompletion()
+{
+    // 触发 QScintilla 自带的自动补全
+    autoCompleteFromAPIs();
+    autoCompleteFromDocument();
 }
 
 int CodeEditor::currentLine() const
